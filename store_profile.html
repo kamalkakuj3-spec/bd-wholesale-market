@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>দোকানের বিস্তারিত</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyAKRgsUrYL4uAWinn5dcJrKck1nqUokRdw",
+        authDomain: "all-hadith-a68fa.firebaseapp.com",
+        databaseURL: "https://all-hadith-a68fa-default-rtdb.firebaseio.com/",
+        projectId: "all-hadith-a68fa",
+        storageBucket: "all-hadith-a68fa.firebasestorage.app",
+        messagingSenderId: "124928027736",
+        appId: "1:124928027736:android:f4d9a9a9ed667150ca2e2d"
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff8f0; /* হালকা ক্রিম */
+        }
+
+        header {
+            background-color: #cde4ff; /* হালকা ব্লু */
+            color: #1d3557;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #1d3557;
+            margin: 0 12px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 20px;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .store-detail {
+            display: flex;
+            align-items: center;
+            background-color: #f1faee; /* হালকা গ্রীন */
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        .store-logo {
+            width: 60px;
+            height: 60px;
+            background-color: #ffb6b9; /* হালকা পিঙ্ক */
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 20px;
+        }
+
+        .store-detail div h2 {
+            margin: 0 0 10px 0;
+        }
+
+        .store-detail div a {
+            color: #457b9d;
+            text-decoration: none;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <h1>দোকানের বিস্তারিত</h1>
+        <nav>
+            <a href="index.html">হোম</a>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div id="store-detail" class="store-detail">
+            <div class="store-logo" id="store-logo">A</div>
+            <div>
+                <h2 id="store-name">Loading...</h2>
+                <p><strong>ঠিকানা:</strong> <span id="store-address"></span></p>
+                <p><strong>পণ্য:</strong> <span id="store-products"></span></p>
+                <p><strong>যোগাযোগ:</strong> <span id="store-contact"></span></p>
+                <p>
+                    <span id="store-links"></span>
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Firebase JS to fetch single store -->
+    <script>
+      // এখানে আমরা উদাহরণ হিসেবে store ID URL parameter থেকে নিচ্ছি
+      const urlParams = new URLSearchParams(window.location.search);
+      const storeId = urlParams.get('id'); // ?id=store_key
+
+      const logoDiv = document.getElementById('store-logo');
+      const nameEl = document.getElementById('store-name');
+      const addressEl = document.getElementById('store-address');
+      const productsEl = document.getElementById('store-products');
+      const contactEl = document.getElementById('store-contact');
+      const linksEl = document.getElementById('store-links');
+
+      if(storeId){
+        db.ref('stores/' + storeId).once('value').then(snapshot => {
+          const store = snapshot.val();
+          if(store){
+            logoDiv.textContent = store.name.charAt(0).toUpperCase();
+            nameEl.textContent = store.name;
+            addressEl.textContent = store.address;
+            productsEl.textContent = store.products;
+            contactEl.textContent = store.contact;
+
+            let linksHTML = '';
+            if(store.facebook) linksHTML += `<a href="${store.facebook}" target="_blank">Facebook</a> | `;
+            if(store.youtube) linksHTML += `<a href="${store.youtube}" target="_blank">YouTube</a> | `;
+            if(store.telegram) linksHTML += `<a href="${store.telegram}" target="_blank">Telegram</a> | `;
+            if(store.whatsapp) linksHTML += `<a href="${store.whatsapp}" target="_blank">WhatsApp</a>`;
+            linksEl.innerHTML = linksHTML;
+          } else {
+            nameEl.textContent = 'দোকান পাওয়া যায়নি';
+          }
+        });
+      } else {
+        nameEl.textContent = 'দোকান নির্বাচন করা হয়নি';
+      }
+    </script>
+</body>
+</html>

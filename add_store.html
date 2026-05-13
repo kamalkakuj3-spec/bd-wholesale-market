@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>দোকান যোগ করুন</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <script>
+      const firebaseConfig = {
+        apiKey: "AIzaSyAKRgsUrYL4uAWinn5dcJrKck1nqUokRdw",
+        authDomain: "all-hadith-a68fa.firebaseapp.com",
+        databaseURL: "https://all-hadith-a68fa-default-rtdb.firebaseio.com/",
+        projectId: "all-hadith-a68fa",
+        storageBucket: "all-hadith-a68fa.firebasestorage.app",
+        messagingSenderId: "124928027736",
+        appId: "1:124928027736:android:f4d9a9a9ed667150ca2e2d"
+      };
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+    </script>
+
+    <style>
+        /* পেস্টেল থিম */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fff8f0; /* হালকা ক্রিম */
+        }
+
+        header {
+            background-color: #cde4ff; /* হালকা ব্লু */
+            color: #1d3557;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #1d3557;
+            margin: 0 12px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        form {
+            background-color: #f1faee; /* হালকা গ্রীন */
+            padding: 20px;
+            border-radius: 8px;
+            max-width: 500px;
+            margin: auto;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0 12px 0;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            background-color: #a8dadc; /* হালকা ব্লু */
+            color: #1d3557;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #89c2d9;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <h1>দোকান প্রোফাইল তৈরি করুন</h1>
+        <nav>
+            <a href="index.html">হোম</a>
+        </nav>
+    </header>
+
+    <!-- Main Form -->
+    <main>
+        <form id="storeForm">
+            <label>দোকানের নাম:</label>
+            <input type="text" id="name" required>
+
+            <label>ঠিকানা:</label>
+            <input type="text" id="address" required>
+
+            <label>পণ্যসমূহ:</label>
+            <input type="text" id="products" required>
+
+            <label>কন্টাক্ট নাম্বার:</label>
+            <input type="text" id="contact" required>
+
+            <label>Facebook লিংক:</label>
+            <input type="url" id="facebook">
+
+            <label>YouTube চ্যানেল লিংক:</label>
+            <input type="url" id="youtube">
+
+            <label>Telegram লিংক:</label>
+            <input type="url" id="telegram">
+
+            <label>WhatsApp লিংক:</label>
+            <input type="url" id="whatsapp">
+
+            <button type="submit">দোকান যোগ করুন</button>
+        </form>
+    </main>
+
+    <script>
+      const form = document.getElementById('storeForm');
+
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+
+        const newStore = {
+          name: document.getElementById('name').value,
+          address: document.getElementById('address').value,
+          products: document.getElementById('products').value,
+          contact: document.getElementById('contact').value,
+          facebook: document.getElementById('facebook').value,
+          youtube: document.getElementById('youtube').value,
+          telegram: document.getElementById('telegram').value,
+          whatsapp: document.getElementById('whatsapp').value
+        };
+
+        db.ref('stores').push(newStore);
+        form.reset();
+        alert('দোকান সফলভাবে যোগ করা হয়েছে!');
+      });
+    </script>
+</body>
+</html>

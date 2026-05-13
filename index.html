@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বাংলাদেশ পাইকারি দোকান</title>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
+    <script>
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyAKRgsUrYL4uAWinn5dcJrKck1nqUokRdw",
+        authDomain: "all-hadith-a68fa.firebaseapp.com",
+        databaseURL: "https://all-hadith-a68fa-default-rtdb.firebaseio.com/",
+        projectId: "all-hadith-a68fa",
+        storageBucket: "all-hadith-a68fa.firebasestorage.app",
+        messagingSenderId: "124928027736",
+        appId: "1:124928027736:android:f4d9a9a9ed667150ca2e2d"
+      };
+
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      const db = firebase.database();
+    </script>
+
+    <style>
+        /* পেস্টেল কালার থিম */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #fef9f3; /* হালকা ক্রিম ব্যাকগ্রাউন্ড */
+        }
+
+        header {
+            background-color: #a8dadc; /* হালকা ব্লু */
+            color: #1d3557;
+            padding: 15px;
+            text-align: center;
+        }
+
+        nav a {
+            color: #1d3557;
+            margin: 0 12px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 20px;
+        }
+
+        .store {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ccc;
+            padding: 12px;
+            margin-bottom: 12px;
+            background-color: #f1faee; /* হালকা গ্রীন */
+            border-radius: 8px;
+        }
+
+        .store-logo {
+            width: 50px;
+            height: 50px;
+            background-color: #ffb6b9; /* হালকা পিঙ্ক */
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .store div {
+            flex: 1;
+        }
+
+        .store a {
+            color: #457b9d;
+            text-decoration: none;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <h1>বাংলাদেশ পাইকারি দোকান</h1>
+        <nav>
+            <a href="index.html">হোম</a>
+            <a href="add_store.html">দোকান যোগ করুন</a>
+        </nav>
+    </header>
+
+    <!-- Main -->
+    <main>
+        <section id="store-list">
+            <h2>দোকানসমূহ</h2>
+            <div id="stores">
+                <p>Loading...</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Firebase JS to fetch stores -->
+    <script>
+      const storesDiv = document.getElementById('stores');
+
+      db.ref('stores').on('value', snapshot => {
+        storesDiv.innerHTML = '';
+        const data = snapshot.val();
+        if (data) {
+          Object.keys(data).forEach(key => {
+            const store = data[key];
+            const firstLetter = store.name.charAt(0).toUpperCase();
+            const div = document.createElement('div');
+            div.classList.add('store');
+            div.innerHTML = `
+              <div class="store-logo">${firstLetter}</div>
+              <div>
+                  <h3>${store.name}</h3>
+                  <p><strong>ঠিকানা:</strong> ${store.address}</p>
+                  <p><strong>পণ্য:</strong> ${store.products}</p>
+                  <p>
+                    <strong>যোগাযোগ:</strong> ${store.contact} <br>
+                    ${store.facebook ? `<a href="${store.facebook}" target="_blank">Facebook</a> |` : ""}
+                    ${store.youtube ? `<a href="${store.youtube}" target="_blank">YouTube</a> |` : ""}
+                    ${store.telegram ? `<a href="${store.telegram}" target="_blank">Telegram</a> |` : ""}
+                    ${store.whatsapp ? `<a href="${store.whatsapp}" target="_blank">WhatsApp</a>` : ""}
+                  </p>
+              </div>
+            `;
+            storesDiv.appendChild(div);
+          });
+        } else {
+          storesDiv.innerHTML = '<p>কোনো দোকান যোগ করা হয়নি।</p>';
+        }
+      });
+    </script>
+</body>
+</html>
