@@ -63,7 +63,6 @@
       z-index: 10;
     }
 
-    /* কার্ড ডিজাইন */
     .news-card {
       background: #ffffff;
       width: 100%;
@@ -75,7 +74,6 @@
       padding-bottom: 45px;
     }
 
-    /* হেডার সেকশন */
     .card-header {
       display: flex;
       justify-content: space-between;
@@ -146,15 +144,6 @@
       overflow: hidden;
     }
 
-    .date-info {
-      font-size: 0.7rem;
-      color: #999;
-      margin-bottom: 10px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
     .address {
       font-size: 0.75rem;
       color: #b8860b;
@@ -164,7 +153,6 @@
       gap: 5px;
     }
 
-    /* যোগাযোগ - শুধু আইকন */
     .contact-icon {
       display: inline-flex;
       align-items: center;
@@ -234,7 +222,6 @@
       z-index: 15;
     }
 
-    /* স্লাইড ইন্ডিকেটর */
     .slide-indicators {
       position: absolute;
       bottom: 15px;
@@ -261,7 +248,6 @@
       background: #d4af37;
     }
 
-    /* মোডাল স্টাইল */
     .modal {
       display: none;
       position: fixed;
@@ -326,7 +312,6 @@
   </div>
 </div>
 
-<!-- মোডাল -->
 <div id="detailModal" class="modal">
   <div class="modal-content">
     <span class="close-modal">&times;</span>
@@ -379,7 +364,6 @@
     return d.toLocaleDateString('bn-BD');
   }
 
-  // যোগাযোগ পপআপ টগল
   window.toggleContact = function(element) {
     const popup = element.nextElementSibling;
     if (popup && popup.classList.contains('contact-popup')) {
@@ -387,7 +371,6 @@
     }
   }
 
-  // মোডাল ফাংশন
   function showModal(card) {
     const modal = document.getElementById('detailModal');
     const modalBody = document.getElementById('modalBody');
@@ -424,7 +407,6 @@
     if (card) showModal(card);
   }
 
-  // যোগাযোগের পপআপ HTML (শুধু আইকন)
   function renderContactIcon(contacts) {
     if (!contacts || contacts.length === 0) return '';
     let contactsHtml = '';
@@ -441,7 +423,6 @@
     `;
   }
 
-  // স্লাইড তৈরি
   function createSlideHTML(card, idx) {
     const status = getStatus(card.startDate, card.endDate);
     const isRunning = status === 'running';
@@ -459,10 +440,6 @@
           </div>
           <div class="title">${escapeHtml(card.title)}</div>
           <div class="desc">${escapeHtml(card.description).substring(0, 100)}${card.description.length > 100 ? '...' : ''}</div>
-          <div class="date-info">
-            <span>📅 শুরু: ${formatDate(card.startDate)}</span>
-            <span>🏁 শেষ: ${formatDate(card.endDate)}</span>
-          </div>
           ${card.address ? `<div class="address">📍 ${escapeHtml(card.address)}</div>` : ''}
           ${renderContactIcon(card.contacts)}
           ${card.mapLink ? `<a href="${escapeHtml(card.mapLink)}" target="_blank" class="map-link" onclick="event.stopPropagation();">🗺️ গুগল ম্যাপ</a>` : ''}
@@ -533,7 +510,6 @@
     if (slides.length > 1) interval = setInterval(nextSlide, 5000);
   }
 
-  // Firebase Realtime Database লোড
   const melaPostsRef = database.ref('melaPosts');
   melaPostsRef.on('value', (snapshot) => {
     const data = snapshot.val();
@@ -546,7 +522,6 @@
     renderSlides();
   });
 
-  // মোডাল ক্লোজ
   document.querySelector('.close-modal').onclick = () => {
     document.getElementById('detailModal').style.display = 'none';
   };
