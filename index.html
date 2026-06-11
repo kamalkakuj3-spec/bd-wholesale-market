@@ -3,62 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>বাংলাদেশ মেলা অ্যাপস | প্রিমিয়াম স্লাইডার</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <title>বাংলাদেশ মেলা অ্যাপস | গোল্ডেন স্লাইডার</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: linear-gradient(145deg, #0a0a2a 0%, #1a1a3a 50%, #0f0f2a 100%);
+      background: #e8e8e8;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Inter', 'Segoe UI', 'Noto Sans Bengali', system-ui, sans-serif;
-      padding: 20px;
-      position: relative;
-    }
-
-    /* ডেকোরেটিভ ব্লার এলিমেন্ট */
-    body::before {
-      content: '';
-      position: fixed;
-      top: -50%;
-      left: -50%;
-      width: 200%;
-      height: 200%;
-      background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, rgba(0,0,0,0) 70%);
-      pointer-events: none;
-      z-index: 0;
+      font-family: 'Segoe UI', 'Poppins', 'Noto Sans Bengali', system-ui, sans-serif;
+      padding: 16px;
     }
 
     .billboard {
       width: 100%;
       max-width: 640px;
       aspect-ratio: 16 / 9;
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(20px);
-      border-radius: 48px;
-      padding: 12px;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(212, 175, 55, 0.3);
       position: relative;
-      z-index: 1;
-      border: 1px solid rgba(212, 175, 55, 0.2);
+      border-radius: 24px;
     }
 
     .screen {
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,245,240,0.95) 100%);
-      backdrop-filter: blur(4px);
-      border-radius: 38px;
+      background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
       position: relative;
       overflow: hidden;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02), 0 4px 20px rgba(0,0,0,0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .content-container {
@@ -76,10 +54,9 @@
       top: 0;
       left: 0;
       opacity: 0;
-      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.3s ease-in-out;
       overflow-y: auto;
-      padding: 28px 24px;
-      scrollbar-width: thin;
+      padding: 20px;
     }
 
     .slide.active {
@@ -87,29 +64,24 @@
       z-index: 10;
     }
 
-    /* কার্ড ডিজাইন - প্রিমিয়াম */
+    /* পুরো কার্ড ক্লিকযোগ্য */
     .news-card {
+      background: #ffffff;
       width: 100%;
       min-height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
+      border-radius: 20px;
+      position: relative;
       cursor: pointer;
-      background: rgba(255,255,255,0.5);
-      backdrop-filter: blur(8px);
-      border-radius: 32px;
-      padding: 24px 20px 32px;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(212, 175, 55, 0.15);
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
     }
 
     .news-card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(212, 175, 55, 0.4);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      background: rgba(255,255,255,0.7);
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
     }
 
     /* স্ট্যাটাস ও টাইপ */
@@ -117,102 +89,97 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      background: rgba(0, 0, 0, 0.04);
-      backdrop-filter: blur(4px);
-      padding: 6px 18px;
-      border-radius: 100px;
-      margin-bottom: 20px;
+      gap: 15px;
+      background: transparent;
+      padding: 2px 20px;
+      border-radius: 50px;
+      margin-top: 2px;
+      margin-bottom: 4px;
       flex-wrap: wrap;
-      border: 0.5px solid rgba(212, 175, 55, 0.2);
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      letter-spacing: 0.3px;
+      gap: 12px;
+      font-size: 1.2rem;
+      font-weight: bold;
     }
 
     .status-badge.running {
-      color: #10b981;
+      color: #4caf50;
     }
 
     .status-badge.upcoming {
-      color: #f59e0b;
+      color: #ff9800;
     }
 
     .blinking-dot {
-      width: 10px;
-      height: 10px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
-      background: #10b981;
+      background: #4caf50;
       animation: blink 1.2s infinite;
-      box-shadow: 0 0 6px #10b981;
     }
 
     @keyframes blink {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
     .static-dot {
-      width: 10px;
-      height: 10px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
-      background: #f59e0b;
-      box-shadow: 0 0 4px #f59e0b;
+      background: #ff9800;
     }
 
     .separator {
-      color: #d4af37;
-      font-size: 0.9rem;
-      font-weight: 500;
-      opacity: 0.6;
+      color: #b8860b;
+      font-size: 1.2rem;
+      font-weight: bold;
     }
 
     .mela-type-text {
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 1.2rem;
+      font-weight: bold;
       color: #b8860b;
       background: transparent;
-      letter-spacing: 0.2px;
     }
 
     /* মেলার নাম */
     .title {
-      font-size: 1.8rem;
+      font-size: 2rem;
       font-weight: 800;
-      background: linear-gradient(135deg, #8B6914 0%, #D4AF37 40%, #FFD700 80%);
+      background: linear-gradient(135deg, #b8860b, #d4af37, #ffd700);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      margin-bottom: 16px;
+      margin-top: 20px;
+      margin-bottom: 10px;
       line-height: 1.3;
       text-align: center;
-      letter-spacing: -0.3px;
+      padding: 0 15px;
     }
 
     /* বিবরণ */
     .desc {
-      font-size: 0.95rem;
-      color: #4a4a5a;
+      font-size: 1.1rem;
+      color: #6b6b6b;
       line-height: 1.6;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-align: center;
-      font-weight: 450;
+      padding: 0 15px;
     }
 
-    /* প্রিমিয়াম ডটস */
     .slide-indicators {
       position: absolute;
-      bottom: 16px;
+      bottom: 15px;
       left: 0;
       right: 0;
       display: flex;
@@ -222,23 +189,21 @@
     }
 
     .indicator {
-      width: 6px;
-      height: 6px;
+      width: 8px;
+      height: 8px;
       border-radius: 50%;
-      background: rgba(0, 0, 0, 0.2);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background: rgba(0, 0, 0, 0.25);
+      transition: all 0.3s ease;
       cursor: pointer;
-      backdrop-filter: blur(2px);
     }
 
     .indicator.active {
       width: 24px;
       border-radius: 10px;
-      background: linear-gradient(90deg, #d4af37, #ffd700);
-      box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
+      background: #d4af37;
     }
 
-    /* মোডাল - প্রিমিয়াম */
+    /* মোডাল */
     .modal {
       display: none;
       position: fixed;
@@ -246,51 +211,36 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(10, 10, 30, 0.85);
-      backdrop-filter: blur(16px);
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px);
       z-index: 1000;
       justify-content: center;
       align-items: center;
-      padding: 20px;
     }
 
     .modal-content {
-      background: rgba(255, 255, 255, 0.97);
-      width: 100%;
-      max-width: 520px;
-      max-height: 85%;
-      border-radius: 48px;
-      padding: 28px 24px;
+      background: white;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80%;
+      border-radius: 28px;
+      padding: 24px 22px;
       overflow-y: auto;
       position: relative;
-      box-shadow: 0 32px 64px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.5);
-      border: 1px solid rgba(212, 175, 55, 0.3);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
     }
 
     .close-modal {
       position: absolute;
-      top: 20px;
-      right: 24px;
-      font-size: 28px;
+      top: 16px;
+      right: 20px;
+      font-size: 26px;
       cursor: pointer;
       color: #b8860b;
-      transition: all 0.2s;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 50%;
-      background: rgba(0,0,0,0.03);
-    }
-
-    .close-modal:hover {
-      background: rgba(212, 175, 55, 0.1);
-      transform: scale(1.05);
     }
 
     .modal-title {
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       font-weight: 800;
       background: linear-gradient(135deg, #b8860b, #d4af37);
       background-clip: text;
@@ -298,124 +248,44 @@
       color: transparent;
       margin-bottom: 20px;
       text-align: center;
-      padding-right: 30px;
     }
 
     .modal-section {
-      margin-bottom: 20px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-    }
-
-    .modal-section:last-child {
-      border-bottom: none;
-      margin-bottom: 0;
-      padding-bottom: 0;
-    }
-
-    .modal-section strong {
-      color: #b8860b;
-      font-weight: 600;
-      display: block;
-      margin-bottom: 8px;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #eee;
     }
 
     .contact-item {
-      padding: 8px 0;
+      padding: 6px 0;
       font-size: 0.9rem;
-      border-bottom: 1px dashed rgba(0,0,0,0.05);
     }
 
     .contact-item a {
-      color: #d4af37;
+      color: #b8860b;
       text-decoration: none;
-      font-weight: 500;
     }
 
     .map-link-btn {
       display: inline-block;
       background: linear-gradient(115deg, #d4af37, #c49b2a);
       color: white;
-      padding: 10px 20px;
+      padding: 8px 18px;
       border-radius: 40px;
       text-decoration: none;
       font-size: 0.85rem;
-      font-weight: 600;
-      margin-top: 8px;
-      transition: all 0.2s;
-      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+      margin-top: 6px;
     }
 
-    .map-link-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 16px rgba(212, 175, 55, 0.4);
-    }
-
-    /* কাস্টম স্ক্রলবার */
-    .slide::-webkit-scrollbar,
-    .modal-content::-webkit-scrollbar {
-      width: 4px;
-    }
-
-    .slide::-webkit-scrollbar-track,
-    .modal-content::-webkit-scrollbar-track {
-      background: rgba(0,0,0,0.05);
-      border-radius: 10px;
-    }
-
-    .slide::-webkit-scrollbar-thumb,
-    .modal-content::-webkit-scrollbar-thumb {
-      background: #d4af37;
-      border-radius: 10px;
-    }
-
-    /* রেস্পন্সিভ */
     @media (max-width: 550px) {
-      .billboard {
-        padding: 8px;
-        border-radius: 36px;
-      }
-      .screen {
-        border-radius: 30px;
-      }
-      .slide {
-        padding: 18px 16px;
-      }
-      .title {
-        font-size: 1.4rem;
-      }
-      .desc {
-        font-size: 0.85rem;
-      }
-      .news-card {
-        padding: 20px 16px 28px;
-      }
-      .status-badge, .mela-type-text, .separator {
-        font-size: 0.75rem;
-      }
-      .status-type-wrapper {
-        gap: 8px;
-        padding: 4px 14px;
-      }
-      .modal-content {
-        padding: 22px 18px;
-        border-radius: 36px;
-      }
-      .modal-title {
-        font-size: 1.3rem;
-      }
-    }
-
-    @media (max-width: 400px) {
-      .title {
-        font-size: 1.2rem;
-      }
-      .desc {
-        font-size: 0.8rem;
-      }
-      .status-badge, .mela-type-text {
-        font-size: 0.7rem;
-      }
+      .title { font-size: 1.5rem; margin-top: 12px; }
+      .desc { font-size: 0.95rem; }
+      .status-badge { font-size: 0.95rem; }
+      .mela-type-text { font-size: 0.95rem; }
+      .separator { font-size: 0.95rem; }
+      .slide { padding: 16px; }
+      .blinking-dot, .static-dot { width: 13px; height: 13px; }
+      .status-type-wrapper { gap: 10px; }
     }
   </style>
 </head>
@@ -425,7 +295,7 @@
     <div class="content-container" id="slidesContainer">
       <div class="slide active">
         <div class="news-card">
-          <div style="text-align:center; padding:40px; color:#b8860b;">🎪 লোড হচ্ছে...</div>
+          <div style="text-align:center; padding:40px;">🎪 লোড হচ্ছে...</div>
         </div>
       </div>
     </div>
@@ -512,34 +382,28 @@
 
     modalBody.innerHTML = `
       <div class="modal-title">${escapeHtml(card.title)}</div>
-      
       <div class="modal-section">
         <strong>📅 মেলার ধরন</strong>
         <div>${escapeHtml(card.melaType)} (${card.days || ''} দিনব্যাপী)</div>
-        <div style="margin-top:8px;"><strong>স্ট্যাটাস:</strong> ${statusIcon} ${statusText}</div>
+        <div style="margin-top:6px;"><strong>স্ট্যাটাস:</strong> ${statusIcon} ${statusText}</div>
       </div>
-
       <div class="modal-section">
         <strong>📝 বিস্তারিত বিবরণ</strong>
-        <div style="line-height:1.6;">${escapeHtml(card.description)}</div>
+        <div style="line-height:1.5;">${escapeHtml(card.description)}</div>
       </div>
-
       <div class="modal-section">
         <strong>📍 ঠিকানা/লোকেশন</strong>
         <div>${escapeHtml(card.address || 'ঠিকানা দেওয়া নেই')}</div>
       </div>
-
       <div class="modal-section">
         <strong>📞 যোগাযোগ করুন</strong>
         ${contactsHtml}
       </div>
-
       <div class="modal-section">
         <strong>🗓️ সময়কাল</strong>
         <div>শুরু: ${formatDateTime(card.startDate)}</div>
         <div>শেষ: ${formatDateTime(card.endDate)}</div>
       </div>
-
       ${mapHtml ? `<div class="modal-section">${mapHtml}</div>` : ''}
     `;
     modal.style.display = 'flex';
@@ -549,10 +413,7 @@
     const status = getStatus(card.startDate, card.endDate);
     const isRunning = status === 'running';
     const statusText = isRunning ? 'চলমান' : 'আসন্ন';
-    
-    const dotHtml = isRunning 
-      ? '<span class="blinking-dot"></span>'
-      : '<span class="static-dot"></span>';
+    const dotHtml = isRunning ? '<span class="blinking-dot"></span>' : '<span class="static-dot"></span>';
     
     return `
       <div class="slide" data-id="${card.id}" data-index="${idx}">
@@ -560,8 +421,7 @@
           <div class="title">${escapeHtml(card.title)}</div>
           <div class="status-type-wrapper">
             <div class="status-badge ${isRunning ? 'running' : 'upcoming'}">
-              ${dotHtml}
-              ${statusText}
+              ${dotHtml} ${statusText}
             </div>
             <span class="separator">|</span>
             <span class="mela-type-text">${escapeHtml(card.melaType)} (${card.days || ''} দিন)</span>
@@ -572,21 +432,13 @@
     `;
   }
 
-  function handleTouchStart(event) {
-    touchStartX = event.changedTouches[0].screenX;
-  }
-
-  function handleTouchEnd(event) {
-    touchEndX = event.changedTouches[0].screenX;
-    const swipeDistance = touchEndX - touchStartX;
-    const minSwipeDistance = 50;
-    
-    if (Math.abs(swipeDistance) > minSwipeDistance) {
-      if (swipeDistance > 0) {
-        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-      } else {
-        currentIndex = (currentIndex + 1) % slides.length;
-      }
+  function handleTouchStart(e) { touchStartX = e.changedTouches[0].screenX; }
+  function handleTouchEnd(e) {
+    touchEndX = e.changedTouches[0].screenX;
+    const diff = touchEndX - touchStartX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+      else currentIndex = (currentIndex + 1) % slides.length;
       showSlide(currentIndex);
       startSlideshow();
     }
@@ -596,34 +448,24 @@
     const container = document.getElementById('slidesContainer');
     const indicatorsDiv = document.getElementById('indicators');
     
-    if (!slides || slides.length === 0) {
-      container.innerHTML = `<div class="slide active"><div class="news-card"><div style="text-align:center; padding:40px;">🎪 কোনো মেলার তথ্য নেই<br>অ্যাডমিন প্যানেল থেকে যোগ করুন</div></div></div>`;
+    if (!slides.length) {
+      container.innerHTML = `<div class="slide active"><div class="news-card"><div style="padding:40px;">🎪 কোনো মেলার তথ্য নেই</div></div></div>`;
       indicatorsDiv.innerHTML = '<div class="indicator active"></div>';
       return;
     }
 
-    let slidesHtml = '';
-    slides.forEach((slide, idx) => {
-      slidesHtml += createSlideHTML(slide, idx);
-    });
-    container.innerHTML = slidesHtml;
-
-    let indicatorsHtml = '';
-    for (let i = 0; i < slides.length; i++) {
-      indicatorsHtml += `<div class="indicator ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`;
-    }
-    indicatorsDiv.innerHTML = indicatorsHtml;
+    container.innerHTML = slides.map((s,i) => createSlideHTML(s,i)).join('');
+    indicatorsDiv.innerHTML = slides.map((_,i) => `<div class="indicator ${i===0?'active':''}" data-index="${i}"></div>`).join('');
 
     document.querySelectorAll('.indicator').forEach(ind => {
       ind.addEventListener('click', (e) => {
-        const index = parseInt(e.target.getAttribute('data-index'));
-        if (!isNaN(index)) goToSlide(index);
+        const idx = parseInt(e.target.dataset.index);
+        if (!isNaN(idx)) goToSlide(idx);
       });
     });
 
-    const sliderContainer = document.querySelector('.content-container');
-    sliderContainer.addEventListener('touchstart', handleTouchStart, false);
-    sliderContainer.addEventListener('touchend', handleTouchEnd, false);
+    document.querySelector('.content-container').addEventListener('touchstart', handleTouchStart);
+    document.querySelector('.content-container').addEventListener('touchend', handleTouchEnd);
 
     currentIndex = 0;
     showSlide(0);
@@ -631,16 +473,12 @@
   }
 
   function showSlide(index) {
-    const allSlides = document.querySelectorAll('.slide');
-    const indicators = document.querySelectorAll('.indicator');
-    allSlides.forEach(s => s.classList.remove('active'));
-    indicators.forEach(i => i.classList.remove('active'));
-    if (allSlides[index]) allSlides[index].classList.add('active');
-    if (indicators[index]) indicators[index].classList.add('active');
+    document.querySelectorAll('.slide').forEach((s,i) => s.classList.toggle('active', i===index));
+    document.querySelectorAll('.indicator').forEach((d,i) => d.classList.toggle('active', i===index));
   }
 
   function goToSlide(index) {
-    if (slides.length === 0) return;
+    if (!slides.length) return;
     currentIndex = index;
     showSlide(currentIndex);
     startSlideshow();
@@ -654,26 +492,14 @@
     }, 5000);
   }
 
-  const melaPostsRef = database.ref('melaPosts');
-  melaPostsRef.on('value', (snapshot) => {
-    const data = snapshot.val();
-    if (data) {
-      slides = Object.keys(data).map(key => ({ id: key, ...data[key] }));
-      slides.sort((a, b) => (a.order || 0) - (b.order || 0));
-    } else {
-      slides = [];
-    }
+  database.ref('melaPosts').on('value', (snap) => {
+    const data = snap.val();
+    slides = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })).sort((a,b)=> (a.order||0)-(b.order||0)) : [];
     renderSlides();
   });
 
-  document.querySelector('.close-modal').onclick = () => {
-    document.getElementById('detailModal').style.display = 'none';
-  };
-  window.onclick = (e) => {
-    if (e.target === document.getElementById('detailModal')) {
-      document.getElementById('detailModal').style.display = 'none';
-    }
-  };
+  document.querySelector('.close-modal').onclick = () => document.getElementById('detailModal').style.display = 'none';
+  window.onclick = (e) => { if (e.target === document.getElementById('detailModal')) document.getElementById('detailModal').style.display = 'none'; };
 </script>
 </body>
 </html>
