@@ -76,17 +76,13 @@
       padding-bottom: 50px;
     }
 
-    /* স্ট্যাটাস ও টাইপ একসাথে সেন্টারে */
-    .status-type-wrapper {
-      display: inline-flex;
+    /* স্ট্যাটাস ও টাইপ আলাদা - ট্রান্সপারেন্ট */
+    .status-wrapper {
+      display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      background: linear-gradient(115deg, #2c2c2c, #1a1a1a);
-      padding: 6px 20px;
-      border-radius: 50px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 15px;
     }
 
     .status-badge {
@@ -126,17 +122,6 @@
       background: #ff9800;
     }
 
-    .mela-type-text {
-      font-size: 0.75rem;
-      font-weight: bold;
-      color: #d4af37;
-    }
-
-    .separator {
-      color: #d4af37;
-      font-size: 0.75rem;
-    }
-
     .title {
       font-size: 1.4rem;
       font-weight: 800;
@@ -144,9 +129,24 @@
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
       line-height: 1.3;
       text-align: center;
+    }
+
+    /* মেলার ধরন - ট্রান্সপারেন্ট ব্যাকগ্রাউন্ড, মেলার নামের নিচে */
+    .mela-type-wrapper {
+      margin-bottom: 12px;
+    }
+
+    .mela-type-text {
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: #b8860b;
+      background: transparent;
+      padding: 4px 12px;
+      border-radius: 20px;
+      display: inline-block;
     }
 
     .desc {
@@ -175,6 +175,7 @@
       font-weight: bold;
       cursor: pointer;
       z-index: 15;
+      transition: opacity 0.2s;
     }
 
     .view-btn:hover {
@@ -283,9 +284,8 @@
       .title { font-size: 1.1rem; }
       .desc { font-size: 0.75rem; }
       .slide { padding: 15px; }
-      .status-type-wrapper { padding: 4px 15px; gap: 8px; }
       .status-badge { font-size: 0.65rem; }
-      .mela-type-text { font-size: 0.65rem; }
+      .mela-type-text { font-size: 0.6rem; }
     }
   </style>
 </head>
@@ -343,17 +343,12 @@
   }
 
   function getStatus(startDate, endDate) {
+    if (!startDate || !endDate) return 'upcoming';
     const now = new Date();
     const start = new Date(startDate);
     const end = new Date(endDate);
     if (now >= start && now <= end) return 'running';
     return 'upcoming';
-  }
-
-  function formatDate(dateStr) {
-    if (!dateStr) return 'N/A';
-    const d = new Date(dateStr);
-    return d.toLocaleDateString('bn-BD');
   }
 
   function formatDateTime(dateStr) {
@@ -363,7 +358,14 @@
   }
 
   // মোডাল দেখানো
-  function showModal(card) {
+  window.showModalById = function(id) {
+    console.log("showModalById called with id:", id);
+    const card = slides.find(s => s.id === id);
+    if (!card) {
+      console.error("Card not found for id:", id);
+      return;
+    }
+    
     const modal = document.getElementById('detailModal');
     const modalBody = document.getElementById('modalBody');
     const status = getStatus(card.startDate, card.endDate);
@@ -413,12 +415,7 @@
       ${mapHtml ? `<div class="modal-section">${mapHtml}</div>` : ''}
     `;
     modal.style.display = 'flex';
-  }
-
-  window.showModalById = function(id) {
-    const card = slides.find(s => s.id === id);
-    if (card) showModal(card);
-  }
+  };
 
   // স্লাইড তৈরি
   function createSlideHTML(card, idx) {
@@ -433,15 +430,16 @@
     return `
       <div class="slide" data-id="${card.id}" data-index="${idx}">
         <div class="news-card">
-          <div class="status-type-wrapper">
+          <div class="status-wrapper">
             <div class="status-badge ${isRunning ? 'running' : 'upcoming'}">
               ${dotHtml}
               ${statusText}
             </div>
-            <span class="separator">|</span>
-            <span class="mela-type-text">${escapeHtml(card.melaType)} (${card.days || ''} দিন)</span>
           </div>
           <div class="title">${escapeHtml(card.title)}</div>
+          <div class="mela-type-wrapper">
+            <span class="mela-type-text">${escapeHtml(card.melaType)} (${card.days || ''} দিন)</span>
+          </div>
           <div class="desc">${escapeHtml(card.description).substring(0, 100)}${card.description.length > 100 ? '...' : ''}</div>
           <button class="view-btn" onclick="event.stopPropagation(); showModalById('${card.id}')">View</button>
         </div>
@@ -510,18 +508,22 @@
     if (slides.length > 1) interval = setInterval(nextSlide, 5000);
   }
 
+  // Firebase Realtime Database লোড
   const melaPostsRef = database.ref('melaPosts');
   melaPostsRef.on('value', (snapshot) => {
     const data = snapshot.val();
     if (data) {
       slides = Object.keys(data).map(key => ({ id: key, ...data[key] }));
       slides.sort((a, b) => (a.order || 0) - (b.order || 0));
+      console.log("Slides loaded:", slides.length);
     } else {
       slides = [];
+      console.log("No data found");
     }
     renderSlides();
   });
 
+  // মোডাল ক্লোজ
   document.querySelector('.close-modal').onclick = () => {
     document.getElementById('detailModal').style.display = 'none';
   };
