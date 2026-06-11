@@ -78,17 +78,17 @@
       cursor: pointer;
     }
 
-    /* স্ট্যাটাস ও টাইপ - বড় সাইজ */
+    /* স্ট্যাটাস ও টাইপ - গ্যাপ কমানো হয়েছে (৪ ভাগের ১ ভাগ) */
     .status-type-wrapper {
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 12px;
       background: transparent;
-      padding: 8px 20px;
+      padding: 2px 20px;  /* আগে ছিল 8px, এখন 2px (৪ ভাগের ১ ভাগ) */
       border-radius: 50px;
-      margin-top: 8px;
-      margin-bottom: 15px;
+      margin-top: 2px;     /* আগে ছিল 8px, এখন 2px */
+      margin-bottom: 4px;  /* আগে ছিল 15px, এখন 4px */
       flex-wrap: wrap;
     }
 
@@ -142,7 +142,7 @@
       background: transparent;
     }
 
-    /* মেলার নাম - বড় সাইজ + টপ মার্জিন */
+    /* মেলার নাম */
     .title {
       font-size: 1.8rem;
       font-weight: 800;
@@ -157,7 +157,7 @@
       padding: 0 15px;
     }
 
-    /* বিবরণ - বড় সাইজ */
+    /* বিবরণ */
     .desc {
       font-size: 1rem;
       color: #6b6b6b;
@@ -171,7 +171,7 @@
       padding: 0 15px;
     }
 
-    /* View টেক্সট - ছোট সাইজ (একমাত্র যেটা বড় হবে না) */
+    /* View টেক্সট */
     .view-text {
       position: absolute;
       bottom: 12px;
@@ -298,6 +298,12 @@
       .separator { font-size: 0.8rem; }
       .slide { padding: 15px; }
       .blinking-dot, .static-dot { width: 10px; height: 10px; }
+      .status-type-wrapper {
+        gap: 8px;
+        padding: 1px 15px;
+        margin-top: 1px;
+        margin-bottom: 3px;
+      }
     }
 
     @media (max-width: 400px) {
@@ -437,7 +443,7 @@
     modal.style.display = 'flex';
   };
 
-  // স্লাইড তৈরি - পুরো কার্ড ক্লিকযোগ্য
+  // স্লাইড তৈরি
   function createSlideHTML(card, idx) {
     const status = getStatus(card.startDate, card.endDate);
     const isRunning = status === 'running';
