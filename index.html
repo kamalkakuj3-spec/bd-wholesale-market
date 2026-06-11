@@ -63,6 +63,7 @@
       z-index: 10;
     }
 
+    /* পুরো কার্ড ক্লিকযোগ্য */
     .news-card {
       background: #ffffff;
       width: 100%;
@@ -73,11 +74,10 @@
       text-align: center;
       border-radius: 20px;
       position: relative;
-      padding-bottom: 50px;
       cursor: pointer;
     }
 
-    /* স্ট্যাটাস ও টাইপ - সাইজ বড় করা হয়েছে */
+    /* স্ট্যাটাস ও টাইপ */
     .status-type-wrapper {
       display: inline-flex;
       align-items: center;
@@ -141,7 +141,7 @@
       background: transparent;
     }
 
-    /* মেলার নাম - সাইজ বড় করা হয়েছে */
+    /* মেলার নাম */
     .title {
       font-size: 2.2rem;
       font-weight: 800;
@@ -156,7 +156,7 @@
       padding: 0 15px;
     }
 
-    /* বিবরণ - সাইজ বড় করা হয়েছে */
+    /* বিবরণ */
     .desc {
       font-size: 1.2rem;
       color: #6b6b6b;
@@ -168,27 +168,6 @@
       overflow: hidden;
       text-align: center;
       padding: 0 15px;
-    }
-
-    /* View টেক্সট - সাইজ অপরিবর্তিত (ছোট থাকবে) */
-    .view-text {
-      position: absolute;
-      bottom: 12px;
-      right: 15px;
-      background: linear-gradient(115deg, #d4af37, #c49b2a);
-      color: white;
-      padding: 6px 14px;
-      border-radius: 30px;
-      font-size: 0.7rem;
-      font-weight: bold;
-      cursor: pointer;
-      z-index: 15;
-      transition: opacity 0.2s;
-      pointer-events: auto;
-    }
-
-    .view-text:hover {
-      opacity: 0.9;
     }
 
     .slide-indicators {
@@ -289,7 +268,7 @@
       margin-top: 5px;
     }
 
-    /* মোবাইল রেস্পন্সিভ - সাইজ সামান্য কমবে কিন্তু বড়ই থাকবে */
+    /* মোবাইল রেস্পন্সিভ */
     @media (max-width: 550px) {
       .title { font-size: 1.6rem; margin-top: 15px; }
       .desc { font-size: 1rem; }
@@ -379,6 +358,7 @@
     return d.toLocaleString('bn-BD');
   }
 
+  // মোডাল দেখানো
   window.showModalById = function(id, event) {
     if (event) event.stopPropagation();
     console.log("showModalById called with id:", id);
@@ -439,6 +419,7 @@
     modal.style.display = 'flex';
   };
 
+  // স্লাইড তৈরি - পুরো কার্ডে ক্লিক করলেই মোডাল খুলবে
   function createSlideHTML(card, idx) {
     const status = getStatus(card.startDate, card.endDate);
     const isRunning = status === 'running';
@@ -461,7 +442,6 @@
             <span class="mela-type-text">${escapeHtml(card.melaType)} (${card.days || ''} দিন)</span>
           </div>
           <div class="desc">${escapeHtml(card.description).substring(0, 120)}${card.description.length > 120 ? '...' : ''}</div>
-          <div class="view-text" onclick="showModalById('${card.id}', event)">View</div>
         </div>
       </div>
     `;
@@ -528,6 +508,7 @@
     if (slides.length > 1) interval = setInterval(nextSlide, 5000);
   }
 
+  // Firebase Realtime Database লোড
   const melaPostsRef = database.ref('melaPosts');
   melaPostsRef.on('value', (snapshot) => {
     const data = snapshot.val();
@@ -542,6 +523,7 @@
     renderSlides();
   });
 
+  // মোডাল ক্লোজ
   document.querySelector('.close-modal').onclick = () => {
     document.getElementById('detailModal').style.display = 'none';
   };
