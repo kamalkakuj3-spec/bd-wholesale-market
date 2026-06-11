@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>বাংলাদেশ মেলা অ্যাপস | গোল্ডেন স্লাইডার</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       background: #e8e8e8;
@@ -21,6 +17,7 @@
       padding: 16px;
     }
 
+    /* বিলবোর্ড - সাদা ও গোল্ডেন আভা */
     .billboard {
       width: 100%;
       max-width: 640px;
@@ -56,11 +53,10 @@
       height: 100%;
       top: 0;
       left: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       opacity: 0;
       transition: opacity 0.5s ease-in-out;
+      overflow-y: auto;
+      padding: 20px;
     }
 
     .slide.active {
@@ -68,53 +64,171 @@
       z-index: 10;
     }
 
+    /* কার্ড ডিজাইন */
     .news-card {
       background: #ffffff;
       width: 100%;
       height: 100%;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 25px;
+      border-radius: 20px;
+      position: relative;
     }
 
-    .tag {
-      display: inline-block;
-      background: linear-gradient(115deg, #d4af37, #c49b2a);
-      padding: 6px 20px;
+    /* হেডার সেকশন - ট্যাগ ও স্ট্যাটাস */
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
       border-radius: 50px;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: bold;
-      color: #ffffff;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .status-badge.running {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .status-badge.upcoming {
+      background: #fff3e0;
+      color: #ed6c02;
+    }
+
+    .status-icon {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    .status-icon.running { background: #4caf50; box-shadow: 0 0 5px #4caf50; }
+    .status-icon.upcoming { background: #ff9800; }
+
+    .mela-type-badge {
+      background: linear-gradient(115deg, #d4af37, #c49b2a);
+      padding: 5px 12px;
+      border-radius: 50px;
+      font-size: 0.7rem;
+      font-weight: bold;
+      color: white;
     }
 
     .title {
-      font-size: 1.6rem;
+      font-size: 1.4rem;
       font-weight: 800;
       background: linear-gradient(135deg, #b8860b, #d4af37, #ffd700);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
       line-height: 1.3;
-      padding: 0 15px;
     }
 
     .desc {
-      font-size: 1rem;
+      font-size: 0.85rem;
       color: #6b6b6b;
       line-height: 1.5;
-      padding: 0 20px;
-      max-width: 90%;
-      font-weight: 500;
+      margin-bottom: 12px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
+    .date-info {
+      font-size: 0.7rem;
+      color: #999;
+      margin-bottom: 10px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .address {
+      font-size: 0.75rem;
+      color: #b8860b;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .contact-dropdown {
+      margin-bottom: 12px;
+    }
+
+    .contact-summary {
+      background: #f5f5f5;
+      padding: 8px 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 0.75rem;
+      color: #b8860b;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .contact-list {
+      display: none;
+      background: white;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      padding: 10px;
+      margin-top: 5px;
+    }
+
+    .contact-list.show {
+      display: block;
+    }
+
+    .contact-item {
+      padding: 5px 0;
+      font-size: 0.7rem;
+      border-bottom: 1px solid #eee;
+    }
+
+    .map-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #f0f0f0;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      color: #b8860b;
+      text-decoration: none;
+      margin-bottom: 10px;
+      width: fit-content;
+    }
+
+    .view-btn {
+      position: absolute;
+      bottom: 15px;
+      right: 15px;
+      background: linear-gradient(115deg, #d4af37, #c49b2a);
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 30px;
+      font-size: 0.75rem;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 15;
+    }
+
+    /* স্লাইড ইন্ডিকেটর */
     .slide-indicators {
       position: absolute;
       bottom: 15px;
@@ -141,15 +255,54 @@
       background: #d4af37;
     }
 
-    @media (max-width: 550px) {
-      .title { font-size: 1.2rem; padding: 0 10px; margin-bottom: 12px; }
-      .desc { font-size: 0.85rem; padding: 0 15px; }
-      .tag { font-size: 0.65rem; padding: 4px 16px; margin-bottom: 15px; }
+    /* মোডাল স্টাইল */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
     }
 
-    @media (max-width: 400px) {
-      .title { font-size: 1rem; }
+    .modal-content {
+      background: white;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80%;
+      border-radius: 24px;
+      padding: 20px;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .close-modal {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      background: linear-gradient(135deg, #b8860b, #d4af37);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 550px) {
+      .title { font-size: 1.1rem; }
       .desc { font-size: 0.75rem; }
+      .slide { padding: 15px; }
     }
   </style>
 </head>
@@ -159,13 +312,19 @@
     <div class="content-container" id="slidesContainer">
       <div class="slide active">
         <div class="news-card">
-          <div class="tag">🎪 লোড হচ্ছে...</div>
-          <div class="title">বাংলাদেশ মেলা অ্যাপস</div>
-          <div class="desc">মেলার তথ্য আসছে...</div>
+          <div style="text-align:center; padding:40px;">🎪 লোড হচ্ছে...</div>
         </div>
       </div>
     </div>
     <div class="slide-indicators" id="indicators"></div>
+  </div>
+</div>
+
+<!-- মোডাল -->
+<div id="detailModal" class="modal">
+  <div class="modal-content">
+    <span class="close-modal">&times;</span>
+    <div id="modalBody"></div>
   </div>
 </div>
 
@@ -178,13 +337,12 @@
     apiKey: "AIzaSyAKRgsUrYL4uAWinn5dcJrKck1nqUokRdw",
     authDomain: "all-hadith-a68fa.firebaseapp.com",
     projectId: "all-hadith-a68fa",
-    databaseURL: "https://all-hadith-a68fa-default-rtdb.firebaseio.com/", // Realtime DB URL
+    databaseURL: "https://all-hadith-a68fa-default-rtdb.firebaseio.com/",
     storageBucket: "all-hadith-a68fa.firebasestorage.app",
     messagingSenderId: "124928027736",
     appId: "1:124928027736:android:f4d9a9a9ed667150ca2e2d"
   };
 
-  // Firebase initialize
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
 
@@ -192,6 +350,7 @@
   let currentIndex = 0;
   let interval;
 
+  // ইউটিলিটি ফাংশন
   function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
@@ -202,16 +361,110 @@
     });
   }
 
-  function createSlideHTML(card, index) {
+  // চালমান/আসন্ন চেক
+  function getStatus(startDate, endDate) {
+    const now = new Date();
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    if (now >= start && now <= end) return 'running';
+    return 'upcoming';
+  }
+
+  // কন্টাক্ট লিস্ট HTML
+  function renderContacts(contacts) {
+    if (!contacts || contacts.length === 0) return '<div>কোনো যোগাযোগ তথ্য নেই</div>';
+    let html = '<div class="contact-summary">📞 যোগাযোগ করুন ▼</div><div class="contact-list">';
+    contacts.forEach(c => {
+      html += `<div class="contact-item">👤 ${escapeHtml(c.name)}: ${escapeHtml(c.phone)}</div>`;
+    });
+    html += '</div>';
+    return html;
+  }
+
+  // মোডাল দেখানো
+  function showModal(card) {
+    const modal = document.getElementById('detailModal');
+    const modalBody = document.getElementById('modalBody');
+    const status = getStatus(card.startDate, card.endDate);
+    const statusText = status === 'running' ? 'চলমান 🟢' : 'আসন্ন 🟠';
+    
+    let contactsHtml = '<div><strong>📞 যোগাযোগ করুন:</strong></div>';
+    if (card.contacts && card.contacts.length > 0) {
+      card.contacts.forEach(c => {
+        contactsHtml += `<div>👤 ${escapeHtml(c.name)}: <a href="tel:${escapeHtml(c.phone)}">${escapeHtml(c.phone)}</a></div>`;
+      });
+    } else {
+      contactsHtml += '<div>কোনো যোগাযোগ তথ্য নেই</div>';
+    }
+
+    modalBody.innerHTML = `
+      <div class="modal-title">${escapeHtml(card.title)}</div>
+      <div class="status-badge ${status === 'running' ? 'running' : 'upcoming'}" style="margin-bottom:10px;">
+        <span class="status-icon ${status === 'running' ? 'running' : 'upcoming'}"></span>
+        ${statusText}
+      </div>
+      <div><strong>📅 মেলার ধরন:</strong> ${escapeHtml(card.melaType)} (${card.days || ''} দিনব্যাপী)</div>
+      <div><strong>⏰ সময়কাল:</strong> ${formatDate(card.startDate)} - ${formatDate(card.endDate)}</div>
+      <div><strong>📍 ঠিকানা:</strong> ${escapeHtml(card.address || 'ঠিকানা নেই')}</div>
+      <div style="margin:10px 0;"><strong>📝 বিবরণ:</strong><br>${escapeHtml(card.description)}</div>
+      ${contactsHtml}
+      ${card.mapLink ? `<div style="margin-top:10px;"><strong>🗺️ অবস্থান:</strong> <a href="${escapeHtml(card.mapLink)}" target="_blank">গুগল ম্যাপে দেখুন</a></div>` : ''}
+    `;
+    modal.style.display = 'flex';
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return 'N/A';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('bn-BD');
+  }
+
+  // স্লাইড তৈরি
+  function createSlideHTML(card, idx) {
+    const status = getStatus(card.startDate, card.endDate);
+    const isRunning = status === 'running';
+    const statusText = isRunning ? 'চলমান' : 'আসন্ন';
+    const contactHtml = renderContacts(card.contacts || []);
+    
     return `
-      <div class="slide" data-index="${index}">
+      <div class="slide" data-id="${card.id}" data-index="${idx}">
         <div class="news-card">
-          <div class="tag">${escapeHtml(card.tag) || '🎪 মেলা'} | ${escapeHtml(card.melaType) || 'মেলা'}</div>
+          <div class="card-header">
+            <div class="status-badge ${isRunning ? 'running' : 'upcoming'}">
+              <span class="status-icon ${isRunning ? 'running' : 'upcoming'}"></span>
+              ${statusText}
+            </div>
+            <div class="mela-type-badge">${escapeHtml(card.melaType)} (${card.days || ''} দিন)</div>
+          </div>
           <div class="title">${escapeHtml(card.title)}</div>
-          <div class="desc">${escapeHtml(card.description)}</div>
+          <div class="desc">${escapeHtml(card.description).substring(0, 100)}...</div>
+          <div class="date-info">
+            <span>📅 শুরু: ${formatDate(card.startDate)}</span>
+            <span>🏁 শেষ: ${formatDate(card.endDate)}</span>
+          </div>
+          ${card.address ? `<div class="address">📍 ${escapeHtml(card.address)}</div>` : ''}
+          <div class="contact-dropdown" onclick="event.stopPropagation(); toggleContact(this)">
+            ${contactHtml}
+          </div>
+          ${card.mapLink ? `<a href="${escapeHtml(card.mapLink)}" target="_blank" class="map-link" onclick="event.stopPropagation();">🗺️ গুগল ম্যাপ</a>` : ''}
+          <button class="view-btn" onclick="event.stopPropagation(); showModalById('${card.id}')">👁️ View</button>
         </div>
       </div>
     `;
+  }
+
+  // টগল কন্টাক্ট লিস্ট
+  window.toggleContact = function(element) {
+    const contactList = element.querySelector('.contact-list');
+    if (contactList) {
+      contactList.classList.toggle('show');
+    }
+  }
+
+  // আইডি দিয়ে মোডাল দেখানো
+  window.showModalById = function(id) {
+    const card = slides.find(s => s.id === id);
+    if (card) showModal(card);
   }
 
   function renderSlides() {
@@ -219,40 +472,27 @@
     const indicatorsDiv = document.getElementById('indicators');
     
     if (!slides || slides.length === 0) {
-      container.innerHTML = `
-        <div class="slide active">
-          <div class="news-card">
-            <div class="tag">🎪 স্বাগতম</div>
-            <div class="title">বাংলাদেশ মেলা অ্যাপস</div>
-            <div class="desc">অ্যাডমিন প্যানেল থেকে মেলার তথ্য যোগ করুন।</div>
-          </div>
-        </div>
-      `;
+      container.innerHTML = `<div class="slide active"><div class="news-card"><div style="text-align:center; padding:40px;">🎪 কোনো মেলার তথ্য নেই<br>অ্যাডমিন প্যানেল থেকে যোগ করুন</div></div></div>`;
       indicatorsDiv.innerHTML = '<div class="indicator active"></div>';
       return;
     }
 
-    // স্লাইড তৈরি
     let slidesHtml = '';
     slides.forEach((slide, idx) => {
       slidesHtml += createSlideHTML(slide, idx);
     });
     container.innerHTML = slidesHtml;
 
-    // ইন্ডিকেটর তৈরি
     let indicatorsHtml = '';
     for (let i = 0; i < slides.length; i++) {
       indicatorsHtml += `<div class="indicator ${i === 0 ? 'active' : ''}" data-index="${i}"></div>`;
     }
     indicatorsDiv.innerHTML = indicatorsHtml;
 
-    // ইন্ডিকেটরে ক্লিক ইভেন্ট
     document.querySelectorAll('.indicator').forEach(ind => {
       ind.addEventListener('click', (e) => {
         const index = parseInt(e.target.getAttribute('data-index'));
-        if (!isNaN(index)) {
-          goToSlide(index);
-        }
+        if (!isNaN(index)) goToSlide(index);
       });
     });
 
@@ -264,26 +504,16 @@
   function showSlide(index) {
     const allSlides = document.querySelectorAll('.slide');
     const indicators = document.querySelectorAll('.indicator');
-    
-    if (allSlides.length === 0) return;
-    
-    allSlides.forEach(slide => slide.classList.remove('active'));
-    indicators.forEach(ind => ind.classList.remove('active'));
-    
-    if (allSlides[index]) {
-      allSlides[index].classList.add('active');
-    }
-    if (indicators[index]) {
-      indicators[index].classList.add('active');
-    }
+    allSlides.forEach(s => s.classList.remove('active'));
+    indicators.forEach(i => i.classList.remove('active'));
+    if (allSlides[index]) allSlides[index].classList.add('active');
+    if (indicators[index]) indicators[index].classList.add('active');
   }
 
   function goToSlide(index) {
     if (slides.length === 0) return;
     currentIndex = index;
     showSlide(currentIndex);
-    
-    // টাইমার রিস্টার্ট
     startSlideshow();
   }
 
@@ -295,33 +525,31 @@
 
   function startSlideshow() {
     if (interval) clearInterval(interval);
-    if (slides.length > 1) {
-      interval = setInterval(nextSlide, 4000);
-    }
+    if (slides.length > 1) interval = setInterval(nextSlide, 5000);
   }
 
-  // Realtime Database থেকে ডাটা লোড (রিয়েলটাইম আপডেট)
+  // Realtime Database লোড
   const melaPostsRef = database.ref('melaPosts');
-  
   melaPostsRef.on('value', (snapshot) => {
     const data = snapshot.val();
     if (data) {
-      // অবজেক্ট থেকে array তে কনভার্ট
-      const postsArray = Object.keys(data).map(key => ({
-        id: key,
-        ...data[key]
-      }));
-      // অর্ডার অনুযায়ী সাজানো (order ফিল্ড থাকলে, না থাকলে যেমন আছে)
-      postsArray.sort((a, b) => (a.order || 0) - (b.order || 0));
-      slides = postsArray;
+      slides = Object.keys(data).map(key => ({ id: key, ...data[key] }));
+      slides.sort((a, b) => (a.order || 0) - (b.order || 0));
     } else {
       slides = [];
     }
     renderSlides();
   });
 
-  // initial load
-  renderSlides();
+  // মোডাল ক্লোজ
+  document.querySelector('.close-modal').onclick = () => {
+    document.getElementById('detailModal').style.display = 'none';
+  };
+  window.onclick = (e) => {
+    if (e.target === document.getElementById('detailModal')) {
+      document.getElementById('detailModal').style.display = 'none';
+    }
+  };
 </script>
 </body>
 </html>
