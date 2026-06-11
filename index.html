@@ -63,7 +63,6 @@
       z-index: 10;
     }
 
-    /* পুরো কার্ড ক্লিকযোগ্য */
     .news-card {
       background: #ffffff;
       width: 100%;
@@ -78,25 +77,25 @@
       cursor: pointer;
     }
 
-    /* স্ট্যাটাস ও টাইপ - গ্যাপ কমানো হয়েছে (৪ ভাগের ১ ভাগ) */
+    /* স্ট্যাটাস ও টাইপ - সাইজ বড় করা হয়েছে */
     .status-type-wrapper {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 15px;
       background: transparent;
-      padding: 2px 20px;  /* আগে ছিল 8px, এখন 2px (৪ ভাগের ১ ভাগ) */
+      padding: 2px 20px;
       border-radius: 50px;
-      margin-top: 2px;     /* আগে ছিল 8px, এখন 2px */
-      margin-bottom: 4px;  /* আগে ছিল 15px, এখন 4px */
+      margin-top: 2px;
+      margin-bottom: 4px;
       flex-wrap: wrap;
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      font-size: 0.95rem;
+      gap: 12px;
+      font-size: 1.2rem;
       font-weight: bold;
     }
 
@@ -109,8 +108,8 @@
     }
 
     .blinking-dot {
-      width: 12px;
-      height: 12px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       background: #4caf50;
       animation: blink 1.2s infinite;
@@ -123,28 +122,28 @@
     }
 
     .static-dot {
-      width: 12px;
-      height: 12px;
+      width: 16px;
+      height: 16px;
       border-radius: 50%;
       background: #ff9800;
     }
 
     .separator {
       color: #b8860b;
-      font-size: 0.95rem;
+      font-size: 1.2rem;
       font-weight: bold;
     }
 
     .mela-type-text {
-      font-size: 0.95rem;
+      font-size: 1.2rem;
       font-weight: bold;
       color: #b8860b;
       background: transparent;
     }
 
-    /* মেলার নাম */
+    /* মেলার নাম - সাইজ বড় করা হয়েছে */
     .title {
-      font-size: 1.8rem;
+      font-size: 2.2rem;
       font-weight: 800;
       background: linear-gradient(135deg, #b8860b, #d4af37, #ffd700);
       background-clip: text;
@@ -157,9 +156,9 @@
       padding: 0 15px;
     }
 
-    /* বিবরণ */
+    /* বিবরণ - সাইজ বড় করা হয়েছে */
     .desc {
-      font-size: 1rem;
+      font-size: 1.2rem;
       color: #6b6b6b;
       line-height: 1.6;
       margin-bottom: 15px;
@@ -171,7 +170,7 @@
       padding: 0 15px;
     }
 
-    /* View টেক্সট */
+    /* View টেক্সট - সাইজ অপরিবর্তিত (ছোট থাকবে) */
     .view-text {
       position: absolute;
       bottom: 12px;
@@ -290,27 +289,25 @@
       margin-top: 5px;
     }
 
+    /* মোবাইল রেস্পন্সিভ - সাইজ সামান্য কমবে কিন্তু বড়ই থাকবে */
     @media (max-width: 550px) {
-      .title { font-size: 1.4rem; margin-top: 15px; }
-      .desc { font-size: 0.85rem; }
-      .status-badge { font-size: 0.8rem; }
-      .mela-type-text { font-size: 0.8rem; }
-      .separator { font-size: 0.8rem; }
+      .title { font-size: 1.6rem; margin-top: 15px; }
+      .desc { font-size: 1rem; }
+      .status-badge { font-size: 1rem; }
+      .mela-type-text { font-size: 1rem; }
+      .separator { font-size: 1rem; }
       .slide { padding: 15px; }
-      .blinking-dot, .static-dot { width: 10px; height: 10px; }
-      .status-type-wrapper {
-        gap: 8px;
-        padding: 1px 15px;
-        margin-top: 1px;
-        margin-bottom: 3px;
-      }
+      .blinking-dot, .static-dot { width: 14px; height: 14px; }
+      .status-type-wrapper { gap: 10px; }
     }
 
     @media (max-width: 400px) {
-      .title { font-size: 1.2rem; margin-top: 10px; }
-      .desc { font-size: 0.75rem; }
-      .status-badge { font-size: 0.7rem; }
-      .mela-type-text { font-size: 0.7rem; }
+      .title { font-size: 1.4rem; margin-top: 10px; }
+      .desc { font-size: 0.9rem; }
+      .status-badge { font-size: 0.9rem; }
+      .mela-type-text { font-size: 0.9rem; }
+      .separator { font-size: 0.9rem; }
+      .blinking-dot, .static-dot { width: 12px; height: 12px; }
     }
   </style>
 </head>
@@ -382,7 +379,6 @@
     return d.toLocaleString('bn-BD');
   }
 
-  // মোডাল দেখানো
   window.showModalById = function(id, event) {
     if (event) event.stopPropagation();
     console.log("showModalById called with id:", id);
@@ -443,7 +439,6 @@
     modal.style.display = 'flex';
   };
 
-  // স্লাইড তৈরি
   function createSlideHTML(card, idx) {
     const status = getStatus(card.startDate, card.endDate);
     const isRunning = status === 'running';
@@ -533,7 +528,6 @@
     if (slides.length > 1) interval = setInterval(nextSlide, 5000);
   }
 
-  // Firebase Realtime Database লোড
   const melaPostsRef = database.ref('melaPosts');
   melaPostsRef.on('value', (snapshot) => {
     const data = snapshot.val();
@@ -548,7 +542,6 @@
     renderSlides();
   });
 
-  // মোডাল ক্লোজ
   document.querySelector('.close-modal').onclick = () => {
     document.getElementById('detailModal').style.display = 'none';
   };
