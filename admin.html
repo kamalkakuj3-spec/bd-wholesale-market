@@ -15,17 +15,17 @@
     .container { max-width: 900px; margin: 0 auto; }
     h1 { text-align: center; color: #d4af37; margin-bottom: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
     
-    /* স্লাইডার ড্রপডাউন স্টাইল */
+    /* ড্রপডাউন স্টাইল */
     .slider-dropdown {
       background: white;
       border-radius: 24px;
-      margin-bottom: 30px;
+      margin-bottom: 20px;
       overflow: hidden;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
     .slider-header {
       background: linear-gradient(115deg, #d4af37, #c49b2a);
-      padding: 18px 25px;
+      padding: 15px 22px;
       cursor: pointer;
       display: flex;
       justify-content: space-between;
@@ -37,14 +37,14 @@
     }
     .slider-header h2 {
       color: white;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
     .toggle-icon {
       color: white;
-      font-size: 1.5rem;
+      font-size: 1.3rem;
       font-weight: bold;
       transition: transform 0.3s;
     }
@@ -67,7 +67,7 @@
     .form-card h3 {
       color: #b8860b;
       margin-bottom: 20px;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
     }
     input, textarea, select {
       width: 100%;
@@ -125,6 +125,8 @@
       border-radius: 24px;
       padding: 25px;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      max-height: 500px;
+      overflow-y: auto;
     }
     .card-list h3 { color: #b8860b; margin-bottom: 20px; }
     .card-item {
@@ -140,8 +142,9 @@
     .small-btn { padding: 6px 12px; font-size: 0.8rem; margin: 2px; }
     
     @media (max-width: 550px) {
-      .slider-header h2 { font-size: 1.1rem; }
+      .slider-header h2 { font-size: 1rem; }
       .form-card { padding: 18px; }
+      .slider-header { padding: 12px 18px; }
     }
   </style>
 </head>
@@ -149,15 +152,15 @@
 <div class="container">
   <h1>🏆 অ্যাডমিন প্যানেল | মেলা স্লাইডার 🏆</h1>
 
-  <!-- স্লাইডার ড্রপডাউন -->
+  <!-- লাইনার ১: নতুন পোস্ট যোগ -->
   <div class="slider-dropdown">
-    <div class="slider-header" id="sliderHeader">
-      <h2>📋 স্লাইডার - মেলার তথ্য ব্যবস্থাপনা</h2>
+    <div class="slider-header" id="sliderHeaderAdd">
+      <h2>➕ স্লাইডার - নতুন পোস্ট যোগ</h2>
       <span class="toggle-icon">▼</span>
     </div>
-    <div class="slider-content" id="sliderContent">
+    <div class="slider-content" id="sliderContentAdd">
       <div class="form-card">
-        <h3>✨ মেলার তথ্য যোগ/এডিট করুন ✨</h3>
+        <h3>✨ মেলার তথ্য যোগ করুন ✨</h3>
         <input type="text" id="title" placeholder="মেলার নাম *" required>
         <textarea id="description" rows="3" placeholder="বিবরণ *" required></textarea>
         <input type="text" id="address" placeholder="ঠিকানা/লোকেশন">
@@ -198,10 +201,17 @@
     </div>
   </div>
 
-  <!-- সকল মেলার তালিকা -->
-  <div class="card-list">
-    <h3>📋 সকল মেলার তালিকা</h3>
-    <div id="postsList">লোড হচ্ছে...</div>
+  <!-- লাইনার ২: পোস্ট করা তথ্য এডিট -->
+  <div class="slider-dropdown">
+    <div class="slider-header" id="sliderHeaderEdit">
+      <h2>✏️ স্লাইডার পোস্ট করা তথ্য এডিট</h2>
+      <span class="toggle-icon">▼</span>
+    </div>
+    <div class="slider-content" id="sliderContentEdit">
+      <div class="card-list">
+        <div id="postsList">লোড হচ্ছে...</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -225,13 +235,22 @@
 
   let currentEditId = null;
 
-  // ড্রপডাউন টগল
-  const sliderHeader = document.getElementById('sliderHeader');
-  const sliderContent = document.getElementById('sliderContent');
-  
-  sliderHeader.addEventListener('click', () => {
-    sliderHeader.classList.toggle('open');
-    sliderContent.classList.toggle('open');
+  // ড্রপডাউন টগল ফাংশন
+  function toggleDropdown(headerId, contentId) {
+    const header = document.getElementById(headerId);
+    const content = document.getElementById(contentId);
+    header.classList.toggle('open');
+    content.classList.toggle('open');
+  }
+
+  // লাইনার ১ টগল
+  document.getElementById('sliderHeaderAdd').addEventListener('click', () => {
+    toggleDropdown('sliderHeaderAdd', 'sliderContentAdd');
+  });
+
+  // লাইনার ২ টগল
+  document.getElementById('sliderHeaderEdit').addEventListener('click', () => {
+    toggleDropdown('sliderHeaderEdit', 'sliderContentEdit');
   });
 
   function escapeHtml(str) {
@@ -295,7 +314,7 @@
       const data = snapshot.val();
       const container = document.getElementById('postsList');
       if (!data) {
-        container.innerHTML = '<div style="text-align:center;padding:40px;">🎪 কোনো পোস্ট নেই। উপরের ফর্ম দিয়ে যোগ করুন।</div>';
+        container.innerHTML = '<div style="text-align:center;padding:40px;">🎪 কোনো পোস্ট নেই। প্রথম লাইনার দিয়ে পোস্ট যোগ করুন।</div>';
         return;
       }
       const posts = Object.keys(data).map(key => ({ id: key, ...data[key] }));
@@ -356,9 +375,15 @@
       document.getElementById('saveBtn').innerHTML = '✏️ আপডেট করুন';
       document.getElementById('cancelBtn').style.display = 'inline-block';
       
-      // এডিট করার সময় ড্রপডাউন খুলে দিন
-      sliderContent.classList.add('open');
-      sliderHeader.classList.add('open');
+      // এডিট করার সময় প্রথম লাইনার ড্রপডাউন খুলে দিন
+      const headerAdd = document.getElementById('sliderHeaderAdd');
+      const contentAdd = document.getElementById('sliderContentAdd');
+      if (!contentAdd.classList.contains('open')) {
+        headerAdd.classList.add('open');
+        contentAdd.classList.add('open');
+      }
+      // স্ক্রল করে ফর্মে নিয়ে যান
+      document.querySelector('.container').scrollIntoView({ behavior: 'smooth' });
     }
   }
 
@@ -404,11 +429,12 @@
       if(currentEditId) {
         await melaPostsRef.child(currentEditId).update(postData);
         alert('পোস্ট আপডেট হয়েছে!');
+        resetForm();
       } else {
         await melaPostsRef.push().set(postData);
         alert('নতুন মেলা যোগ হয়েছে!');
+        resetForm();
       }
-      resetForm();
     } catch(e) { alert('ত্রুটি: '+e.message); }
   });
 
