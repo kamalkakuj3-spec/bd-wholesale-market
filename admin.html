@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>অ্যাডমিন প্যানেল | মেলা কার্ড স্লাইডার</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      background: #f0f2f5;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      padding: 20px;
+    }
+    .container {
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    h1 {
+      background: linear-gradient(135deg, #b8860b, #d4af37);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .form-card {
+      background: white;
+      border-radius: 24px;
+      padding: 20px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      border: 1px solid #d4af37;
+    }
+    .form-card h3 {
+      color: #b8860b;
+      margin-bottom: 15px;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0 16px 0;
+      border: 1px solid #ddd;
+      border-radius: 16px;
+      font-size: 1rem;
+    }
+    button {
+      background: linear-gradient(115deg, #d4af37, #c49b2a);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+    button:hover {
+      opacity: 0.9;
+    }
+    .delete-btn {
+      background: #dc2626;
+      margin-left: 10px;
+    }
+    .card-list {
+      background: white;
+      border-radius: 24px;
+      padding: 20px;
+    }
+    .card-item {
+      border-bottom: 1px solid #eee;
+      padding: 15px 0;
+    }
+    .card-item:last-child {
+      border-bottom: none;
+    }
+    .card-title {
+      font-weight: bold;
+      color: #b8860b;
+    }
+    .card-actions {
+      margin-top: 10px;
+    }
+    .edit-btn {
+      background: #3b82f6;
+      margin-right: 10px;
+    }
+    .small-btn {
+      padding: 6px 12px;
+      font-size: 0.8rem;
+    }
+    .order-input {
+      width: 80px;
+      display: inline-block;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>🏆 মেলা স্লাইডার অ্যাডমিন প্যানেল</h1>
+  
+  <div class="form-card" id="formCard">
+    <h3 id="formTitle">✨ নতুন কার্ড যোগ করুন</h3>
+    <input type="text" id="cardId" placeholder="ID (শুধু এডিটের জন্য)" style="display:none;">
+    <input type="text" id="tag" placeholder="ট্যাগ (যেমন: 🎪 বিশেষ মেলা)">
+    <input type="text" id="title" placeholder="শিরোনাম *" required>
+    <textarea id="description" rows="3" placeholder="বিবরণ *" required></textarea>
+    <select id="melaType">
+      <option value="মাসব্যাপী মেলা">মাসব্যাপী মেলা</option>
+      <option value="১৫ দিনব্যাপী মেলা">১৫ দিনব্যাপী মেলা</option>
+      <option value="৭ দিনব্যাপী মেলা">৭ দিনব্যাপী মেলা</option>
+      <option value="৩ দিনব্যাপী মেলা">৩ দিনব্যাপী মেলা</option>
+    </select>
+    <input type="number" id="order" placeholder="ক্রম (১,২,৩...)" value="1">
+    <button id="saveBtn">➕ সংরক্ষণ করুন</button>
+    <button id="cancelBtn" style="background:#6b7280; display:none;">বাতিল করুন</button>
+  </div>
+
+  <div class="card-list">
+    <h3>📋 সকল কার্ডের তালিকা</h3>
+    <div id="cardsList">লোড হচ্ছে...</div>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAKRgsUrYL4uAWinn5dcJrKck1nqUokRdw",
+    authDomain: "all-hadith-a68fa.firebaseapp.com",
+    projectId: "all-hadith-a68fa",
+    storageBucket: "all-hadith-a68fa.firebasestorage.app",
+    messagingSenderId: "124928027736",
+    appId: "1:124928027736:android:f4d9a9a9ed667150ca2e2d"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  let currentEditId = null;
+
+  async function loadCards() {
+    const container = document.getElementById('cardsList');
+    try {
+      const q = query(collection(db, "melaCards"), orderBy("order", "asc"));
+      const snap = await getDocs(q);
+      if (snap.empty) {
+        container.innerHTML = '<p>কোনো কার্ড নেই। উপরের ফর্ম দিয়ে যোগ করুন।</p>';
+        return;
+      }
+      let html = '';
+      snap.forEach(docSnap => {
+        const data = docSnap.data();
+        html += `
+          <div class="card-item">
+            <div class="card-title">${escapeHtml(data.title)}</div>
+            <div>🏷️ ${escapeHtml(data.tag)} | ${escapeHtml(data.melaType)} | ক্রম: ${data.order}</div>
+            <div class="desc-preview">${escapeHtml(data.description.substring(0, 80))}...</div>
+            <div class="card-actions">
+              <button class="edit-btn small-btn" data-id="${docSnap.id}">✏️ এডিট</button>
+              <button class="delete-btn small-btn" data-id="${docSnap.id}">🗑️ ডিলিট</button>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+      
+      // এডিট বাটন
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const id = btn.getAttribute('data-id');
+          const docRef = doc(db, "melaCards", id);
+          const docSnap = await getDocs(query(collection(db, "melaCards")));
+          // better way: get single doc
+          import { getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+          const singleDoc = await getDoc(docRef);
+          if (singleDoc.exists()) {
+            const data = singleDoc.data();
+            document.getElementById('cardId').value = id;
+            document.getElementById('tag').value = data.tag || '';
+            document.getElementById('title').value = data.title || '';
+            document.getElementById('description').value = data.description || '';
+            document.getElementById('melaType').value = data.melaType || 'মাসব্যাপী মেলা';
+            document.getElementById('order').value = data.order || 1;
+            document.getElementById('formTitle').innerText = '✏️ কার্ড এডিট করুন';
+            document.getElementById('saveBtn').innerText = '✏️ আপডেট করুন';
+            document.getElementById('cancelBtn').style.display = 'inline-block';
+            currentEditId = id;
+          }
+        });
+      });
+      
+      // ডিলিট বাটন
+      document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          if (confirm('কার্ড ডিলিট করতে চান?')) {
+            const id = btn.getAttribute('data-id');
+            await deleteDoc(doc(db, "melaCards", id));
+            loadCards();
+          }
+        });
+      });
+      
+    } catch (error) {
+      console.error(error);
+      container.innerHTML = '<p>লোড করতে সমস্যা হয়েছে</p>';
+    }
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  // সেভ বা আপডেট
+  document.getElementById('saveBtn').addEventListener('click', async () => {
+    const tag = document.getElementById('tag').value;
+    const title = document.getElementById('title').value;
+    const description = document.getElementById('description').value;
+    const melaType = document.getElementById('melaType').value;
+    const order = parseInt(document.getElementById('order').value) || 1;
+    
+    if (!title || !description) {
+      alert('শিরোনাম ও বিবরণ দিতে হবে');
+      return;
+    }
+    
+    try {
+      if (currentEditId) {
+        await updateDoc(doc(db, "melaCards", currentEditId), {
+          tag, title, description, melaType, order
+        });
+        alert('আপডেট হয়েছে!');
+        resetForm();
+      } else {
+        await addDoc(collection(db, "melaCards"), {
+          tag, title, description, melaType, order,
+          createdAt: new Date()
+        });
+        alert('নতুন কার্ড যোগ হয়েছে!');
+        resetForm();
+      }
+      loadCards();
+    } catch (error) {
+      console.error(error);
+      alert('সংরক্ষণ করতে সমস্যা হয়েছে');
+    }
+  });
+  
+  function resetForm() {
+    document.getElementById('cardId').value = '';
+    document.getElementById('tag').value = '';
+    document.getElementById('title').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('order').value = '1';
+    document.getElementById('formTitle').innerText = '✨ নতুন কার্ড যোগ করুন';
+    document.getElementById('saveBtn').innerText = '➕ সংরক্ষণ করুন';
+    document.getElementById('cancelBtn').style.display = 'none';
+    currentEditId = null;
+  }
+  
+  document.getElementById('cancelBtn').addEventListener('click', resetForm);
+  
+  loadCards();
+</script>
+</body>
+</html>
