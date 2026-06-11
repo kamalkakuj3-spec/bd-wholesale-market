@@ -63,6 +63,7 @@
       z-index: 10;
     }
 
+    /* পুরো কার্ড ক্লিকযোগ্য */
     .news-card {
       background: #ffffff;
       width: 100%;
@@ -74,9 +75,10 @@
       border-radius: 20px;
       position: relative;
       padding-bottom: 50px;
+      cursor: pointer;
     }
 
-    /* এক লাইনে স্ট্যাটাস ও টাইপ */
+    /* স্ট্যাটাস ও টাইপ - মেলার নামের নিচে */
     .status-type-wrapper {
       display: inline-flex;
       align-items: center;
@@ -85,7 +87,8 @@
       background: transparent;
       padding: 6px 15px;
       border-radius: 50px;
-      margin-bottom: 20px;
+      margin-top: 5px;
+      margin-bottom: 10px;
       flex-wrap: wrap;
     }
 
@@ -132,7 +135,6 @@
       font-weight: bold;
     }
 
-    /* ট্রান্সপারেন্ট ব্যাকগ্রাউন্ড সহ মেলা টাইপ */
     .mela-type-text {
       font-size: 0.75rem;
       font-weight: bold;
@@ -147,7 +149,7 @@
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      margin-bottom: 12px;
+      margin-bottom: 5px;
       line-height: 1.3;
       text-align: center;
     }
@@ -165,13 +167,13 @@
       padding: 0 10px;
     }
 
-    .view-btn {
+    /* View টেক্সট - ডান পাশে নিচে */
+    .view-text {
       position: absolute;
       bottom: 12px;
       right: 15px;
       background: linear-gradient(115deg, #d4af37, #c49b2a);
       color: white;
-      border: none;
       padding: 6px 14px;
       border-radius: 30px;
       font-size: 0.7rem;
@@ -179,9 +181,10 @@
       cursor: pointer;
       z-index: 15;
       transition: opacity 0.2s;
+      pointer-events: auto;
     }
 
-    .view-btn:hover {
+    .view-text:hover {
       opacity: 0.9;
     }
 
@@ -362,7 +365,8 @@
   }
 
   // মোডাল দেখানো
-  window.showModalById = function(id) {
+  window.showModalById = function(id, event) {
+    if (event) event.stopPropagation();
     console.log("showModalById called with id:", id);
     const card = slides.find(s => s.id === id);
     if (!card) {
@@ -421,7 +425,7 @@
     modal.style.display = 'flex';
   };
 
-  // স্লাইড তৈরি
+  // স্লাইড তৈরি - পুরো কার্ড ক্লিকযোগ্য
   function createSlideHTML(card, idx) {
     const status = getStatus(card.startDate, card.endDate);
     const isRunning = status === 'running';
@@ -433,7 +437,8 @@
     
     return `
       <div class="slide" data-id="${card.id}" data-index="${idx}">
-        <div class="news-card">
+        <div class="news-card" onclick="showModalById('${card.id}', event)">
+          <div class="title">${escapeHtml(card.title)}</div>
           <div class="status-type-wrapper">
             <div class="status-badge ${isRunning ? 'running' : 'upcoming'}">
               ${dotHtml}
@@ -442,9 +447,8 @@
             <span class="separator">|</span>
             <span class="mela-type-text">${escapeHtml(card.melaType)} (${card.days || ''} দিন)</span>
           </div>
-          <div class="title">${escapeHtml(card.title)}</div>
           <div class="desc">${escapeHtml(card.description).substring(0, 100)}${card.description.length > 100 ? '...' : ''}</div>
-          <button class="view-btn" onclick="event.stopPropagation(); showModalById('${card.id}')">View</button>
+          <div class="view-text" onclick="showModalById('${card.id}', event)">View</div>
         </div>
       </div>
     `;
