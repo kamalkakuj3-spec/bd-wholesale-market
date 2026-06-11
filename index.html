@@ -3,114 +3,94 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>বাংলাদেশ মেলা অ্যাপস | বুক ফ্লিপ স্লাইডার</title>
+  <title>বাংলাদেশ মেলা অ্যাপস | ভার্টিক্যাল স্লাইডার</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
-      background: linear-gradient(145deg, #2c1810 0%, #1a0f0a 100%);
+      background: #e8e8e8;
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: 'Segoe UI', 'Poppins', 'Noto Sans Bengali', system-ui, sans-serif;
-      padding: 20px;
-      perspective: 1200px;
+      padding: 16px;
     }
 
-    /* কন্টেইনার 3D */
-    .book-container {
+    .billboard {
       width: 100%;
       max-width: 640px;
       aspect-ratio: 16 / 9;
+      background: #ffffff;
+      overflow: hidden;
+      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(212, 175, 55, 0.3);
       position: relative;
-      perspective: 1200px;
+      border-radius: 24px;
     }
 
-    .book {
+    .screen {
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ভার্টিক্যাল স্লাইডার কন্টেইনার */
+    .vertical-slider {
       width: 100%;
       height: 100%;
       position: relative;
-      transform-style: preserve-3d;
-      transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1);
-      border-radius: 12px;
+      overflow: hidden;
     }
 
-    /* ফ্লিপ অ্যানিমেশন */
-    .book.flipping-left {
-      animation: flipToLeft 0.5s cubic-bezier(0.4, 0.2, 0.2, 1) forwards;
+    .slides-wrapper {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    .book.flipping-right {
-      animation: flipToRight 0.5s cubic-bezier(0.4, 0.2, 0.2, 1) forwards;
-    }
-
-    @keyframes flipToLeft {
-      0% {
-        transform: rotateY(0deg);
-      }
-      50% {
-        transform: rotateY(-90deg);
-      }
-      100% {
-        transform: rotateY(0deg);
-      }
-    }
-
-    @keyframes flipToRight {
-      0% {
-        transform: rotateY(0deg);
-      }
-      50% {
-        transform: rotateY(90deg);
-      }
-      100% {
-        transform: rotateY(0deg);
-      }
-    }
-
-    /* কার্ড স্টাইল - 3D */
-    .page {
+    .slide {
+      width: 100%;
+      height: 100%;
       position: absolute;
-      width: 100%;
-      height: 100%;
       top: 0;
       left: 0;
-      backface-visibility: hidden;
-      border-radius: 12px;
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+      padding: 20px;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      overflow-y: auto;
     }
 
-    /* সামনের কার্ড */
-    .page-front {
-      background: linear-gradient(145deg, #fff8f0 0%, #f5ede0 100%);
-      transform: rotateY(0deg);
-      z-index: 2;
+    .slide.active {
+      opacity: 1;
+      z-index: 10;
     }
 
-    /* পেছনের কার্ড (উল্টানো অবস্থায় দেখাবে) */
-    .page-back {
-      background: linear-gradient(145deg, #f0e8d8 0%, #e8ddce 100%);
-      transform: rotateY(180deg);
-      z-index: 1;
-    }
-
-    /* কার্ডের কন্টেন্ট */
-    .card-content {
+    /* পুরো কার্ড ক্লিকযোগ্য */
+    .news-card {
+      background: #ffffff;
       width: 100%;
-      height: 100%;
+      min-height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      padding: 28px 24px;
-      overflow-y: auto;
+      border-radius: 20px;
+      position: relative;
       cursor: pointer;
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      padding: 24px 20px 32px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+
+    .news-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
     }
 
     /* স্ট্যাটাস ও টাইপ */
@@ -118,143 +98,153 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
-      background: rgba(212, 175, 55, 0.12);
-      padding: 5px 16px;
+      gap: 15px;
+      background: transparent;
+      padding: 2px 20px;
       border-radius: 50px;
-      margin-bottom: 20px;
+      margin-top: 2px;
+      margin-bottom: 8px;
       flex-wrap: wrap;
-      border: 0.5px solid rgba(212, 175, 55, 0.3);
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 10px;
-      font-size: 0.9rem;
-      font-weight: 700;
+      gap: 12px;
+      font-size: 1.1rem;
+      font-weight: bold;
     }
 
-    .status-badge.running { color: #10b981; }
-    .status-badge.upcoming { color: #f59e0b; }
+    .status-badge.running {
+      color: #4caf50;
+    }
+
+    .status-badge.upcoming {
+      color: #ff9800;
+    }
 
     .blinking-dot {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
-      background: #10b981;
+      background: #4caf50;
       animation: blink 1.2s infinite;
-      box-shadow: 0 0 6px #10b981;
     }
 
     @keyframes blink {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+      50% { opacity: 0.3; transform: scale(0.8); }
     }
 
     .static-dot {
-      width: 12px;
-      height: 12px;
+      width: 14px;
+      height: 14px;
       border-radius: 50%;
-      background: #f59e0b;
+      background: #ff9800;
     }
 
     .separator {
-      color: #d4af37;
-      font-size: 0.9rem;
-      font-weight: 500;
+      color: #b8860b;
+      font-size: 1.1rem;
+      font-weight: bold;
     }
 
     .mela-type-text {
-      font-size: 0.9rem;
-      font-weight: 600;
+      font-size: 1.1rem;
+      font-weight: bold;
       color: #b8860b;
+      background: transparent;
     }
 
     /* মেলার নাম */
     .title {
       font-size: 1.8rem;
       font-weight: 800;
-      background: linear-gradient(135deg, #8B6914 0%, #D4AF37 40%, #FFD700 80%);
+      background: linear-gradient(135deg, #b8860b, #d4af37, #ffd700);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      margin-bottom: 16px;
+      margin-top: 10px;
+      margin-bottom: 12px;
       line-height: 1.3;
+      text-align: center;
+      padding: 0 15px;
     }
 
     /* বিবরণ */
     .desc {
-      font-size: 0.9rem;
-      color: #5a4a3a;
+      font-size: 0.95rem;
+      color: #6b6b6b;
       line-height: 1.6;
+      margin-bottom: 15px;
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      font-weight: 450;
+      text-align: center;
+      padding: 0 10px;
     }
 
-    /* ফ্লিপ বাটন */
-    .flip-buttons {
+    /* নেভিগেশন বাটন - উপরে ও নিচে */
+    .nav-buttons {
       position: absolute;
-      bottom: 20px;
-      left: 0;
-      right: 0;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
-      justify-content: center;
-      gap: 20px;
+      flex-direction: column;
+      gap: 12px;
       z-index: 20;
     }
 
-    .flip-btn {
+    .nav-btn {
       background: linear-gradient(135deg, #d4af37, #c49b2a);
       border: none;
-      width: 44px;
-      height: 44px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       color: white;
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
       transition: all 0.2s;
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
-    .flip-btn:hover {
+    .nav-btn:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.3);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
 
-    .flip-btn:active {
-      transform: scale(0.98);
+    .nav-btn:active {
+      transform: scale(0.95);
     }
 
-    /* ইন্ডিকেটর ডটস */
+    /* ইন্ডিকেটর ডটস - ডান পাশে */
     .indicators {
       position: absolute;
-      bottom: 20px;
-      left: 0;
-      right: 0;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
       display: flex;
-      justify-content: center;
-      gap: 10px;
+      flex-direction: column;
+      gap: 12px;
       z-index: 20;
     }
 
-    .dot {
+    .indicator {
       width: 8px;
       height: 8px;
       border-radius: 50%;
       background: rgba(0, 0, 0, 0.25);
-      transition: all 0.3s;
+      transition: all 0.3s ease;
       cursor: pointer;
     }
 
-    .dot.active {
-      width: 24px;
+    .indicator.active {
+      height: 24px;
       border-radius: 10px;
       background: #d4af37;
     }
@@ -267,23 +257,23 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.85);
-      backdrop-filter: blur(8px);
+      background: rgba(0,0,0,0.75);
+      backdrop-filter: blur(4px);
       z-index: 1000;
       justify-content: center;
       align-items: center;
     }
 
     .modal-content {
-      background: #fff8f0;
+      background: white;
       width: 90%;
       max-width: 500px;
       max-height: 80%;
       border-radius: 28px;
-      padding: 24px;
+      padding: 24px 22px;
       overflow-y: auto;
       position: relative;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+      box-shadow: 0 25px 50px rgba(0,0,0,0.2);
     }
 
     .close-modal {
@@ -307,7 +297,7 @@
     }
 
     .modal-section {
-      margin-bottom: 16px;
+      margin-bottom: 18px;
       padding-bottom: 12px;
       border-bottom: 1px solid #eee;
     }
@@ -330,30 +320,36 @@
       border-radius: 40px;
       text-decoration: none;
       font-size: 0.85rem;
+      margin-top: 6px;
     }
 
     @media (max-width: 550px) {
-      .card-content { padding: 20px 16px; }
+      .slide { padding: 15px; }
       .title { font-size: 1.4rem; }
-      .desc { font-size: 0.8rem; }
-      .status-badge, .mela-type-text { font-size: 0.75rem; }
-      .flip-btn { width: 38px; height: 38px; font-size: 1rem; }
+      .desc { font-size: 0.85rem; }
+      .status-badge, .mela-type-text { font-size: 0.9rem; }
+      .separator { font-size: 0.9rem; }
+      .blinking-dot, .static-dot { width: 12px; height: 12px; }
+      .status-type-wrapper { gap: 10px; }
+      .nav-btn { width: 34px; height: 34px; font-size: 1rem; right: 8px; }
+      .indicators { left: 8px; gap: 8px; }
     }
   </style>
 </head>
 <body>
-<div class="book-container">
-  <div class="book" id="book">
-    <div class="page page-front" id="frontPage">
-      <div class="card-content" id="frontContent">
-        <div style="text-align:center; padding:40px;">🎪 লোড হচ্ছে...</div>
+<div class="billboard">
+  <div class="screen">
+    <div class="vertical-slider">
+      <div class="slides-wrapper" id="slidesWrapper">
+        <!-- স্লাইডগুলো ডায়নামিক হবে -->
+      </div>
+      <div class="indicators" id="indicators"></div>
+      <div class="nav-buttons">
+        <button class="nav-btn" id="prevBtn">▲</button>
+        <button class="nav-btn" id="nextBtn">▼</button>
       </div>
     </div>
-    <div class="page page-back" id="backPage">
-      <div class="card-content" id="backContent"></div>
-    </div>
   </div>
-  <div class="indicators" id="indicators"></div>
 </div>
 
 <div id="detailModal" class="modal">
@@ -382,8 +378,8 @@
 
   let slides = [];
   let currentIndex = 0;
-  let isAnimating = false;
-  let autoFlipInterval;
+  let autoInterval;
+  let isTransitioning = false;
 
   function escapeHtml(str) {
     if (!str) return '';
@@ -410,6 +406,7 @@
     return d.toLocaleString('bn-BD');
   }
 
+  // কার্ড HTML তৈরি
   function createCardHTML(card) {
     const status = getStatus(card.startDate, card.endDate);
     const isRunning = status === 'running';
@@ -417,119 +414,22 @@
     const dotHtml = isRunning ? '<span class="blinking-dot"></span>' : '<span class="static-dot"></span>';
     
     return `
-      <div class="status-type-wrapper">
-        <div class="status-badge ${isRunning ? 'running' : 'upcoming'}">
-          ${dotHtml} ${statusText}
+      <div class="news-card" data-id="${card.id}">
+        <div class="status-type-wrapper">
+          <div class="status-badge ${isRunning ? 'running' : 'upcoming'}">
+            ${dotHtml} ${statusText}
+          </div>
+          <span class="separator">|</span>
+          <span class="mela-type-text">${escapeHtml(card.melaType)} (${card.days || ''} দিন)</span>
         </div>
-        <span class="separator">|</span>
-        <span class="mela-type-text">${escapeHtml(card.melaType)} (${card.days || ''} দিন)</span>
+        <div class="title">${escapeHtml(card.title)}</div>
+        <div class="desc">${escapeHtml(card.description).substring(0, 120)}${card.description.length > 120 ? '...' : ''}</div>
       </div>
-      <div class="title">${escapeHtml(card.title)}</div>
-      <div class="desc">${escapeHtml(card.description).substring(0, 120)}${card.description.length > 120 ? '...' : ''}</div>
     `;
   }
 
-  function updateDisplay() {
-    if (!slides.length) {
-      document.getElementById('frontContent').innerHTML = '<div style="text-align:center; padding:40px;">🎪 কোনো মেলার তথ্য নেই</div>';
-      document.getElementById('backContent').innerHTML = '';
-      return;
-    }
-    
-    const currentCard = slides[currentIndex];
-    const nextIndex = (currentIndex + 1) % slides.length;
-    const nextCard = slides[nextIndex];
-    
-    document.getElementById('frontContent').innerHTML = createCardHTML(currentCard);
-    document.getElementById('backContent').innerHTML = createCardHTML(nextCard);
-    
-    // ইন্ডিকেটর আপডেট
-    const indicatorsDiv = document.getElementById('indicators');
-    indicatorsDiv.innerHTML = slides.map((_, i) => 
-      `<div class="dot ${i === currentIndex ? 'active' : ''}" data-index="${i}"></div>`
-    ).join('');
-    
-    document.querySelectorAll('.dot').forEach(dot => {
-      dot.addEventListener('click', (e) => {
-        if (isAnimating) return;
-        const idx = parseInt(e.target.dataset.index);
-        if (!isNaN(idx) && idx !== currentIndex) {
-          flipToIndex(idx);
-        }
-      });
-    });
-  }
-
-  function flipToNext() {
-    if (isAnimating || slides.length <= 1) return;
-    isAnimating = true;
-    
-    const book = document.getElementById('book');
-    book.classList.add('flipping-right');
-    
-    setTimeout(() => {
-      currentIndex = (currentIndex + 1) % slides.length;
-      updateDisplay();
-      book.classList.remove('flipping-right');
-      isAnimating = false;
-      restartAutoFlip();
-    }, 250);
-  }
-
-  function flipToPrev() {
-    if (isAnimating || slides.length <= 1) return;
-    isAnimating = true;
-    
-    const book = document.getElementById('book');
-    book.classList.add('flipping-left');
-    
-    setTimeout(() => {
-      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-      updateDisplay();
-      book.classList.remove('flipping-left');
-      isAnimating = false;
-      restartAutoFlip();
-    }, 250);
-  }
-
-  function flipToIndex(targetIndex) {
-    if (isAnimating || slides.length <= 1 || targetIndex === currentIndex) return;
-    
-    const direction = targetIndex > currentIndex ? 'right' : 'left';
-    isAnimating = true;
-    
-    const book = document.getElementById('book');
-    book.classList.add(direction === 'right' ? 'flipping-right' : 'flipping-left');
-    
-    setTimeout(() => {
-      currentIndex = targetIndex;
-      updateDisplay();
-      book.classList.remove(direction === 'right' ? 'flipping-right' : 'flipping-left');
-      isAnimating = false;
-      restartAutoFlip();
-    }, 250);
-  }
-
-  function startAutoFlip() {
-    if (autoFlipInterval) clearInterval(autoFlipInterval);
-    if (slides.length > 1) {
-      autoFlipInterval = setInterval(() => {
-        flipToNext();
-      }, 5000);
-    }
-  }
-
-  function restartAutoFlip() {
-    if (autoFlipInterval) clearInterval(autoFlipInterval);
-    startAutoFlip();
-  }
-
-  // মোডাল ফাংশন
-  window.showModal = function(event) {
-    if (event) event.stopPropagation();
-    if (!slides.length) return;
-    
-    const card = slides[currentIndex];
+  // মোডাল দেখানো
+  function showModal(card) {
     const status = getStatus(card.startDate, card.endDate);
     const statusText = status === 'running' ? 'চলমান' : 'আসন্ন';
     const statusIcon = status === 'running' ? '🟢' : '🟠';
@@ -574,44 +474,151 @@
     `;
     
     document.getElementById('detailModal').style.display = 'flex';
-  };
+  }
 
-  // ফ্লিপ বাটন তৈরি ও যোগ করা
-  function addFlipButtons() {
-    const container = document.querySelector('.book-container');
-    const btnDiv = document.createElement('div');
-    btnDiv.className = 'flip-buttons';
-    btnDiv.innerHTML = `
-      <button class="flip-btn" id="prevBtn">◀</button>
-      <button class="flip-btn" id="nextBtn">▶</button>
-    `;
-    container.appendChild(btnDiv);
+  // স্লাইড রেন্ডার (ভার্টিক্যাল)
+  function renderSlides() {
+    const wrapper = document.getElementById('slidesWrapper');
+    const indicatorsDiv = document.getElementById('indicators');
     
-    document.getElementById('prevBtn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      flipToPrev();
+    if (!slides.length) {
+      wrapper.innerHTML = `<div class="slide active"><div class="news-card"><div style="text-align:center; padding:40px;">🎪 কোনো মেলার তথ্য নেই</div></div></div>`;
+      indicatorsDiv.innerHTML = '';
+      return;
+    }
+
+    // স্লাইড তৈরি
+    let slidesHtml = '';
+    slides.forEach((slide, idx) => {
+      const activeClass = idx === currentIndex ? 'active' : '';
+      slidesHtml += `
+        <div class="slide ${activeClass}" data-index="${idx}">
+          ${createCardHTML(slide)}
+        </div>
+      `;
     });
-    document.getElementById('nextBtn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      flipToNext();
+    wrapper.innerHTML = slidesHtml;
+
+    // ইন্ডিকেটর তৈরি
+    let indicatorsHtml = '';
+    slides.forEach((_, idx) => {
+      indicatorsHtml += `<div class="indicator ${idx === currentIndex ? 'active' : ''}" data-index="${idx}"></div>`;
+    });
+    indicatorsDiv.innerHTML = indicatorsHtml;
+
+    // ইন্ডিকেটর ক্লিক ইভেন্ট
+    document.querySelectorAll('.indicator').forEach(ind => {
+      ind.addEventListener('click', (e) => {
+        const idx = parseInt(e.target.dataset.index);
+        if (!isNaN(idx) && idx !== currentIndex) {
+          goToSlide(idx);
+        }
+      });
+    });
+
+    // কার্ড ক্লিক ইভেন্ট
+    document.querySelectorAll('.news-card').forEach((card, idx) => {
+      card.addEventListener('click', () => {
+        showModal(slides[idx]);
+      });
     });
   }
+
+  // ভার্টিক্যাল ট্রানজিশন ইফেক্ট
+  function goToSlide(newIndex) {
+    if (isTransitioning || newIndex === currentIndex || !slides.length) return;
+    
+    isTransitioning = true;
+    const direction = newIndex > currentIndex ? 'down' : 'up';
+    const currentSlide = document.querySelector(`.slide[data-index="${currentIndex}"]`);
+    const newSlide = document.querySelector(`.slide[data-index="${newIndex}"]`);
+    
+    if (!currentSlide || !newSlide) {
+      isTransitioning = false;
+      return;
+    }
+
+    // অ্যানিমেশন স্টাইল সেট
+    if (direction === 'down') {
+      currentSlide.style.transform = 'translateY(-100%)';
+      currentSlide.style.opacity = '0';
+      newSlide.style.transform = 'translateY(100%)';
+      newSlide.style.opacity = '0';
+    } else {
+      currentSlide.style.transform = 'translateY(100%)';
+      currentSlide.style.opacity = '0';
+      newSlide.style.transform = 'translateY(-100%)';
+      newSlide.style.opacity = '0';
+    }
+    
+    newSlide.style.display = 'block';
+    newSlide.classList.add('active');
+    
+    // ফোর্স রিফ্লো
+    void newSlide.offsetHeight;
+    
+    // অ্যানিমেশন চালু
+    newSlide.style.transform = 'translateY(0)';
+    newSlide.style.opacity = '1';
+    
+    setTimeout(() => {
+      currentSlide.classList.remove('active');
+      currentSlide.style.transform = '';
+      currentSlide.style.opacity = '';
+      newSlide.style.transform = '';
+      newSlide.style.opacity = '';
+      currentSlide.style.display = '';
+      
+      // ইন্ডিকেটর আপডেট
+      document.querySelectorAll('.indicator').forEach((ind, i) => {
+        ind.classList.toggle('active', i === newIndex);
+      });
+      
+      currentIndex = newIndex;
+      isTransitioning = false;
+      restartAutoSlide();
+    }, 500);
+  }
+
+  function nextSlide() {
+    if (slides.length && !isTransitioning) {
+      goToSlide((currentIndex + 1) % slides.length);
+    }
+  }
+
+  function prevSlide() {
+    if (slides.length && !isTransitioning) {
+      goToSlide((currentIndex - 1 + slides.length) % slides.length);
+    }
+  }
+
+  function startAutoSlide() {
+    if (autoInterval) clearInterval(autoInterval);
+    if (slides.length > 1) {
+      autoInterval = setInterval(() => {
+        nextSlide();
+      }, 5000);
+    }
+  }
+
+  function restartAutoSlide() {
+    if (autoInterval) {
+      clearInterval(autoInterval);
+      startAutoSlide();
+    }
+  }
+
+  // বাটন ইভেন্ট
+  document.getElementById('prevBtn').addEventListener('click', () => prevSlide());
+  document.getElementById('nextBtn').addEventListener('click', () => nextSlide());
 
   // Firebase লোড
   database.ref('melaPosts').on('value', (snap) => {
     const data = snap.val();
     slides = data ? Object.keys(data).map(k => ({ id: k, ...data[k] })).sort((a,b) => (a.order||0)-(b.order||0)) : [];
     currentIndex = 0;
-    updateDisplay();
-    startAutoFlip();
-  });
-
-  // কার্ডে ক্লিক করলে মোডাল খোলা
-  document.getElementById('frontPage').addEventListener('click', (e) => {
-    if (!e.target.closest('.flip-btn')) showModal();
-  });
-  document.getElementById('backPage').addEventListener('click', (e) => {
-    if (!e.target.closest('.flip-btn')) showModal();
+    renderSlides();
+    startAutoSlide();
   });
 
   // মোডাল ক্লোজ
@@ -623,8 +630,6 @@
       document.getElementById('detailModal').style.display = 'none';
     }
   };
-
-  addFlipButtons();
 </script>
 </body>
 </html>
