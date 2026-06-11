@@ -3,142 +3,121 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>বাংলাদেশ মেলা অ্যাপস | গোল্ডেন স্লাইডার</title>
+  <title>বাংলাদেশ মেলা অ্যাপস</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
-      background: #e8e8e8;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Segoe UI', 'Poppins', 'Noto Sans Bengali', system-ui, sans-serif;
-      padding: 16px;
+      font-family: 'Segoe UI', 'Noto Sans Bengali', system-ui, sans-serif;
+      padding: 20px;
     }
-    .billboard {
+    .slider-container {
       width: 100%;
-      max-width: 640px;
-      aspect-ratio: 16 / 9;
-      background: #ffffff;
-      overflow: hidden;
-      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(212, 175, 55, 0.3);
-      position: relative;
-      border-radius: 24px;
+      max-width: 900px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 30px;
+      padding: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
     }
-    .screen {
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+    .slider {
       position: relative;
+      height: 400px;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .content-container {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      overflow: hidden;
+      border-radius: 20px;
     }
     .slide {
       position: absolute;
       width: 100%;
       height: 100%;
-      top: 0;
-      left: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      background: linear-gradient(135deg, #ffffff, #f8f9fa);
+      padding: 40px;
+      border-radius: 20px;
       opacity: 0;
-      transition: opacity 0.5s ease-in-out;
-    }
-    .slide.active { opacity: 1; z-index: 10; }
-    .news-card {
-      background: #ffffff;
-      width: 100%;
-      height: 100%;
+      transition: opacity 0.5s ease;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      text-align: center;
-      padding: 25px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
     }
+    .slide.active { opacity: 1; }
     .tag {
       display: inline-block;
-      background: linear-gradient(115deg, #d4af37, #c49b2a);
-      padding: 6px 20px;
-      border-radius: 50px;
-      font-size: 0.75rem;
-      font-weight: bold;
-      color: #ffffff;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
+      background: #ff6b6b;
+      color: white;
+      padding: 5px 15px;
+      border-radius: 20px;
+      font-size: 0.8rem;
       margin-bottom: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      width: fit-content;
     }
     .title {
-      font-size: 1.6rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #b8860b, #d4af37, #ffd700);
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      margin-bottom: 18px;
-      line-height: 1.3;
-      padding: 0 15px;
+      font-size: 2rem;
+      color: #2c3e50;
+      margin-bottom: 20px;
     }
-    .desc {
-      font-size: 1rem;
-      color: #6b6b6b;
-      line-height: 1.5;
-      padding: 0 20px;
-      max-width: 90%;
-      font-weight: 500;
+    .description {
+      font-size: 1.1rem;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 15px;
     }
-    .slide-indicators {
+    .mela-type {
+      color: #ff6b6b;
+      font-weight: bold;
+    }
+    .nav-btn {
       position: absolute;
-      bottom: 15px;
-      left: 0;
-      right: 0;
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      z-index: 20;
-    }
-    .indicator {
-      width: 8px;
-      height: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.5);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      cursor: pointer;
       border-radius: 50%;
-      background: rgba(0, 0, 0, 0.3);
-      transition: all 0.3s;
+      font-size: 1.2rem;
+      z-index: 10;
     }
-    .indicator.active { width: 20px; border-radius: 10px; background: #d4af37; }
-    @media (max-width: 550px) {
-      .title { font-size: 1.2rem; padding: 0 10px; margin-bottom: 12px; }
-      .desc { font-size: 0.85rem; padding: 0 15px; }
-      .tag { font-size: 0.65rem; padding: 4px 16px; margin-bottom: 15px; }
+    .prev { left: 10px; }
+    .next { right: 10px; }
+    .dots {
+      text-align: center;
+      margin-top: 20px;
+    }
+    .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #bbb;
+      margin: 0 5px;
+      cursor: pointer;
+    }
+    .dot.active { background: #ff6b6b; }
+    @media (max-width: 768px) {
+      .slider { height: 350px; }
+      .title { font-size: 1.5rem; }
+      .description { font-size: 0.9rem; }
+      .slide { padding: 20px; }
     }
   </style>
 </head>
 <body>
-<div class="billboard">
-  <div class="screen">
-    <div class="content-container" id="slidesContainer">
-      <div class="loading-slide" style="display: flex; align-items: center; justify-content: center; height: 100%;">
-        <p style="color: #d4af37;">🎪 মেলার তথ্য লোড হচ্ছে...</p>
-      </div>
-    </div>
-    <div class="slide-indicators" id="indicators"></div>
+<div class="slider-container">
+  <div class="slider" id="slider">
+    <!-- স্লাইডগুলো এখানে ডায়নামিক হবে -->
   </div>
+  <div class="dots" id="dots"></div>
 </div>
 
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, getDocs, orderBy, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+  import { getFirestore, collection, getDocs, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-  // আপনার Firebase কনফিগারেশন (নিশ্চিত করুন এটা সঠিক)
   const firebaseConfig = {
     apiKey: "AIzaSyAKRgsUrYL4uAWinn5dcJrKck1nqUokRdw",
     authDomain: "all-hadith-a68fa.firebaseapp.com",
@@ -151,120 +130,86 @@
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  let slidesData = [];
-  let currentIndex = 0;
-  let interval;
+  let currentSlide = 0;
+  let slides = [];
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
+  // রিয়েলটাইম লিসেনার
+  onSnapshot(collection(db, "melaPosts"), (snapshot) => {
+    slides = [];
+    snapshot.forEach(doc => {
+      slides.push({ id: doc.id, ...doc.data() });
     });
-  }
+    renderSlides();
+  });
 
-  function createSlideHTML(card) {
-    return `
-      <div class="slide">
-        <div class="news-card">
-          <div class="tag">${escapeHtml(card.tag) || '🎪 মেলা'} ${card.melaType ? '| ' + escapeHtml(card.melaType) : ''}</div>
-          <div class="title">${escapeHtml(card.title)}</div>
-          <div class="desc">${escapeHtml(card.description)}</div>
-        </div>
+  function renderSlides() {
+    const sliderDiv = document.getElementById('slider');
+    const dotsDiv = document.getElementById('dots');
+    
+    if (slides.length === 0) {
+      sliderDiv.innerHTML = '<div class="slide active"><div class="tag">🎪 স্বাগতম</div><div class="title">বাংলাদেশ মেলা অ্যাপস</div><div class="description">অ্যাডমিন প্যানেল থেকে মেলার তথ্য যোগ করুন। স্লাইডার এখানে দেখাবে।</div></div>';
+      dotsDiv.innerHTML = '';
+      return;
+    }
+
+    // স্লাইড তৈরি
+    sliderDiv.innerHTML = slides.map((slide, index) => `
+      <div class="slide ${index === 0 ? 'active' : ''}">
+        <div class="tag">${slide.tag || '🎪 মেলা'} | ${slide.melaType || 'মেলা'}</div>
+        <div class="title">${slide.title || 'শিরোনাম নেই'}</div>
+        <div class="description">${slide.description || 'বিবরণ নেই'}</div>
+        <div class="mela-type">📅 ${slide.melaType || 'মেলার ধরন'}</div>
       </div>
-    `;
-  }
+    `).join('');
 
-  function showSlide(index) {
-    const allSlides = document.querySelectorAll('.slide');
-    if (allSlides.length === 0) return;
-    allSlides.forEach(slide => slide.classList.remove('active'));
-    if (allSlides[index]) allSlides[index].classList.add('active');
-    
-    const indicators = document.querySelectorAll('.indicator');
-    indicators.forEach((ind, i) => {
-      if (i === index) ind.classList.add('active');
-      else ind.classList.remove('active');
-    });
-  }
+    // ডটস তৈরি
+    dotsDiv.innerHTML = slides.map((_, index) => `
+      <div class="dot ${index === 0 ? 'active' : ''}" data-index="${index}"></div>
+    `).join('');
 
-  function nextSlide() {
-    if (slidesData.length === 0) return;
-    currentIndex = (currentIndex + 1) % slidesData.length;
-    showSlide(currentIndex);
-  }
-
-  function startSlideshow() {
-    if (interval) clearInterval(interval);
-    if (slidesData.length > 1) {
-      interval = setInterval(nextSlide, 4000);
-    }
-  }
-
-  async function loadSlidesFromFirebase() {
-    const container = document.getElementById('slidesContainer');
-    const indicatorsDiv = document.getElementById('indicators');
-    
-    try {
-      const q = query(collection(db, "melaCards"), orderBy("order", "asc"));
-      const querySnapshot = await getDocs(q);
-      
-      console.log("Firebase থেকে ডাটা এসেছে:", querySnapshot.size); // ডিবাগিং এর জন্য
-      
-      if (querySnapshot.empty) {
-        container.innerHTML = `
-          <div class="slide active">
-            <div class="news-card">
-              <div class="tag">🎪 স্বাগতম</div>
-              <div class="title">বাংলাদেশ মেলা অ্যাপস</div>
-              <div class="desc">অ্যাডমিন প্যানেল থেকে মেলার তথ্য যোগ করুন। স্লাইডার এখানে দেখাবে।</div>
-            </div>
-          </div>
-        `;
-        indicatorsDiv.innerHTML = '<div class="indicator active"></div>';
-        slidesData = [];
-        return;
-      }
-      
-      let html = '';
-      const cardsData = [];
-      querySnapshot.forEach(doc => {
-        const data = doc.data();
-        cardsData.push(data);
-        html += createSlideHTML(data);
+    // ডটস এ ইভেন্ট
+    document.querySelectorAll('.dot').forEach(dot => {
+      dot.addEventListener('click', (e) => {
+        const index = parseInt(e.target.dataset.index);
+        goToSlide(index);
       });
-      
-      container.innerHTML = html;
-      slidesData = cardsData;
-      
-      // ইন্ডিকেটর তৈরি
-      let indicatorsHtml = '';
-      for (let i = 0; i < slidesData.length; i++) {
-        indicatorsHtml += `<div class="indicator ${i === 0 ? 'active' : ''}"></div>`;
-      }
-      indicatorsDiv.innerHTML = indicatorsHtml;
-      
-      currentIndex = 0;
-      showSlide(0);
-      startSlideshow();
-      
-    } catch (error) {
-      console.error("ফায়ারবেস থেকে লোড করতে সমস্যা:", error);
-      container.innerHTML = `
-        <div class="slide active">
-          <div class="news-card">
-            <div class="tag">⚠️ সংযোগ সমস্যা</div>
-            <div class="title">ইন্টারনেট চেক করুন</div>
-            <div class="desc">পুনরায় লোড করে দেখুন।</div>
-          </div>
-        </div>
-      `;
-    }
+    });
+
+    currentSlide = 0;
   }
 
-  loadSlidesFromFirebase();
+  function goToSlide(index) {
+    const slidesElements = document.querySelectorAll('.slide');
+    const dots = document.querySelectorAll('.dot');
+    
+    slidesElements[currentSlide].classList.remove('active');
+    dots[currentSlide].classList.remove('active');
+    
+    currentSlide = index;
+    
+    slidesElements[currentSlide].classList.add('active');
+    dots[currentSlide].classList.add('active');
+  }
+
+  // নেভিগেশন বাটন যোগ করুন (ঐচ্ছিক)
+  const prevBtn = document.createElement('button');
+  prevBtn.innerHTML = '❮';
+  prevBtn.className = 'nav-btn prev';
+  prevBtn.onclick = () => {
+    if (slides.length === 0) return;
+    goToSlide((currentSlide - 1 + slides.length) % slides.length);
+  };
+  
+  const nextBtn = document.createElement('button');
+  nextBtn.innerHTML = '❯';
+  nextBtn.className = 'nav-btn next';
+  nextBtn.onclick = () => {
+    if (slides.length === 0) return;
+    goToSlide((currentSlide + 1) % slides.length);
+  };
+  
+  document.querySelector('.slider').appendChild(prevBtn);
+  document.querySelector('.slider').appendChild(nextBtn);
 </script>
 </body>
 </html>
