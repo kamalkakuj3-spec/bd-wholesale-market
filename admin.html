@@ -13,28 +13,81 @@
       padding: 20px;
     }
     .container { max-width: 900px; margin: 0 auto; }
-    h1 { text-align: center; color: #d4af37; margin-bottom: 30px; }
-    .form-card, .card-list {
+    h1 { text-align: center; color: #d4af37; margin-bottom: 30px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
+    
+    /* স্লাইডার ড্রপডাউন স্টাইল */
+    .slider-dropdown {
       background: white;
       border-radius: 24px;
-      padding: 25px;
       margin-bottom: 30px;
+      overflow: hidden;
       box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
-    .form-card h3, .card-list h3 { color: #b8860b; margin-bottom: 20px; }
-    input, textarea, select, .contact-row input {
+    .slider-header {
+      background: linear-gradient(115deg, #d4af37, #c49b2a);
+      padding: 18px 25px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.3s;
+    }
+    .slider-header:hover {
+      background: linear-gradient(115deg, #c49b2a, #b8860b);
+    }
+    .slider-header h2 {
+      color: white;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .toggle-icon {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      transition: transform 0.3s;
+    }
+    .slider-header.open .toggle-icon {
+      transform: rotate(180deg);
+    }
+    .slider-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out;
+      background: white;
+    }
+    .slider-content.open {
+      max-height: 2000px;
+      transition: max-height 0.5s ease-in;
+    }
+    .form-card {
+      padding: 25px;
+    }
+    .form-card h3 {
+      color: #b8860b;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+    }
+    input, textarea, select {
       width: 100%;
       padding: 12px;
       margin: 8px 0 16px 0;
       border: 2px solid #e0e0e0;
       border-radius: 12px;
       font-size: 1rem;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #d4af37;
     }
     .contact-group {
       background: #f9f9f9;
       padding: 15px;
       border-radius: 16px;
       margin-bottom: 15px;
+      position: relative;
     }
     .contact-row {
       display: flex;
@@ -42,6 +95,16 @@
       margin-bottom: 10px;
     }
     .contact-row input { margin: 0; flex: 1; }
+    .removeContactBtn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.7rem;
+      margin-top: 8px;
+    }
     button {
       background: linear-gradient(115deg, #d4af37, #c49b2a);
       color: white;
@@ -50,10 +113,20 @@
       border-radius: 40px;
       font-weight: bold;
       cursor: pointer;
+      font-size: 1rem;
       margin-right: 10px;
+      transition: transform 0.2s;
     }
+    button:hover { transform: translateY(-2px); }
     .delete-btn { background: #dc3545; }
     .edit-btn { background: #28a745; }
+    .card-list {
+      background: white;
+      border-radius: 24px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    }
+    .card-list h3 { color: #b8860b; margin-bottom: 20px; }
     .card-item {
       background: #f8f9fa;
       border-left: 4px solid #d4af37;
@@ -61,54 +134,71 @@
       margin-bottom: 15px;
       border-radius: 12px;
     }
+    .card-item h4 { color: #2c3e50; margin-bottom: 8px; }
+    .card-item p { color: #666; margin: 5px 0; font-size: 0.9rem; }
     .card-actions { margin-top: 12px; }
     .small-btn { padding: 6px 12px; font-size: 0.8rem; margin: 2px; }
+    
+    @media (max-width: 550px) {
+      .slider-header h2 { font-size: 1.1rem; }
+      .form-card { padding: 18px; }
+    }
   </style>
 </head>
 <body>
 <div class="container">
   <h1>🏆 অ্যাডমিন প্যানেল | মেলা স্লাইডার 🏆</h1>
 
-  <div class="form-card" id="formCard">
-    <h3 id="formTitle">✨ নতুন মেলা যোগ করুন ✨</h3>
-    <input type="text" id="title" placeholder="মেলার নাম *" required>
-    <textarea id="description" rows="3" placeholder="বিবরণ *" required></textarea>
-    <input type="text" id="address" placeholder="ঠিকানা/লোকেশন">
-    <input type="url" id="mapLink" placeholder="গুগল ম্যাপ লিংক (ঐচ্ছিক)">
-    
-    <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-      <input type="datetime-local" id="startDate" style="flex:1;" required>
-      <input type="datetime-local" id="endDate" style="flex:1;" required>
+  <!-- স্লাইডার ড্রপডাউন -->
+  <div class="slider-dropdown">
+    <div class="slider-header" id="sliderHeader">
+      <h2>📋 স্লাইডার - মেলার তথ্য ব্যবস্থাপনা</h2>
+      <span class="toggle-icon">▼</span>
     </div>
+    <div class="slider-content" id="sliderContent">
+      <div class="form-card">
+        <h3>✨ মেলার তথ্য যোগ/এডিট করুন ✨</h3>
+        <input type="text" id="title" placeholder="মেলার নাম *" required>
+        <textarea id="description" rows="3" placeholder="বিবরণ *" required></textarea>
+        <input type="text" id="address" placeholder="ঠিকানা/লোকেশন">
+        <input type="url" id="mapLink" placeholder="গুগল ম্যাপ লিংক (ঐচ্ছিক)">
+        
+        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+          <input type="datetime-local" id="startDate" style="flex:1;" required>
+          <input type="datetime-local" id="endDate" style="flex:1;" required>
+        </div>
 
-    <select id="melaType">
-      <option value="মাসব্যাপী মেলা">মাসব্যাপী মেলা</option>
-      <option value="১৫ দিনব্যাপী মেলা">১৫ দিনব্যাপী মেলা</option>
-      <option value="৭ দিনব্যাপী মেলা">৭ দিনব্যাপী মেলা</option>
-      <option value="৩ দিনব্যাপী মেলা">৩ দিনব্যাপী মেলা</option>
-    </select>
+        <select id="melaType">
+          <option value="মাসব্যাপী মেলা">মাসব্যাপী মেলা</option>
+          <option value="১৫ দিনব্যাপী মেলা">১৫ দিনব্যাপী মেলা</option>
+          <option value="৭ দিনব্যাপী মেলা">৭ দিনব্যাপী মেলা</option>
+          <option value="৩ দিনব্যাপী মেলা">৩ দিনব্যাপী মেলা</option>
+        </select>
 
-    <input type="number" id="order" placeholder="ক্রম (১,২,৩...)" value="1">
+        <input type="number" id="order" placeholder="ক্রম (১,২,৩...)" value="1">
 
-    <div id="contactsArea">
-      <h4 style="margin:15px 0 10px;">📞 যোগাযোগ ব্যক্তি (একাধিক)</h4>
-      <div id="contactList">
-        <div class="contact-group">
-          <div class="contact-row">
-            <input type="text" placeholder="নাম" class="contact-name">
-            <input type="tel" placeholder="মোবাইল নাম্বার" class="contact-phone">
+        <div id="contactsArea">
+          <h4 style="margin:15px 0 10px;">📞 যোগাযোগ ব্যক্তি (একাধিক)</h4>
+          <div id="contactList">
+            <div class="contact-group">
+              <div class="contact-row">
+                <input type="text" placeholder="নাম" class="contact-name">
+                <input type="tel" placeholder="মোবাইল নাম্বার" class="contact-phone">
+              </div>
+            </div>
           </div>
+          <button type="button" id="addContactBtn" style="background:#6c757d;">+ আরও যোগাযোগ যোগ করুন</button>
+        </div>
+
+        <div style="margin-top: 20px;">
+          <button id="saveBtn">➕ সংরক্ষণ করুন</button>
+          <button id="cancelBtn" style="background:#6c757d; display:none;">বাতিল করুন</button>
         </div>
       </div>
-      <button type="button" id="addContactBtn" style="background:#6c757d;">+ আরও যোগাযোগ যোগ করুন</button>
-    </div>
-
-    <div style="margin-top: 20px;">
-      <button id="saveBtn">➕ সংরক্ষণ করুন</button>
-      <button id="cancelBtn" style="background:#6c757d; display:none;">বাতিল করুন</button>
     </div>
   </div>
 
+  <!-- সকল মেলার তালিকা -->
   <div class="card-list">
     <h3>📋 সকল মেলার তালিকা</h3>
     <div id="postsList">লোড হচ্ছে...</div>
@@ -135,7 +225,25 @@
 
   let currentEditId = null;
 
-  // দিন গণনা ফাংশন
+  // ড্রপডাউন টগল
+  const sliderHeader = document.getElementById('sliderHeader');
+  const sliderContent = document.getElementById('sliderContent');
+  
+  sliderHeader.addEventListener('click', () => {
+    sliderHeader.classList.toggle('open');
+    sliderContent.classList.toggle('open');
+  });
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
   function calculateDays(startDate, endDate, melaType) {
     if (startDate && endDate) {
       const start = new Date(startDate);
@@ -153,7 +261,6 @@
     }
   }
 
-  // কন্টাক্ট কালেক্ট করা
   function collectContacts() {
     const contacts = [];
     document.querySelectorAll('.contact-group').forEach(group => {
@@ -164,7 +271,6 @@
     return contacts;
   }
 
-  // কন্টাক্ট ফিল্ড রেন্ডার (এডিটের জন্য)
   function renderContactFields(contacts) {
     const container = document.getElementById('contactList');
     container.innerHTML = '';
@@ -177,29 +283,19 @@
       contacts.forEach(contact => {
         const div = document.createElement('div');
         div.className = 'contact-group';
-        div.innerHTML = `<div class="contact-row"><input type="text" placeholder="নাম" class="contact-name" value="${escapeHtml(contact.name)}"><input type="tel" placeholder="মোবাইল নাম্বার" class="contact-phone" value="${escapeHtml(contact.phone)}"></div>`;
+        div.innerHTML = `<div class="contact-row"><input type="text" placeholder="নাম" class="contact-name" value="${escapeHtml(contact.name)}"><input type="tel" placeholder="মোবাইল নাম্বার" class="contact-phone" value="${escapeHtml(contact.phone)}"></div><button type="button" class="removeContactBtn" style="background:#dc3545; padding:4px 8px; font-size:0.7rem;">✖️ সরান</button>`;
         container.appendChild(div);
+        div.querySelector('.removeContactBtn').addEventListener('click', () => div.remove());
       });
     }
   }
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, function(m) {
-      if (m === '&') return '&amp;';
-      if (m === '<') return '&lt;';
-      if (m === '>') return '&gt;';
-      return m;
-    });
-  }
-
-  // লোড পোস্ট
   function loadPosts() {
     melaPostsRef.on('value', (snapshot) => {
       const data = snapshot.val();
       const container = document.getElementById('postsList');
       if (!data) {
-        container.innerHTML = '<div style="text-align:center;padding:40px;">🎪 কোনো পোস্ট নেই</div>';
+        container.innerHTML = '<div style="text-align:center;padding:40px;">🎪 কোনো পোস্ট নেই। উপরের ফর্ম দিয়ে যোগ করুন।</div>';
         return;
       }
       const posts = Object.keys(data).map(key => ({ id: key, ...data[key] }));
@@ -229,8 +325,9 @@
       });
       document.querySelectorAll('.delete-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
-          if(confirm('ডিলিট করবেন?')) {
+          if(confirm('পোস্টটি ডিলিট করবেন?')) {
             await melaPostsRef.child(btn.getAttribute('data-id')).remove();
+            alert('পোস্ট ডিলিট হয়েছে!');
           }
         });
       });
@@ -256,9 +353,12 @@
       document.getElementById('order').value = post.order || 1;
       renderContactFields(post.contacts || []);
       currentEditId = id;
-      document.getElementById('formTitle').innerText = '✏️ মেলা এডিট করুন';
       document.getElementById('saveBtn').innerHTML = '✏️ আপডেট করুন';
       document.getElementById('cancelBtn').style.display = 'inline-block';
+      
+      // এডিট করার সময় ড্রপডাউন খুলে দিন
+      sliderContent.classList.add('open');
+      sliderHeader.classList.add('open');
     }
   }
 
@@ -273,7 +373,6 @@
     document.getElementById('order').value = '1';
     renderContactFields([]);
     currentEditId = null;
-    document.getElementById('formTitle').innerText = '✨ নতুন মেলা যোগ করুন ✨';
     document.getElementById('saveBtn').innerHTML = '➕ সংরক্ষণ করুন';
     document.getElementById('cancelBtn').style.display = 'none';
   }
@@ -304,7 +403,7 @@
     try {
       if(currentEditId) {
         await melaPostsRef.child(currentEditId).update(postData);
-        alert('আপডেট হয়েছে!');
+        alert('পোস্ট আপডেট হয়েছে!');
       } else {
         await melaPostsRef.push().set(postData);
         alert('নতুন মেলা যোগ হয়েছে!');
