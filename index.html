@@ -5,175 +5,248 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>বাংলাদেশ মেলা অ্যাপস | গোল্ডেন স্লাইডার</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;500;600;700&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
 
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --gold-deep:   #9a6f1e;
-      --gold-mid:    #c9962a;
-      --gold-bright: #f0c040;
-      --gold-pale:   #faecc2;
-      --ink:         #1a1008;
-      --ink-soft:    #4a3a20;
-      --smoke:       #f7f2e8;
-      --white:       #ffffff;
-      --green:       #2e9e54;
-      --amber:       #e07a10;
+      --g1: #fff8e1;   /* warm white */
+      --g2: #ffd54f;   /* light gold */
+      --g3: #f9a825;   /* mid gold */
+      --g4: #e65100;   /* deep amber-gold */
+      --gold: #d4af37;
+      --gold-bright: #ffe066;
+      --gold-shine: #fffde7;
+      --white: #ffffff;
+      --off-white: #fffdf5;
     }
 
     body {
-      background: radial-gradient(ellipse at 60% 20%, #2a1d05 0%, #0e0a02 100%);
+      background: linear-gradient(135deg, #fffde7 0%, #fff8e1 40%, #fef9e7 100%);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: 'Hind Siliguri', 'Noto Sans Bengali', system-ui, sans-serif;
       padding: 16px;
+      overflow: hidden;
     }
 
-    /* ───── BILLBOARD ───── */
+    /* floating particles background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(circle at 20% 30%, rgba(212,175,55,0.15) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(249,168,37,0.12) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ═══════════════════════════════
+       BILLBOARD — 3D perspective wrap
+    ═══════════════════════════════ */
+    .billboard-wrap {
+      perspective: 1200px;
+      perspective-origin: 50% 50%;
+      position: relative;
+      z-index: 1;
+    }
+
     .billboard {
       width: 100%;
       max-width: 640px;
       aspect-ratio: 16 / 9;
       position: relative;
-      border-radius: 20px;
-      /* multi-layer gold border glow */
-      box-shadow:
-        0 0 0 1px var(--gold-deep),
-        0 0 0 3px var(--gold-mid),
-        0 0 0 5px rgba(201,150,42,0.25),
-        0 30px 80px rgba(0,0,0,0.7),
-        inset 0 0 0 1px rgba(240,192,64,0.1);
-      overflow: hidden;
+      border-radius: 22px;
+      transform-style: preserve-3d;
+      animation: floatCard 6s ease-in-out infinite;
+      overflow: visible;
+
+      /* layered gold shadows for 3D depth */
+      filter: drop-shadow(0 8px 0 rgba(180,140,20,0.5))
+              drop-shadow(0 16px 0 rgba(180,140,20,0.25))
+              drop-shadow(0 32px 40px rgba(180,140,20,0.3))
+              drop-shadow(0 60px 80px rgba(0,0,0,0.15));
     }
 
-    /* decorative corner ornaments */
-    .billboard::before,
+    @keyframes floatCard {
+      0%   { transform: rotateX(3deg) rotateY(-1.5deg) translateY(0px); }
+      30%  { transform: rotateX(1deg) rotateY(1.5deg)  translateY(-8px); }
+      60%  { transform: rotateX(3.5deg) rotateY(0deg)  translateY(-4px); }
+      100% { transform: rotateX(3deg) rotateY(-1.5deg) translateY(0px); }
+    }
+
+    .billboard:hover {
+      animation: none;
+      transform: rotateX(2deg) rotateY(0deg) translateY(-4px) scale(1.01);
+      transition: transform 0.4s ease;
+    }
+
+    /* gold 3D edge — bottom face */
     .billboard::after {
       content: '';
       position: absolute;
-      z-index: 50;
-      width: 44px;
-      height: 44px;
-      pointer-events: none;
+      bottom: -10px; left: 6px; right: 6px;
+      height: 12px;
+      background: linear-gradient(180deg, #c9962a, #9a6f1e);
+      border-radius: 0 0 18px 18px;
+      transform: translateZ(-1px);
+      z-index: -1;
     }
-    .billboard::before {
-      top: -1px; left: -1px;
-      border-top: 3px solid var(--gold-bright);
-      border-left: 3px solid var(--gold-bright);
-      border-radius: 20px 0 0 0;
-    }
-    .billboard::after {
-      bottom: -1px; right: -1px;
-      border-bottom: 3px solid var(--gold-bright);
-      border-right: 3px solid var(--gold-bright);
-      border-radius: 0 0 20px 0;
-    }
-    .corner-tr, .corner-bl {
-      position: absolute;
-      z-index: 50;
-      width: 44px;
-      height: 44px;
-      pointer-events: none;
-    }
-    .corner-tr { top: -1px; right: -1px; border-top: 3px solid var(--gold-bright); border-right: 3px solid var(--gold-bright); border-radius: 0 20px 0 0; }
-    .corner-bl { bottom: -1px; left: -1px; border-bottom: 3px solid var(--gold-bright); border-left: 3px solid var(--gold-bright); border-radius: 0 0 0 20px; }
 
-    /* ───── SCREEN BACKGROUND ───── */
+    /* ═══════════════════════════════
+       SCREEN INNER
+    ═══════════════════════════════ */
     .screen {
       width: 100%;
       height: 100%;
-      background:
-        radial-gradient(ellipse 70% 60% at 50% 0%, rgba(201,150,42,0.13) 0%, transparent 70%),
-        linear-gradient(160deg, #1c1305 0%, #0d0900 60%, #1a100a 100%);
-      position: relative;
+      border-radius: 22px;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      position: relative;
+      background: linear-gradient(145deg, #ffffff 0%, #fffdf0 60%, #fff8e1 100%);
+      /* inset 3D border */
+      box-shadow:
+        inset 0 0 0 2px rgba(212,175,55,0.9),
+        inset 0 0 0 4px rgba(255,255,255,0.8),
+        inset 0 0 0 6px rgba(212,175,55,0.4),
+        inset 0 2px 20px rgba(255,250,230,0.6);
     }
 
-    /* ambient shimmer lines */
+    /* animated shimmer sweep across screen */
     .screen::before {
       content: '';
       position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 59px,
-        rgba(201,150,42,0.04) 60px
+      top: -100%; left: -60%;
+      width: 60%; height: 300%;
+      background: linear-gradient(
+        105deg,
+        transparent 40%,
+        rgba(255,255,255,0.55) 50%,
+        transparent 60%
       );
+      animation: shimmerSweep 4s ease-in-out infinite;
       pointer-events: none;
-      z-index: 1;
+      z-index: 40;
+      border-radius: 100%;
     }
 
-    /* ───── TOP HEADER BAR ───── */
+    @keyframes shimmerSweep {
+      0%   { left: -60%; opacity: 0; }
+      10%  { opacity: 1; }
+      70%  { left: 110%; opacity: 1; }
+      80%  { opacity: 0; }
+      100% { left: 110%; opacity: 0; }
+    }
+
+    /* ═══════════════════════════════
+       HEADER BAR
+    ═══════════════════════════════ */
     .header-bar {
       position: absolute;
       top: 0; left: 0; right: 0;
       z-index: 30;
-      height: 36px;
-      background: linear-gradient(90deg, rgba(154,111,30,0.0) 0%, rgba(201,150,42,0.18) 50%, rgba(154,111,30,0.0) 100%);
-      border-bottom: 1px solid rgba(201,150,42,0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-    }
-    .header-logo-text {
-      font-family: 'Playfair Display', serif;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      background: linear-gradient(90deg, var(--gold-mid), var(--gold-bright), var(--gold-mid));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
-    .header-gem {
-      width: 5px; height: 5px;
-      border-radius: 50%;
-      background: var(--gold-bright);
-      box-shadow: 0 0 6px var(--gold-bright);
+      height: 34px;
+      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.12), transparent);
+      border-bottom: 1.5px solid rgba(212,175,55,0.5);
+      display: flex; align-items: center; justify-content: center; gap: 10px;
     }
 
-    /* ───── SLIDE CONTAINER ───── */
+    .header-text {
+      font-family: 'Cinzel', serif;
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--g3);
+    }
+
+    .header-gem {
+      width: 6px; height: 6px;
+      background: radial-gradient(circle at 35% 35%, var(--gold-bright), var(--g3));
+      border-radius: 50%;
+      box-shadow: 0 0 8px rgba(212,175,55,0.7), 0 0 16px rgba(212,175,55,0.3);
+      animation: gemPulse 2.5s ease-in-out infinite;
+    }
+    .header-gem:nth-child(3) { animation-delay: 1.2s; }
+
+    @keyframes gemPulse {
+      0%, 100% { box-shadow: 0 0 8px rgba(212,175,55,0.7), 0 0 16px rgba(212,175,55,0.3); }
+      50% { box-shadow: 0 0 14px rgba(212,175,55,1), 0 0 28px rgba(212,175,55,0.6); }
+    }
+
+    /* ═══════════════════════════════
+       CORNER ORNAMENTS
+    ═══════════════════════════════ */
+    .corner {
+      position: absolute;
+      width: 32px; height: 32px;
+      z-index: 35;
+      pointer-events: none;
+    }
+    .corner::before, .corner::after {
+      content: '';
+      position: absolute;
+      background: linear-gradient(135deg, var(--g3), var(--gold-bright));
+    }
+    .corner::before { width: 100%; height: 2.5px; top: 0; }
+    .corner::after  { width: 2.5px; height: 100%; top: 0; }
+
+    .corner-tl { top: 6px; left: 6px; }
+    .corner-tr { top: 6px; right: 6px; transform: scaleX(-1); }
+    .corner-bl { bottom: 6px; left: 6px; transform: scaleY(-1); }
+    .corner-br { bottom: 6px; right: 6px; transform: scale(-1); }
+
+    /* ═══════════════════════════════
+       SLIDE CONTAINER
+    ═══════════════════════════════ */
     .content-container {
       position: absolute;
-      inset: 36px 0 34px 0;
+      inset: 34px 0 32px 0;
       overflow: hidden;
       touch-action: pan-y pinch-zoom;
       z-index: 10;
     }
 
-    /* ───── INDIVIDUAL SLIDE ───── */
+    /* ═══════════════════════════════
+       SLIDE — 3D flip entrance
+    ═══════════════════════════════ */
     .slide {
       position: absolute;
       width: 100%;
       height: 100%;
       top: 0; left: 0;
-      opacity: 0;
-      transform: translateX(30px) scale(0.98);
-      transition: opacity 0.5s cubic-bezier(0.4,0,0.2,1),
-                  transform 0.5s cubic-bezier(0.4,0,0.2,1);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 16px 22px;
-    }
-    .slide.active {
-      opacity: 1;
-      transform: translateX(0) scale(1);
-      z-index: 10;
+      padding: 14px 22px 10px;
+
+      opacity: 0;
+      transform: perspective(800px) rotateY(25deg) translateX(40px) scale(0.95);
+      transition:
+        opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: none;
     }
 
-    /* ───── NEWS CARD ───── */
+    .slide.active {
+      opacity: 1;
+      transform: perspective(800px) rotateY(0deg) translateX(0) scale(1);
+      z-index: 10;
+      pointer-events: auto;
+    }
+
+    .slide.leaving {
+      opacity: 0;
+      transform: perspective(800px) rotateY(-20deg) translateX(-40px) scale(0.95);
+      z-index: 5;
+    }
+
+    /* ═══════════════════════════════
+       NEWS CARD — 3D raised tile
+    ═══════════════════════════════ */
     .news-card {
       width: 100%;
       display: flex;
@@ -181,384 +254,509 @@
       align-items: center;
       text-align: center;
       cursor: pointer;
-      padding: 0 4px;
+      position: relative;
+
+      /* 3D raised white card */
+      background: linear-gradient(160deg, #ffffff 0%, #fffcf0 100%);
+      border-radius: 16px;
+      padding: 18px 20px 14px;
+      border: 1.5px solid rgba(212,175,55,0.35);
+      box-shadow:
+        0 4px 0 rgba(212,175,55,0.3),
+        0 8px 0 rgba(212,175,55,0.15),
+        0 12px 30px rgba(180,140,20,0.12),
+        inset 0 1px 0 rgba(255,255,255,1),
+        inset 0 -1px 0 rgba(212,175,55,0.2);
+
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
 
-    /* mela type pill */
+    .news-card:hover {
+      transform: translateY(-3px) scale(1.01);
+      box-shadow:
+        0 6px 0 rgba(212,175,55,0.35),
+        0 12px 0 rgba(212,175,55,0.18),
+        0 20px 40px rgba(180,140,20,0.2),
+        inset 0 1px 0 rgba(255,255,255,1);
+    }
+
+    .news-card:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow:
+        0 2px 0 rgba(212,175,55,0.3),
+        0 6px 20px rgba(180,140,20,0.1);
+    }
+
+    /* gold top stripe on card */
+    .news-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 20px; right: 20px;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--g3), var(--gold-bright), var(--g3), transparent);
+      border-radius: 2px;
+      animation: goldStripe 3s ease-in-out infinite;
+    }
+
+    @keyframes goldStripe {
+      0%, 100% { opacity: 0.7; }
+      50% { opacity: 1; filter: brightness(1.2); }
+    }
+
+    /* ═══════════════════════════════
+       TYPE PILL
+    ═══════════════════════════════ */
     .mela-type-pill {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      border: 1px solid rgba(201,150,42,0.4);
-      background: rgba(201,150,42,0.08);
+      gap: 7px;
+      background: linear-gradient(135deg, var(--g3), var(--gold-bright));
       padding: 3px 14px;
       border-radius: 100px;
       margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(212,175,55,0.4), 0 4px 0 rgba(180,130,10,0.2);
     }
     .mela-type-pill span {
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--gold-mid);
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #4a2e00;
       letter-spacing: 0.08em;
       text-transform: uppercase;
     }
-    .pill-dot {
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: var(--gold-mid);
-      opacity: 0.6;
-    }
 
-    /* title */
+    /* ═══════════════════════════════
+       TITLE
+    ═══════════════════════════════ */
     .title {
-      font-family: 'Playfair Display', serif;
-      font-size: 2rem;
-      font-weight: 800;
-      line-height: 1.25;
+      font-family: 'Cinzel', serif;
+      font-size: 1.55rem;
+      font-weight: 900;
+      line-height: 1.2;
       text-align: center;
-      padding: 0 8px;
-      margin-bottom: 10px;
-      background: linear-gradient(150deg, #faecc2 20%, #f0c040 50%, #c9962a 80%);
+      padding: 0 4px;
+      margin-bottom: 8px;
+      background: linear-gradient(135deg, #9a6c00 0%, #c9962a 35%, #f0c040 60%, #c9962a 80%, #9a6c00 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      text-shadow: none;
+      background-size: 200% 100%;
+      animation: goldTextShift 4s ease-in-out infinite;
+      /* 3D text depth */
+      filter: drop-shadow(0 1px 0 rgba(180,130,10,0.25));
     }
 
-    /* thin gold divider */
-    .title-rule {
-      width: 60px;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold-mid), transparent);
-      margin: 0 auto 10px;
+    @keyframes goldTextShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
     }
 
-    /* status row */
+    /* thin divider */
+    .divider {
+      width: 50px; height: 1.5px;
+      background: linear-gradient(90deg, transparent, var(--g3), transparent);
+      margin: 0 auto 9px;
+      position: relative;
+    }
+    .divider::before {
+      content: '◆';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 6px;
+      color: var(--g3);
+      background: white;
+      padding: 0 3px;
+    }
+
+    /* ═══════════════════════════════
+       STATUS BADGE
+    ═══════════════════════════════ */
     .status-row {
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
+      gap: 10px;
+      margin-bottom: 10px;
     }
+
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      font-size: 0.82rem;
-      font-weight: 600;
+      gap: 6px;
+      padding: 3px 12px;
+      border-radius: 100px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
     }
-    .status-badge.running { color: #6ee097; }
-    .status-badge.upcoming { color: #f0a94a; }
+
+    .status-badge.running {
+      background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+      border: 1.5px solid rgba(76,175,80,0.5);
+      color: #2e7d32;
+      box-shadow: 0 2px 8px rgba(76,175,80,0.2), 0 3px 0 rgba(76,175,80,0.15);
+    }
+
+    .status-badge.upcoming {
+      background: linear-gradient(135deg, #fff3e0, #fff8e1);
+      border: 1.5px solid rgba(212,175,55,0.6);
+      color: #7a4e00;
+      box-shadow: 0 2px 8px rgba(212,175,55,0.25), 0 3px 0 rgba(180,130,10,0.15);
+    }
 
     .blinking-dot {
-      width: 8px; height: 8px;
+      width: 7px; height: 7px;
       border-radius: 50%;
-      background: #4cde7a;
-      box-shadow: 0 0 8px #4cde7a;
-      animation: pulse 1.4s infinite;
+      background: #4caf50;
+      box-shadow: 0 0 0 0 rgba(76,175,80,0.5);
+      animation: ripple 1.4s ease-out infinite;
     }
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 8px #4cde7a; }
-      50% { opacity: 0.5; transform: scale(0.75); box-shadow: 0 0 3px #4cde7a; }
+    @keyframes ripple {
+      0%   { box-shadow: 0 0 0 0 rgba(76,175,80,0.6); }
+      70%  { box-shadow: 0 0 0 8px rgba(76,175,80,0); }
+      100% { box-shadow: 0 0 0 0 rgba(76,175,80,0); }
     }
+
     .static-dot {
-      width: 8px; height: 8px;
+      width: 7px; height: 7px;
       border-radius: 50%;
-      background: #f0a94a;
-      box-shadow: 0 0 8px rgba(240,169,74,0.6);
+      background: var(--g3);
     }
 
-    .status-sep {
-      width: 1px;
-      height: 14px;
-      background: rgba(201,150,42,0.35);
-    }
-
-    /* description */
+    /* ═══════════════════════════════
+       DESCRIPTION
+    ═══════════════════════════════ */
     .desc {
-      font-size: 0.85rem;
-      color: rgba(250,236,194,0.6);
-      line-height: 1.65;
-      max-width: 90%;
+      font-size: 0.82rem;
+      color: #6b5020;
+      line-height: 1.6;
+      max-width: 92%;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
-    /* "tap for details" hint */
+    /* tap hint */
     .tap-hint {
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      font-size: 0.68rem;
-      color: rgba(201,150,42,0.55);
-      letter-spacing: 0.06em;
-      border: 1px solid rgba(201,150,42,0.2);
-      padding: 3px 12px;
+      font-size: 0.66rem;
+      font-weight: 600;
+      color: var(--g3);
+      background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(240,192,64,0.12));
+      border: 1px solid rgba(212,175,55,0.35);
+      padding: 4px 14px;
       border-radius: 100px;
+      letter-spacing: 0.05em;
       transition: all 0.2s;
-    }
-    .news-card:hover .tap-hint {
-      color: var(--gold-mid);
-      border-color: rgba(201,150,42,0.5);
-      background: rgba(201,150,42,0.06);
+      box-shadow: 0 2px 0 rgba(180,130,10,0.1);
     }
 
-    /* ───── SLIDE INDICATORS ───── */
+    .news-card:hover .tap-hint {
+      background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(240,192,64,0.2));
+      border-color: var(--g3);
+      box-shadow: 0 3px 0 rgba(180,130,10,0.15), 0 4px 12px rgba(212,175,55,0.2);
+    }
+
+    /* ═══════════════════════════════
+       SLIDE INDICATORS
+    ═══════════════════════════════ */
     .slide-indicators {
       position: absolute;
       bottom: 0; left: 0; right: 0;
-      height: 34px;
+      height: 32px;
       display: flex;
       justify-content: center;
       align-items: center;
-      gap: 7px;
+      gap: 8px;
       z-index: 20;
-      background: linear-gradient(0deg, rgba(0,0,0,0.5) 0%, transparent 100%);
-    }
-    .indicator {
-      width: 6px; height: 6px;
-      border-radius: 50%;
-      background: rgba(201,150,42,0.25);
-      border: 1px solid rgba(201,150,42,0.35);
-      transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
-      cursor: pointer;
-    }
-    .indicator.active {
-      width: 22px;
-      border-radius: 10px;
-      background: linear-gradient(90deg, var(--gold-mid), var(--gold-bright));
-      border-color: transparent;
-      box-shadow: 0 0 8px rgba(240,192,64,0.5);
+      border-top: 1px solid rgba(212,175,55,0.2);
+      background: linear-gradient(0deg, rgba(255,250,230,0.8), transparent);
     }
 
-    /* ───── LOADING STATE ───── */
+    .indicator {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(212,175,55,0.25);
+      border: 1.5px solid rgba(212,175,55,0.4);
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+      transform: translateZ(0);
+    }
+
+    .indicator.active {
+      width: 24px;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--g3), var(--gold-bright), var(--g3));
+      border-color: transparent;
+      box-shadow: 0 0 10px rgba(212,175,55,0.6), 0 2px 0 rgba(180,130,10,0.3);
+      background-size: 200%;
+      animation: activeIndicatorShine 2s linear infinite;
+    }
+
+    @keyframes activeIndicatorShine {
+      0% { background-position: 0%; }
+      100% { background-position: 200%; }
+    }
+
+    /* ═══════════════════════════════
+       LOADING
+    ═══════════════════════════════ */
     .loading-state {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      color: rgba(201,150,42,0.6);
-      font-size: 0.85rem;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      gap: 12px;
+      color: var(--g3);
+      font-size: 0.82rem;
+      font-weight: 600;
     }
     .loader-ring {
       width: 36px; height: 36px;
-      border: 2px solid rgba(201,150,42,0.15);
-      border-top-color: var(--gold-mid);
+      border: 3px solid rgba(212,175,55,0.2);
+      border-top: 3px solid var(--g3);
+      border-right: 3px solid var(--gold-bright);
       border-radius: 50%;
-      animation: spin 1s linear infinite;
+      animation: spin 0.9s linear infinite;
     }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ───── MODAL BACKDROP ───── */
+    /* ═══════════════════════════════
+       MODAL BACKDROP
+    ═══════════════════════════════ */
     .modal {
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(5,3,0,0.85);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
+      background: rgba(80,55,0,0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       z-index: 1000;
       justify-content: center;
       align-items: center;
       padding: 16px;
+      perspective: 1000px;
     }
 
-    /* ───── MODAL CARD ───── */
+    /* ═══════════════════════════════
+       MODAL CARD — 3D flip-in
+    ═══════════════════════════════ */
     .modal-content {
-      background: linear-gradient(160deg, #1e1406 0%, #120d03 100%);
-      border: 1px solid rgba(201,150,42,0.35);
+      background: linear-gradient(160deg, #ffffff 0%, #fffdf5 60%, #fff9e8 100%);
+      border: 2px solid rgba(212,175,55,0.5);
       box-shadow:
-        0 0 0 1px rgba(240,192,64,0.08),
-        0 40px 80px rgba(0,0,0,0.6),
-        inset 0 1px 0 rgba(240,192,64,0.12);
+        0 4px 0 rgba(180,130,10,0.3),
+        0 8px 0 rgba(180,130,10,0.15),
+        0 40px 80px rgba(130,90,0,0.25),
+        inset 0 1px 0 rgba(255,255,255,1),
+        inset 0 0 0 1px rgba(255,250,220,0.8);
       width: 100%;
       max-width: 480px;
       max-height: 85vh;
       border-radius: 20px;
-      padding: 28px 24px 24px;
+      padding: 26px 22px 22px;
       overflow-y: auto;
       position: relative;
+      animation: modalPop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
       scrollbar-width: thin;
-      scrollbar-color: var(--gold-deep) transparent;
+      scrollbar-color: var(--g3) transparent;
     }
     .modal-content::-webkit-scrollbar { width: 4px; }
-    .modal-content::-webkit-scrollbar-thumb { background: var(--gold-deep); border-radius: 4px; }
+    .modal-content::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 4px; }
 
-    /* close button */
+    @keyframes modalPop {
+      from { opacity:0; transform: perspective(800px) rotateX(-15deg) scale(0.9) translateY(20px); }
+      to   { opacity:1; transform: perspective(800px) rotateX(0deg) scale(1) translateY(0); }
+    }
+
+    /* gold stripe top of modal */
+    .modal-content::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, var(--g3), var(--gold-bright), var(--g3), transparent);
+      border-radius: 20px 20px 0 0;
+    }
+
     .close-modal {
       position: absolute;
-      top: 14px; right: 16px;
-      width: 28px; height: 28px;
+      top: 14px; right: 14px;
+      width: 30px; height: 30px;
       border-radius: 50%;
-      border: 1px solid rgba(201,150,42,0.3);
+      background: linear-gradient(135deg, #fff9e8, #fff3cc);
+      border: 1.5px solid rgba(212,175,55,0.5);
+      box-shadow: 0 2px 0 rgba(180,130,10,0.2), 0 4px 10px rgba(0,0,0,0.06);
       display: flex; align-items: center; justify-content: center;
-      font-size: 16px;
-      color: rgba(201,150,42,0.6);
+      font-size: 14px; color: var(--g3);
       cursor: pointer;
       transition: all 0.2s;
-      background: rgba(201,150,42,0.06);
-      line-height: 1;
     }
     .close-modal:hover {
-      background: rgba(201,150,42,0.15);
-      color: var(--gold-bright);
-      border-color: var(--gold-mid);
+      transform: rotate(90deg) scale(1.1);
+      background: linear-gradient(135deg, var(--g3), var(--gold-bright));
+      color: #4a2e00;
+      border-color: transparent;
     }
 
-    /* modal title */
     .modal-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.2rem;
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
       font-weight: 700;
-      background: linear-gradient(135deg, var(--gold-pale), var(--gold-bright));
+      background: linear-gradient(135deg, #9a6c00, #c9962a, #f0c040);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
       margin-bottom: 4px;
-      padding-right: 32px;
+      padding-right: 36px;
       line-height: 1.3;
     }
-    .modal-rule {
-      width: 40px; height: 1px;
-      background: linear-gradient(90deg, var(--gold-mid), transparent);
-      margin: 8px 0 18px;
-    }
 
-    /* modal sections */
+    .modal-rule {
+      display: flex; align-items: center; gap: 8px;
+      margin: 8px 0 16px;
+    }
+    .modal-rule-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--g3), transparent);
+    }
+    .modal-rule-gem { font-size: 8px; color: var(--g3); }
+
     .modal-section {
-      margin-bottom: 16px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid rgba(201,150,42,0.12);
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(212,175,55,0.15);
     }
     .modal-section:last-child { border-bottom: none; margin-bottom: 0; }
 
     .modal-label {
-      font-size: 0.68rem;
-      font-weight: 600;
-      letter-spacing: 0.12em;
+      font-size: 0.64rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      color: rgba(201,150,42,0.55);
-      margin-bottom: 6px;
+      color: rgba(180,130,10,0.6);
+      margin-bottom: 5px;
     }
     .modal-value {
-      font-size: 0.85rem;
-      color: rgba(250,236,194,0.8);
-      line-height: 1.6;
+      font-size: 0.83rem;
+      color: #5a3e10;
+      line-height: 1.65;
     }
 
     .contact-item {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      padding: 5px 0;
-      font-size: 0.82rem;
-      color: rgba(250,236,194,0.75);
+      display: flex; align-items: center; gap: 7px;
+      padding: 4px 0;
+      font-size: 0.8rem;
+      color: #6b4e1a;
     }
-    .contact-item a {
-      color: var(--gold-mid);
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
-    .contact-item a:hover { color: var(--gold-bright); }
+    .contact-item a { color: var(--g3); text-decoration: none; font-weight: 600; }
+    .contact-item a:hover { color: #9a6c00; }
 
-    /* status chip inside modal */
     .modal-status {
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 4px 12px;
       border-radius: 100px;
-      font-size: 0.78rem;
-      font-weight: 600;
+      font-size: 0.76rem;
+      font-weight: 700;
+      box-shadow: 0 2px 0 rgba(0,0,0,0.08);
     }
     .modal-status.running {
-      background: rgba(78,222,122,0.1);
-      border: 1px solid rgba(78,222,122,0.25);
-      color: #6ee097;
+      background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+      border: 1.5px solid rgba(76,175,80,0.5);
+      color: #2e7d32;
     }
     .modal-status.upcoming {
-      background: rgba(240,169,74,0.1);
-      border: 1px solid rgba(240,169,74,0.25);
-      color: #f0a94a;
+      background: linear-gradient(135deg, #fff9e8, #fff3cc);
+      border: 1.5px solid rgba(212,175,55,0.6);
+      color: #7a4e00;
     }
 
-    /* map button */
     .map-link-btn {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: linear-gradient(115deg, var(--gold-mid), var(--gold-deep));
-      color: var(--ink);
-      padding: 8px 18px;
+      background: linear-gradient(135deg, var(--g3), var(--gold-bright));
+      color: #4a2e00;
+      padding: 8px 20px;
       border-radius: 100px;
       text-decoration: none;
-      font-size: 0.78rem;
+      font-size: 0.77rem;
       font-weight: 700;
       margin-top: 6px;
-      transition: filter 0.2s, transform 0.2s;
+      box-shadow: 0 3px 0 rgba(155,110,0,0.3), 0 6px 16px rgba(212,175,55,0.3);
+      transition: all 0.2s;
     }
-    .map-link-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .map-link-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 0 rgba(155,110,0,0.3), 0 10px 24px rgba(212,175,55,0.4);
+    }
+    .map-link-btn:active { transform: translateY(1px); }
 
-    /* ───── RESPONSIVE ───── */
+    /* ═══════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════ */
     @media (max-width: 550px) {
-      .title { font-size: 1.5rem; }
-      .desc { font-size: 0.8rem; }
-      .header-logo-text { font-size: 0.6rem; }
+      .title { font-size: 1.25rem; }
+      .desc { font-size: 0.78rem; }
+      .header-text { font-size: 0.52rem; letter-spacing: 0.2em; }
+      .billboard { animation-duration: 8s; }
     }
     @media (max-width: 400px) {
-      .title { font-size: 1.3rem; }
-      .desc { font-size: 0.75rem; -webkit-line-clamp: 2; }
-      .slide { padding: 12px 14px; }
+      .title { font-size: 1.1rem; }
+      .slide { padding: 10px 12px 8px; }
+      .news-card { padding: 14px 14px 11px; }
     }
-
     @media (prefers-reduced-motion: reduce) {
-      .slide { transition: opacity 0.2s; transform: none !important; }
+      .billboard { animation: none; transform: none; }
+      .slide { transition: opacity 0.3s; transform: none !important; }
       .blinking-dot { animation: none; }
-      .loader-ring { animation: none; }
+      .screen::before { display: none; }
     }
   </style>
 </head>
 <body>
 
-<div class="billboard">
-  <!-- corner ornaments -->
-  <div class="corner-tr"></div>
-  <div class="corner-bl"></div>
+<div class="billboard-wrap">
+  <div class="billboard">
+    <div class="screen">
+      <!-- corner ornaments -->
+      <div class="corner corner-tl"></div>
+      <div class="corner corner-tr"></div>
+      <div class="corner corner-bl"></div>
+      <div class="corner corner-br"></div>
 
-  <div class="screen">
-    <!-- top header bar -->
-    <div class="header-bar">
-      <div class="header-gem"></div>
-      <span class="header-logo-text">বাংলাদেশ মেলা অ্যাপস</span>
-      <div class="header-gem"></div>
-    </div>
+      <!-- header -->
+      <div class="header-bar">
+        <div class="header-gem"></div>
+        <span class="header-text">বাংলাদেশ মেলা অ্যাপস</span>
+        <div class="header-gem"></div>
+      </div>
 
-    <!-- slides -->
-    <div class="content-container" id="slidesContainer">
-      <div class="slide active">
-        <div class="news-card">
-          <div class="loading-state">
-            <div class="loader-ring"></div>
-            <span>লোড হচ্ছে…</span>
+      <!-- slides -->
+      <div class="content-container" id="slidesContainer">
+        <div class="slide active">
+          <div class="news-card">
+            <div class="loading-state">
+              <div class="loader-ring"></div>
+              <span>লোড হচ্ছে…</span>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <!-- indicators -->
-    <div class="slide-indicators" id="indicators"></div>
+      <!-- indicators -->
+      <div class="slide-indicators" id="indicators"></div>
+    </div>
   </div>
 </div>
 
-<!-- Detail Modal -->
+<!-- Modal -->
 <div id="detailModal" class="modal">
   <div class="modal-content">
-    <div class="close-modal" id="closeModalBtn">&#10005;</div>
+    <div class="close-modal" id="closeModalBtn">✕</div>
     <div id="modalBody"></div>
   </div>
 </div>
@@ -580,25 +778,22 @@
   firebase.initializeApp(firebaseConfig);
   const database = firebase.database();
 
-  let slides = [];
-  let currentIndex = 0;
-  let interval;
-  let touchStartX = 0;
+  let slides = [], currentIndex = 0, interval, touchStartX = 0;
 
   function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
   }
 
-  function getStatus(startDate, endDate) {
-    if (!startDate || !endDate) return 'upcoming';
+  function getStatus(s, e) {
+    if (!s || !e) return 'upcoming';
     const now = new Date();
-    return (now >= new Date(startDate) && now <= new Date(endDate)) ? 'running' : 'upcoming';
+    return now >= new Date(s) && now <= new Date(e) ? 'running' : 'upcoming';
   }
 
-  function formatDateTime(dateStr) {
-    if (!dateStr) return 'N/A';
-    return new Date(dateStr).toLocaleString('bn-BD');
+  function formatDateTime(d) {
+    if (!d) return 'N/A';
+    return new Date(d).toLocaleString('bn-BD');
   }
 
   /* ── Modal ── */
@@ -606,30 +801,31 @@
     if (event) event.stopPropagation();
     const card = slides.find(s => s.id === id);
     if (!card) return;
-    const modal = document.getElementById('detailModal');
-    const status = getStatus(card.startDate, card.endDate);
-    const isRunning = status === 'running';
+    const isRunning = getStatus(card.startDate, card.endDate) === 'running';
 
     let contactsHtml = '';
-    if (card.contacts && card.contacts.length > 0) {
+    if (card.contacts && card.contacts.length) {
       card.contacts.forEach(c => {
         contactsHtml += `<div class="contact-item">👤 <span>${escapeHtml(c.name)}</span> — <a href="tel:${escapeHtml(c.phone)}">${escapeHtml(c.phone)}</a></div>`;
       });
     } else {
-      contactsHtml = '<div class="modal-value" style="opacity:.5">কোনো যোগাযোগ তথ্য নেই</div>';
+      contactsHtml = '<div class="modal-value" style="opacity:.5">কোনো তথ্য নেই</div>';
     }
 
     document.getElementById('modalBody').innerHTML = `
       <div class="modal-title">${escapeHtml(card.title)}</div>
-      <div class="modal-rule"></div>
+      <div class="modal-rule">
+        <div class="modal-rule-line"></div>
+        <span class="modal-rule-gem">◆</span>
+        <div class="modal-rule-line" style="background:linear-gradient(90deg,transparent,#c9962a);"></div>
+      </div>
 
       <div class="modal-section">
         <div class="modal-label">স্ট্যাটাস ও ধরন</div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px;">
           <span class="modal-status ${isRunning ? 'running' : 'upcoming'}">
-            ${isRunning
-              ? '<span style="width:6px;height:6px;border-radius:50%;background:#4cde7a;box-shadow:0 0 6px #4cde7a;display:inline-block;"></span> চলমান'
-              : '<span style="width:6px;height:6px;border-radius:50%;background:#f0a94a;display:inline-block;"></span> আসন্ন'}
+            <span style="width:6px;height:6px;border-radius:50%;background:${isRunning ? '#4caf50' : '#c9962a'};display:inline-block;${isRunning ? 'animation:ripple 1.4s infinite;' : ''}"></span>
+            ${isRunning ? 'চলমান' : 'আসন্ন'}
           </span>
           <span class="modal-value">${escapeHtml(card.melaType)} · ${card.days || '?'} দিনব্যাপী</span>
         </div>
@@ -637,61 +833,57 @@
 
       <div class="modal-section">
         <div class="modal-label">বিস্তারিত বিবরণ</div>
-        <div class="modal-value">${escapeHtml(card.description)}</div>
+        <div class="modal-value" style="margin-top:4px;">${escapeHtml(card.description)}</div>
       </div>
 
       <div class="modal-section">
-        <div class="modal-label">ঠিকানা / লোকেশন</div>
-        <div class="modal-value">${escapeHtml(card.address || 'ঠিকানা দেওয়া নেই')}</div>
+        <div class="modal-label">ঠিকানা</div>
+        <div class="modal-value" style="margin-top:4px;">${escapeHtml(card.address || 'ঠিকানা দেওয়া নেই')}</div>
         ${card.mapLink ? `<a href="${escapeHtml(card.mapLink)}" target="_blank" class="map-link-btn">🗺️ গুগল ম্যাপে দেখুন</a>` : ''}
       </div>
 
       <div class="modal-section">
         <div class="modal-label">যোগাযোগ</div>
-        ${contactsHtml}
+        <div style="margin-top:4px;">${contactsHtml}</div>
       </div>
 
       <div class="modal-section">
         <div class="modal-label">সময়কাল</div>
-        <div class="modal-value">শুরু: ${formatDateTime(card.startDate)}</div>
-        <div class="modal-value" style="margin-top:3px;">শেষ: ${formatDateTime(card.endDate)}</div>
+        <div class="modal-value" style="margin-top:4px;">শুরু: ${formatDateTime(card.startDate)}</div>
+        <div class="modal-value" style="margin-top:2px;">শেষ: ${formatDateTime(card.endDate)}</div>
       </div>
     `;
-    modal.style.display = 'flex';
+    document.getElementById('detailModal').style.display = 'flex';
   };
 
   /* ── Slide HTML ── */
   function createSlideHTML(card, idx) {
     const isRunning = getStatus(card.startDate, card.endDate) === 'running';
-    const statusText = isRunning ? 'চলমান' : 'আসন্ন';
-    const dotHtml = isRunning
-      ? '<span class="blinking-dot"></span>'
-      : '<span class="static-dot"></span>';
     const desc = card.description || '';
-    const shortDesc = desc.length > 110 ? desc.substring(0, 110) + '…' : desc;
-
+    const short = desc.length > 105 ? desc.substring(0,105) + '…' : desc;
     return `
-      <div class="slide" data-id="${card.id}" data-index="${idx}">
+      <div class="slide" data-index="${idx}">
         <div class="news-card" onclick="showModalById('${card.id}', event)">
           <div class="mela-type-pill">
             <span>${escapeHtml(card.melaType)}</span>
-            <span class="pill-dot"></span>
+            <span style="opacity:.5">·</span>
             <span>${card.days || '?'} দিন</span>
           </div>
           <div class="title">${escapeHtml(card.title)}</div>
-          <div class="title-rule"></div>
+          <div class="divider"></div>
           <div class="status-row">
             <div class="status-badge ${isRunning ? 'running' : 'upcoming'}">
-              ${dotHtml} ${statusText}
+              ${isRunning ? '<span class="blinking-dot"></span>' : '<span class="static-dot"></span>'}
+              ${isRunning ? 'চলমান' : 'আসন্ন'}
             </div>
           </div>
-          <div class="desc">${escapeHtml(shortDesc)}</div>
-          <div class="tap-hint">&#9432; বিস্তারিত দেখতে ট্যাপ করুন</div>
+          <div class="desc">${escapeHtml(short)}</div>
+          <div class="tap-hint">✦ বিস্তারিত দেখতে ট্যাপ করুন</div>
         </div>
       </div>`;
   }
 
-  /* ── Touch swipe ── */
+  /* ── Touch ── */
   function onTouchStart(e) { touchStartX = e.changedTouches[0].screenX; }
   function onTouchEnd(e) {
     const dx = e.changedTouches[0].screenX - touchStartX;
@@ -701,19 +893,19 @@
   function prevSlide() {
     if (!slides.length) return;
     currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-    showSlide(currentIndex);
-    startSlideshow();
+    showSlide(currentIndex); startSlideshow();
   }
   function nextSlide() {
     if (!slides.length) return;
     currentIndex = (currentIndex + 1) % slides.length;
-    showSlide(currentIndex);
-    startSlideshow();
+    showSlide(currentIndex); startSlideshow();
   }
 
   function showSlide(index) {
-    document.querySelectorAll('.slide').forEach((s, i) => {
-      s.classList.toggle('active', i === index);
+    const allSlides = document.querySelectorAll('.slide');
+    allSlides.forEach((s, i) => {
+      s.classList.remove('active', 'leaving');
+      if (i === index) s.classList.add('active');
     });
     document.querySelectorAll('.indicator').forEach((d, i) => {
       d.classList.toggle('active', i === index);
@@ -731,7 +923,6 @@
     if (slides.length > 1) interval = setInterval(nextSlide, 5000);
   }
 
-  /* ── Render ── */
   function renderSlides() {
     const container = document.getElementById('slidesContainer');
     const indicatorsDiv = document.getElementById('indicators');
@@ -763,12 +954,7 @@
   /* ── Firebase ── */
   database.ref('melaPosts').on('value', snap => {
     const data = snap.val();
-    if (data) {
-      slides = Object.keys(data).map(k => ({id:k, ...data[k]}));
-      slides.sort((a,b) => (a.order||0) - (b.order||0));
-    } else {
-      slides = [];
-    }
+    slides = data ? Object.keys(data).map(k => ({id:k,...data[k]})).sort((a,b)=>(a.order||0)-(b.order||0)) : [];
     renderSlides();
   });
 
