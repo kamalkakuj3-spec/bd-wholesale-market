@@ -69,57 +69,72 @@
       min-height: 100%;
       display: flex;
       flex-direction: column;
+      align-items: center;
+      text-align: center;
       border-radius: 20px;
       position: relative;
-      padding-bottom: 45px;
+      padding-bottom: 50px;
     }
 
-    .card-header {
-      display: flex;
-      justify-content: space-between;
+    /* স্ট্যাটাস ও টাইপ একসাথে সেন্টারে */
+    .status-type-wrapper {
+      display: inline-flex;
       align-items: center;
-      margin-bottom: 15px;
+      justify-content: center;
+      gap: 12px;
+      background: linear-gradient(115deg, #2c2c2c, #1a1a1a);
+      padding: 6px 20px;
+      border-radius: 50px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
-      gap: 8px;
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 6px;
-      padding: 5px 12px;
-      border-radius: 50px;
-      font-size: 0.7rem;
+      gap: 8px;
+      font-size: 0.75rem;
       font-weight: bold;
     }
 
     .status-badge.running {
-      background: #e8f5e9;
-      color: #2e7d32;
+      color: #4caf50;
     }
 
     .status-badge.upcoming {
-      background: #fff3e0;
-      color: #ed6c02;
+      color: #ff9800;
     }
 
-    .status-icon {
+    .blinking-dot {
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      display: inline-block;
+      background: #4caf50;
+      animation: blink 1.2s infinite;
     }
 
-    .status-icon.running { background: #4caf50; box-shadow: 0 0 5px #4caf50; }
-    .status-icon.upcoming { background: #ff9800; }
+    @keyframes blink {
+      0% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.3; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
 
-    .mela-type-badge {
-      background: linear-gradient(115deg, #d4af37, #c49b2a);
-      padding: 5px 12px;
-      border-radius: 50px;
-      font-size: 0.7rem;
+    .static-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ff9800;
+    }
+
+    .mela-type-text {
+      font-size: 0.75rem;
       font-weight: bold;
-      color: white;
+      color: #d4af37;
+    }
+
+    .separator {
+      color: #d4af37;
+      font-size: 0.75rem;
     }
 
     .title {
@@ -131,6 +146,7 @@
       color: transparent;
       margin-bottom: 12px;
       line-height: 1.3;
+      text-align: center;
     }
 
     .desc {
@@ -142,11 +158,13 @@
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      text-align: center;
+      padding: 0 10px;
     }
 
     .view-btn {
       position: absolute;
-      bottom: 10px;
+      bottom: 12px;
       right: 15px;
       background: linear-gradient(115deg, #d4af37, #c49b2a);
       color: white;
@@ -157,6 +175,10 @@
       font-weight: bold;
       cursor: pointer;
       z-index: 15;
+    }
+
+    .view-btn:hover {
+      opacity: 0.9;
     }
 
     .slide-indicators {
@@ -227,6 +249,7 @@
       -webkit-background-clip: text;
       color: transparent;
       margin-bottom: 15px;
+      text-align: center;
     }
 
     .modal-section {
@@ -260,6 +283,9 @@
       .title { font-size: 1.1rem; }
       .desc { font-size: 0.75rem; }
       .slide { padding: 15px; }
+      .status-type-wrapper { padding: 4px 15px; gap: 8px; }
+      .status-badge { font-size: 0.65rem; }
+      .mela-type-text { font-size: 0.65rem; }
     }
   </style>
 </head>
@@ -336,15 +362,14 @@
     return d.toLocaleString('bn-BD');
   }
 
-  // মোডাল দেখানো (সব তথ্য এখানে)
+  // মোডাল দেখানো
   function showModal(card) {
     const modal = document.getElementById('detailModal');
     const modalBody = document.getElementById('modalBody');
     const status = getStatus(card.startDate, card.endDate);
-    const statusText = status === 'running' ? 'চলমান 🟢' : 'আসন্ন 🟠';
-    const isRunning = status === 'running';
+    const statusText = status === 'running' ? 'চলমান' : 'আসন্ন';
+    const statusIcon = status === 'running' ? '🟢' : '🟠';
     
-    // যোগাযোগের তালিকা
     let contactsHtml = '';
     if (card.contacts && card.contacts.length > 0) {
       card.contacts.forEach(c => {
@@ -354,18 +379,14 @@
       contactsHtml = '<div>কোনো যোগাযোগ তথ্য নেই</div>';
     }
 
-    // গুগল ম্যাপ বাটন
     const mapHtml = card.mapLink ? `<div><a href="${escapeHtml(card.mapLink)}" target="_blank" class="map-link-btn">🗺️ গুগল ম্যাপে দেখুন</a></div>` : '';
 
     modalBody.innerHTML = `
       <div class="modal-title">${escapeHtml(card.title)}</div>
       
       <div class="modal-section">
-        <div class="status-badge ${isRunning ? 'running' : 'upcoming'}" style="margin-bottom:10px;">
-          <span class="status-icon ${isRunning ? 'running' : 'upcoming'}"></span>
-          ${statusText}
-        </div>
         <div><strong>📅 মেলার ধরন:</strong> ${escapeHtml(card.melaType)} (${card.days || ''} দিনব্যাপী)</div>
+        <div style="margin-top:5px;"><strong>স্ট্যাটাস:</strong> ${statusIcon} ${statusText}</div>
       </div>
 
       <div class="modal-section">
@@ -399,25 +420,30 @@
     if (card) showModal(card);
   }
 
-  // স্লাইড তৈরি (শুধু মিনিমাল তথ্য)
+  // স্লাইড তৈরি
   function createSlideHTML(card, idx) {
     const status = getStatus(card.startDate, card.endDate);
     const isRunning = status === 'running';
     const statusText = isRunning ? 'চলমান' : 'আসন্ন';
     
+    const dotHtml = isRunning 
+      ? '<span class="blinking-dot"></span>'
+      : '<span class="static-dot"></span>';
+    
     return `
       <div class="slide" data-id="${card.id}" data-index="${idx}">
         <div class="news-card">
-          <div class="card-header">
+          <div class="status-type-wrapper">
             <div class="status-badge ${isRunning ? 'running' : 'upcoming'}">
-              <span class="status-icon ${isRunning ? 'running' : 'upcoming'}"></span>
+              ${dotHtml}
               ${statusText}
             </div>
-            <div class="mela-type-badge">${escapeHtml(card.melaType)} (${card.days || ''} দিন)</div>
+            <span class="separator">|</span>
+            <span class="mela-type-text">${escapeHtml(card.melaType)} (${card.days || ''} দিন)</span>
           </div>
           <div class="title">${escapeHtml(card.title)}</div>
           <div class="desc">${escapeHtml(card.description).substring(0, 100)}${card.description.length > 100 ? '...' : ''}</div>
-          <button class="view-btn" onclick="event.stopPropagation(); showModalById('${card.id}')">👁️ View</button>
+          <button class="view-btn" onclick="event.stopPropagation(); showModalById('${card.id}')">View</button>
         </div>
       </div>
     `;
@@ -484,7 +510,6 @@
     if (slides.length > 1) interval = setInterval(nextSlide, 5000);
   }
 
-  // Firebase Realtime Database লোড
   const melaPostsRef = database.ref('melaPosts');
   melaPostsRef.on('value', (snapshot) => {
     const data = snapshot.val();
@@ -497,7 +522,6 @@
     renderSlides();
   });
 
-  // মোডাল ক্লোজ
   document.querySelector('.close-modal').onclick = () => {
     document.getElementById('detailModal').style.display = 'none';
   };
