@@ -78,25 +78,25 @@
       cursor: pointer;
     }
 
-    /* স্ট্যাটাস ও টাইপ - মেলার নামের নিচে */
+    /* স্ট্যাটাস ও টাইপ - বড় সাইজ */
     .status-type-wrapper {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 12px;
       background: transparent;
-      padding: 6px 15px;
+      padding: 8px 20px;
       border-radius: 50px;
-      margin-top: 5px;
-      margin-bottom: 10px;
+      margin-top: 8px;
+      margin-bottom: 15px;
       flex-wrap: wrap;
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      font-size: 0.75rem;
+      gap: 10px;
+      font-size: 0.95rem;
       font-weight: bold;
     }
 
@@ -109,8 +109,8 @@
     }
 
     .blinking-dot {
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       background: #4caf50;
       animation: blink 1.2s infinite;
@@ -123,51 +123,55 @@
     }
 
     .static-dot {
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       border-radius: 50%;
       background: #ff9800;
     }
 
     .separator {
       color: #b8860b;
-      font-size: 0.75rem;
+      font-size: 0.95rem;
       font-weight: bold;
     }
 
     .mela-type-text {
-      font-size: 0.75rem;
+      font-size: 0.95rem;
       font-weight: bold;
       color: #b8860b;
       background: transparent;
     }
 
+    /* মেলার নাম - বড় সাইজ + টপ মার্জিন */
     .title {
-      font-size: 1.4rem;
+      font-size: 1.8rem;
       font-weight: 800;
       background: linear-gradient(135deg, #b8860b, #d4af37, #ffd700);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      margin-bottom: 5px;
+      margin-top: 20px;
+      margin-bottom: 10px;
       line-height: 1.3;
       text-align: center;
+      padding: 0 15px;
     }
 
+    /* বিবরণ - বড় সাইজ */
     .desc {
-      font-size: 0.85rem;
+      font-size: 1rem;
       color: #6b6b6b;
-      line-height: 1.5;
-      margin-bottom: 12px;
+      line-height: 1.6;
+      margin-bottom: 15px;
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-align: center;
-      padding: 0 10px;
+      padding: 0 15px;
     }
 
-    /* View টেক্সট - ডান পাশে নিচে */
+    /* View টেক্সট - ছোট সাইজ (একমাত্র যেটা বড় হবে না) */
     .view-text {
       position: absolute;
       bottom: 12px;
@@ -287,12 +291,20 @@
     }
 
     @media (max-width: 550px) {
-      .title { font-size: 1.1rem; }
-      .desc { font-size: 0.75rem; }
+      .title { font-size: 1.4rem; margin-top: 15px; }
+      .desc { font-size: 0.85rem; }
+      .status-badge { font-size: 0.8rem; }
+      .mela-type-text { font-size: 0.8rem; }
+      .separator { font-size: 0.8rem; }
       .slide { padding: 15px; }
-      .status-badge { font-size: 0.65rem; }
-      .mela-type-text { font-size: 0.65rem; }
-      .separator { font-size: 0.65rem; }
+      .blinking-dot, .static-dot { width: 10px; height: 10px; }
+    }
+
+    @media (max-width: 400px) {
+      .title { font-size: 1.2rem; margin-top: 10px; }
+      .desc { font-size: 0.75rem; }
+      .status-badge { font-size: 0.7rem; }
+      .mela-type-text { font-size: 0.7rem; }
     }
   </style>
 </head>
@@ -447,7 +459,7 @@
             <span class="separator">|</span>
             <span class="mela-type-text">${escapeHtml(card.melaType)} (${card.days || ''} দিন)</span>
           </div>
-          <div class="desc">${escapeHtml(card.description).substring(0, 100)}${card.description.length > 100 ? '...' : ''}</div>
+          <div class="desc">${escapeHtml(card.description).substring(0, 120)}${card.description.length > 120 ? '...' : ''}</div>
           <div class="view-text" onclick="showModalById('${card.id}', event)">View</div>
         </div>
       </div>
