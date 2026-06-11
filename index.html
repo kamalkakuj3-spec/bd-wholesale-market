@@ -144,69 +144,6 @@
       overflow: hidden;
     }
 
-    .address {
-      font-size: 0.75rem;
-      color: #b8860b;
-      margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .contact-icon {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #f0f0f0;
-      padding: 6px 12px;
-      border-radius: 30px;
-      cursor: pointer;
-      font-size: 0.75rem;
-      color: #b8860b;
-      margin-bottom: 10px;
-      width: fit-content;
-      transition: all 0.2s;
-    }
-    .contact-icon:hover {
-      background: #e0e0e0;
-    }
-
-    .contact-popup {
-      display: none;
-      background: white;
-      border: 1px solid #d4af37;
-      border-radius: 16px;
-      padding: 12px;
-      margin-top: 5px;
-      margin-bottom: 10px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-    .contact-popup.show {
-      display: block;
-    }
-    .contact-item {
-      padding: 6px 0;
-      font-size: 0.75rem;
-      border-bottom: 1px solid #eee;
-    }
-    .contact-item:last-child {
-      border-bottom: none;
-    }
-
-    .map-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: #f0f0f0;
-      padding: 6px 12px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      color: #b8860b;
-      text-decoration: none;
-      margin-bottom: 10px;
-      width: fit-content;
-    }
-
     .view-btn {
       position: absolute;
       bottom: 10px;
@@ -248,6 +185,7 @@
       background: #d4af37;
     }
 
+    /* মোডাল স্টাইল */
     .modal {
       display: none;
       position: fixed;
@@ -291,6 +229,33 @@
       margin-bottom: 15px;
     }
 
+    .modal-section {
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .contact-item {
+      padding: 6px 0;
+      font-size: 0.85rem;
+    }
+
+    .contact-item a {
+      color: #b8860b;
+      text-decoration: none;
+    }
+
+    .map-link-btn {
+      display: inline-block;
+      background: linear-gradient(115deg, #d4af37, #c49b2a);
+      color: white;
+      padding: 8px 16px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-size: 0.8rem;
+      margin-top: 5px;
+    }
+
     @media (max-width: 550px) {
       .title { font-size: 1.1rem; }
       .desc { font-size: 0.75rem; }
@@ -312,6 +277,7 @@
   </div>
 </div>
 
+<!-- মোডাল -->
 <div id="detailModal" class="modal">
   <div class="modal-content">
     <span class="close-modal">&times;</span>
@@ -364,40 +330,66 @@
     return d.toLocaleDateString('bn-BD');
   }
 
-  window.toggleContact = function(element) {
-    const popup = element.nextElementSibling;
-    if (popup && popup.classList.contains('contact-popup')) {
-      popup.classList.toggle('show');
-    }
+  function formatDateTime(dateStr) {
+    if (!dateStr) return 'N/A';
+    const d = new Date(dateStr);
+    return d.toLocaleString('bn-BD');
   }
 
+  // মোডাল দেখানো (সব তথ্য এখানে)
   function showModal(card) {
     const modal = document.getElementById('detailModal');
     const modalBody = document.getElementById('modalBody');
     const status = getStatus(card.startDate, card.endDate);
     const statusText = status === 'running' ? 'চলমান 🟢' : 'আসন্ন 🟠';
+    const isRunning = status === 'running';
     
-    let contactsHtml = '<div><strong>📞 যোগাযোগ করুন:</strong></div>';
+    // যোগাযোগের তালিকা
+    let contactsHtml = '';
     if (card.contacts && card.contacts.length > 0) {
       card.contacts.forEach(c => {
-        contactsHtml += `<div>👤 ${escapeHtml(c.name)}: <a href="tel:${escapeHtml(c.phone)}">${escapeHtml(c.phone)}</a></div>`;
+        contactsHtml += `<div class="contact-item">👤 ${escapeHtml(c.name)}: <a href="tel:${escapeHtml(c.phone)}">${escapeHtml(c.phone)}</a></div>`;
       });
     } else {
-      contactsHtml += '<div>কোনো যোগাযোগ তথ্য নেই</div>';
+      contactsHtml = '<div>কোনো যোগাযোগ তথ্য নেই</div>';
     }
+
+    // গুগল ম্যাপ বাটন
+    const mapHtml = card.mapLink ? `<div><a href="${escapeHtml(card.mapLink)}" target="_blank" class="map-link-btn">🗺️ গুগল ম্যাপে দেখুন</a></div>` : '';
 
     modalBody.innerHTML = `
       <div class="modal-title">${escapeHtml(card.title)}</div>
-      <div class="status-badge ${status === 'running' ? 'running' : 'upcoming'}" style="margin-bottom:10px;">
-        <span class="status-icon ${status === 'running' ? 'running' : 'upcoming'}"></span>
-        ${statusText}
+      
+      <div class="modal-section">
+        <div class="status-badge ${isRunning ? 'running' : 'upcoming'}" style="margin-bottom:10px;">
+          <span class="status-icon ${isRunning ? 'running' : 'upcoming'}"></span>
+          ${statusText}
+        </div>
+        <div><strong>📅 মেলার ধরন:</strong> ${escapeHtml(card.melaType)} (${card.days || ''} দিনব্যাপী)</div>
       </div>
-      <div><strong>📅 মেলার ধরন:</strong> ${escapeHtml(card.melaType)} (${card.days || ''} দিনব্যাপী)</div>
-      <div><strong>⏰ সময়কাল:</strong> ${formatDate(card.startDate)} - ${formatDate(card.endDate)}</div>
-      <div><strong>📍 ঠিকানা:</strong> ${escapeHtml(card.address || 'ঠিকানা নেই')}</div>
-      <div style="margin:10px 0;"><strong>📝 বিবরণ:</strong><br>${escapeHtml(card.description)}</div>
-      ${contactsHtml}
-      ${card.mapLink ? `<div style="margin-top:10px;"><strong>🗺️ অবস্থান:</strong> <a href="${escapeHtml(card.mapLink)}" target="_blank">গুগল ম্যাপে দেখুন</a></div>` : ''}
+
+      <div class="modal-section">
+        <div><strong>📝 বিস্তারিত বিবরণ:</strong></div>
+        <div style="margin-top:5px; line-height:1.5;">${escapeHtml(card.description)}</div>
+      </div>
+
+      <div class="modal-section">
+        <div><strong>📍 ঠিকানা/লোকেশন:</strong></div>
+        <div>${escapeHtml(card.address || 'ঠিকানা দেওয়া নেই')}</div>
+      </div>
+
+      <div class="modal-section">
+        <div><strong>📞 যোগাযোগ করুন:</strong></div>
+        ${contactsHtml}
+      </div>
+
+      <div class="modal-section">
+        <div><strong>🗓️ সময়কাল:</strong></div>
+        <div>শুরু: ${formatDateTime(card.startDate)}</div>
+        <div>শেষ: ${formatDateTime(card.endDate)}</div>
+      </div>
+
+      ${mapHtml ? `<div class="modal-section">${mapHtml}</div>` : ''}
     `;
     modal.style.display = 'flex';
   }
@@ -407,22 +399,7 @@
     if (card) showModal(card);
   }
 
-  function renderContactIcon(contacts) {
-    if (!contacts || contacts.length === 0) return '';
-    let contactsHtml = '';
-    contacts.forEach(c => {
-      contactsHtml += `<div class="contact-item">👤 ${escapeHtml(c.name)}: <a href="tel:${escapeHtml(c.phone)}">${escapeHtml(c.phone)}</a></div>`;
-    });
-    return `
-      <div class="contact-icon" onclick="event.stopPropagation(); toggleContact(this)">
-        📞 যোগাযোগ ▼
-      </div>
-      <div class="contact-popup">
-        ${contactsHtml}
-      </div>
-    `;
-  }
-
+  // স্লাইড তৈরি (শুধু মিনিমাল তথ্য)
   function createSlideHTML(card, idx) {
     const status = getStatus(card.startDate, card.endDate);
     const isRunning = status === 'running';
@@ -440,9 +417,6 @@
           </div>
           <div class="title">${escapeHtml(card.title)}</div>
           <div class="desc">${escapeHtml(card.description).substring(0, 100)}${card.description.length > 100 ? '...' : ''}</div>
-          ${card.address ? `<div class="address">📍 ${escapeHtml(card.address)}</div>` : ''}
-          ${renderContactIcon(card.contacts)}
-          ${card.mapLink ? `<a href="${escapeHtml(card.mapLink)}" target="_blank" class="map-link" onclick="event.stopPropagation();">🗺️ গুগল ম্যাপ</a>` : ''}
           <button class="view-btn" onclick="event.stopPropagation(); showModalById('${card.id}')">👁️ View</button>
         </div>
       </div>
@@ -510,6 +484,7 @@
     if (slides.length > 1) interval = setInterval(nextSlide, 5000);
   }
 
+  // Firebase Realtime Database লোড
   const melaPostsRef = database.ref('melaPosts');
   melaPostsRef.on('value', (snapshot) => {
     const data = snapshot.val();
@@ -522,6 +497,7 @@
     renderSlides();
   });
 
+  // মোডাল ক্লোজ
   document.querySelector('.close-modal').onclick = () => {
     document.getElementById('detailModal').style.display = 'none';
   };
