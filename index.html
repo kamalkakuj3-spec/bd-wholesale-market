@@ -3,40 +3,62 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>বাংলাদেশ মেলা অ্যাপস | গোল্ডেন স্লাইডার</title>
+  <title>বাংলাদেশ মেলা অ্যাপস | প্রিমিয়াম স্লাইডার</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
-      background: #e8e8e8;
+      background: linear-gradient(145deg, #0a0a2a 0%, #1a1a3a 50%, #0f0f2a 100%);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      font-family: 'Segoe UI', 'Poppins', 'Noto Sans Bengali', system-ui, sans-serif;
-      padding: 16px;
+      font-family: 'Inter', 'Segoe UI', 'Noto Sans Bengali', system-ui, sans-serif;
+      padding: 20px;
+      position: relative;
+    }
+
+    /* ডেকোরেটিভ ব্লার এলিমেন্ট */
+    body::before {
+      content: '';
+      position: fixed;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(212,175,55,0.08) 0%, rgba(0,0,0,0) 70%);
+      pointer-events: none;
+      z-index: 0;
     }
 
     .billboard {
       width: 100%;
       max-width: 640px;
       aspect-ratio: 16 / 9;
-      background: #ffffff;
-      overflow: hidden;
-      box-shadow: 0 20px 35px rgba(0, 0, 0, 0.15), 0 0 0 2px rgba(212, 175, 55, 0.3);
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border-radius: 48px;
+      padding: 12px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255,255,255,0.1);
       position: relative;
-      border-radius: 24px;
+      z-index: 1;
+      border: 1px solid rgba(212, 175, 55, 0.2);
     }
 
     .screen {
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+      background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(248,245,240,0.95) 100%);
+      backdrop-filter: blur(4px);
+      border-radius: 38px;
       position: relative;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02), 0 4px 20px rgba(0,0,0,0.05);
     }
 
     .content-container {
@@ -44,7 +66,7 @@
       height: 100%;
       position: relative;
       overflow: hidden;
-      touch-action: pan-y pinch-zoom; /* টাচ সুইপের জন্য */
+      touch-action: pan-y pinch-zoom;
     }
 
     .slide {
@@ -54,9 +76,10 @@
       top: 0;
       left: 0;
       opacity: 0;
-      transition: opacity 0.3s ease-in-out;
+      transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
       overflow-y: auto;
-      padding: 20px;
+      padding: 28px 24px;
+      scrollbar-width: thin;
     }
 
     .slide.active {
@@ -64,18 +87,29 @@
       z-index: 10;
     }
 
-    /* পুরো কার্ড ক্লিকযোগ্য */
+    /* কার্ড ডিজাইন - প্রিমিয়াম */
     .news-card {
-      background: #ffffff;
       width: 100%;
       min-height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      border-radius: 20px;
-      position: relative;
       cursor: pointer;
+      background: rgba(255,255,255,0.5);
+      backdrop-filter: blur(8px);
+      border-radius: 32px;
+      padding: 24px 20px 32px;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(212, 175, 55, 0.15);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+    }
+
+    .news-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(212, 175, 55, 0.4);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      background: rgba(255,255,255,0.7);
     }
 
     /* স্ট্যাটাস ও টাইপ */
@@ -83,121 +117,128 @@
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 15px;
-      background: transparent;
-      padding: 2px 20px;
-      border-radius: 50px;
-      margin-top: 2px;
-      margin-bottom: 4px;
+      gap: 12px;
+      background: rgba(0, 0, 0, 0.04);
+      backdrop-filter: blur(4px);
+      padding: 6px 18px;
+      border-radius: 100px;
+      margin-bottom: 20px;
       flex-wrap: wrap;
+      border: 0.5px solid rgba(212, 175, 55, 0.2);
     }
 
     .status-badge {
       display: inline-flex;
       align-items: center;
-      gap: 12px;
-      font-size: 1.2rem;
-      font-weight: bold;
+      gap: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
     }
 
     .status-badge.running {
-      color: #4caf50;
+      color: #10b981;
     }
 
     .status-badge.upcoming {
-      color: #ff9800;
+      color: #f59e0b;
     }
 
     .blinking-dot {
-      width: 16px;
-      height: 16px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      background: #4caf50;
+      background: #10b981;
       animation: blink 1.2s infinite;
+      box-shadow: 0 0 6px #10b981;
     }
 
     @keyframes blink {
-      0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.3; transform: scale(0.8); }
-      100% { opacity: 1; transform: scale(1); }
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
     }
 
     .static-dot {
-      width: 16px;
-      height: 16px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
-      background: #ff9800;
+      background: #f59e0b;
+      box-shadow: 0 0 4px #f59e0b;
     }
 
     .separator {
-      color: #b8860b;
-      font-size: 1.2rem;
-      font-weight: bold;
+      color: #d4af37;
+      font-size: 0.9rem;
+      font-weight: 500;
+      opacity: 0.6;
     }
 
     .mela-type-text {
-      font-size: 1.2rem;
-      font-weight: bold;
+      font-size: 0.9rem;
+      font-weight: 600;
       color: #b8860b;
       background: transparent;
+      letter-spacing: 0.2px;
     }
 
     /* মেলার নাম */
     .title {
-      font-size: 2.2rem;
+      font-size: 1.8rem;
       font-weight: 800;
-      background: linear-gradient(135deg, #b8860b, #d4af37, #ffd700);
+      background: linear-gradient(135deg, #8B6914 0%, #D4AF37 40%, #FFD700 80%);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      margin-top: 20px;
-      margin-bottom: 10px;
+      margin-bottom: 16px;
       line-height: 1.3;
       text-align: center;
-      padding: 0 15px;
+      letter-spacing: -0.3px;
     }
 
     /* বিবরণ */
     .desc {
-      font-size: 1.2rem;
-      color: #6b6b6b;
+      font-size: 0.95rem;
+      color: #4a4a5a;
       line-height: 1.6;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       display: -webkit-box;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-align: center;
-      padding: 0 15px;
+      font-weight: 450;
     }
 
+    /* প্রিমিয়াম ডটস */
     .slide-indicators {
       position: absolute;
-      bottom: 15px;
+      bottom: 16px;
       left: 0;
       right: 0;
       display: flex;
       justify-content: center;
-      gap: 8px;
+      gap: 10px;
       z-index: 20;
     }
 
     .indicator {
-      width: 8px;
-      height: 8px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      background: rgba(0, 0, 0, 0.3);
-      transition: all 0.3s;
+      background: rgba(0, 0, 0, 0.2);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       cursor: pointer;
+      backdrop-filter: blur(2px);
     }
 
     .indicator.active {
-      width: 20px;
+      width: 24px;
       border-radius: 10px;
-      background: #d4af37;
+      background: linear-gradient(90deg, #d4af37, #ffd700);
+      box-shadow: 0 0 8px rgba(212, 175, 55, 0.6);
     }
 
-    /* মোডাল স্টাইল */
+    /* মোডাল - প্রিমিয়াম */
     .modal {
       display: none;
       position: fixed;
@@ -205,88 +246,176 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0,0,0,0.8);
+      background: rgba(10, 10, 30, 0.85);
+      backdrop-filter: blur(16px);
       z-index: 1000;
       justify-content: center;
       align-items: center;
+      padding: 20px;
     }
 
     .modal-content {
-      background: white;
-      width: 90%;
-      max-width: 500px;
-      max-height: 80%;
-      border-radius: 24px;
-      padding: 20px;
+      background: rgba(255, 255, 255, 0.97);
+      width: 100%;
+      max-width: 520px;
+      max-height: 85%;
+      border-radius: 48px;
+      padding: 28px 24px;
       overflow-y: auto;
       position: relative;
+      box-shadow: 0 32px 64px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255,255,255,0.5);
+      border: 1px solid rgba(212, 175, 55, 0.3);
     }
 
     .close-modal {
       position: absolute;
-      top: 10px;
-      right: 15px;
-      font-size: 24px;
+      top: 20px;
+      right: 24px;
+      font-size: 28px;
       cursor: pointer;
-      color: #999;
+      color: #b8860b;
+      transition: all 0.2s;
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.03);
+    }
+
+    .close-modal:hover {
+      background: rgba(212, 175, 55, 0.1);
+      transform: scale(1.05);
     }
 
     .modal-title {
-      font-size: 1.3rem;
-      font-weight: bold;
+      font-size: 1.6rem;
+      font-weight: 800;
       background: linear-gradient(135deg, #b8860b, #d4af37);
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       text-align: center;
+      padding-right: 30px;
     }
 
     .modal-section {
-      margin-bottom: 15px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #eee;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    }
+
+    .modal-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .modal-section strong {
+      color: #b8860b;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 8px;
     }
 
     .contact-item {
-      padding: 6px 0;
-      font-size: 0.85rem;
+      padding: 8px 0;
+      font-size: 0.9rem;
+      border-bottom: 1px dashed rgba(0,0,0,0.05);
     }
 
     .contact-item a {
-      color: #b8860b;
+      color: #d4af37;
       text-decoration: none;
+      font-weight: 500;
     }
 
     .map-link-btn {
       display: inline-block;
       background: linear-gradient(115deg, #d4af37, #c49b2a);
       color: white;
-      padding: 8px 16px;
-      border-radius: 30px;
+      padding: 10px 20px;
+      border-radius: 40px;
       text-decoration: none;
-      font-size: 0.8rem;
-      margin-top: 5px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-top: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
     }
 
+    .map-link-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(212, 175, 55, 0.4);
+    }
+
+    /* কাস্টম স্ক্রলবার */
+    .slide::-webkit-scrollbar,
+    .modal-content::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .slide::-webkit-scrollbar-track,
+    .modal-content::-webkit-scrollbar-track {
+      background: rgba(0,0,0,0.05);
+      border-radius: 10px;
+    }
+
+    .slide::-webkit-scrollbar-thumb,
+    .modal-content::-webkit-scrollbar-thumb {
+      background: #d4af37;
+      border-radius: 10px;
+    }
+
+    /* রেস্পন্সিভ */
     @media (max-width: 550px) {
-      .title { font-size: 1.6rem; margin-top: 15px; }
-      .desc { font-size: 1rem; }
-      .status-badge { font-size: 1rem; }
-      .mela-type-text { font-size: 1rem; }
-      .separator { font-size: 1rem; }
-      .slide { padding: 15px; }
-      .blinking-dot, .static-dot { width: 14px; height: 14px; }
-      .status-type-wrapper { gap: 10px; }
+      .billboard {
+        padding: 8px;
+        border-radius: 36px;
+      }
+      .screen {
+        border-radius: 30px;
+      }
+      .slide {
+        padding: 18px 16px;
+      }
+      .title {
+        font-size: 1.4rem;
+      }
+      .desc {
+        font-size: 0.85rem;
+      }
+      .news-card {
+        padding: 20px 16px 28px;
+      }
+      .status-badge, .mela-type-text, .separator {
+        font-size: 0.75rem;
+      }
+      .status-type-wrapper {
+        gap: 8px;
+        padding: 4px 14px;
+      }
+      .modal-content {
+        padding: 22px 18px;
+        border-radius: 36px;
+      }
+      .modal-title {
+        font-size: 1.3rem;
+      }
     }
 
     @media (max-width: 400px) {
-      .title { font-size: 1.4rem; margin-top: 10px; }
-      .desc { font-size: 0.9rem; }
-      .status-badge { font-size: 0.9rem; }
-      .mela-type-text { font-size: 0.9rem; }
-      .separator { font-size: 0.9rem; }
-      .blinking-dot, .static-dot { width: 12px; height: 12px; }
+      .title {
+        font-size: 1.2rem;
+      }
+      .desc {
+        font-size: 0.8rem;
+      }
+      .status-badge, .mela-type-text {
+        font-size: 0.7rem;
+      }
     }
   </style>
 </head>
@@ -296,7 +425,7 @@
     <div class="content-container" id="slidesContainer">
       <div class="slide active">
         <div class="news-card">
-          <div style="text-align:center; padding:40px;">🎪 লোড হচ্ছে...</div>
+          <div style="text-align:center; padding:40px; color:#b8860b;">🎪 লোড হচ্ছে...</div>
         </div>
       </div>
     </div>
@@ -304,7 +433,6 @@
   </div>
 </div>
 
-<!-- মোডাল -->
 <div id="detailModal" class="modal">
   <div class="modal-content">
     <span class="close-modal">&times;</span>
@@ -360,15 +488,10 @@
     return d.toLocaleString('bn-BD');
   }
 
-  // মোডাল দেখানো
   window.showModalById = function(id, event) {
     if (event) event.stopPropagation();
-    console.log("showModalById called with id:", id);
     const card = slides.find(s => s.id === id);
-    if (!card) {
-      console.error("Card not found for id:", id);
-      return;
-    }
+    if (!card) return;
     
     const modal = document.getElementById('detailModal');
     const modalBody = document.getElementById('modalBody');
@@ -391,27 +514,28 @@
       <div class="modal-title">${escapeHtml(card.title)}</div>
       
       <div class="modal-section">
-        <div><strong>📅 মেলার ধরন:</strong> ${escapeHtml(card.melaType)} (${card.days || ''} দিনব্যাপী)</div>
-        <div style="margin-top:5px;"><strong>স্ট্যাটাস:</strong> ${statusIcon} ${statusText}</div>
+        <strong>📅 মেলার ধরন</strong>
+        <div>${escapeHtml(card.melaType)} (${card.days || ''} দিনব্যাপী)</div>
+        <div style="margin-top:8px;"><strong>স্ট্যাটাস:</strong> ${statusIcon} ${statusText}</div>
       </div>
 
       <div class="modal-section">
-        <div><strong>📝 বিস্তারিত বিবরণ:</strong></div>
-        <div style="margin-top:5px; line-height:1.5;">${escapeHtml(card.description)}</div>
+        <strong>📝 বিস্তারিত বিবরণ</strong>
+        <div style="line-height:1.6;">${escapeHtml(card.description)}</div>
       </div>
 
       <div class="modal-section">
-        <div><strong>📍 ঠিকানা/লোকেশন:</strong></div>
+        <strong>📍 ঠিকানা/লোকেশন</strong>
         <div>${escapeHtml(card.address || 'ঠিকানা দেওয়া নেই')}</div>
       </div>
 
       <div class="modal-section">
-        <div><strong>📞 যোগাযোগ করুন:</strong></div>
+        <strong>📞 যোগাযোগ করুন</strong>
         ${contactsHtml}
       </div>
 
       <div class="modal-section">
-        <div><strong>🗓️ সময়কাল:</strong></div>
+        <strong>🗓️ সময়কাল</strong>
         <div>শুরু: ${formatDateTime(card.startDate)}</div>
         <div>শেষ: ${formatDateTime(card.endDate)}</div>
       </div>
@@ -421,7 +545,6 @@
     modal.style.display = 'flex';
   };
 
-  // স্লাইড তৈরি
   function createSlideHTML(card, idx) {
     const status = getStatus(card.startDate, card.endDate);
     const isRunning = status === 'running';
@@ -449,7 +572,6 @@
     `;
   }
 
-  // টাচ সুইপ হ্যান্ডলার
   function handleTouchStart(event) {
     touchStartX = event.changedTouches[0].screenX;
   }
@@ -457,31 +579,17 @@
   function handleTouchEnd(event) {
     touchEndX = event.changedTouches[0].screenX;
     const swipeDistance = touchEndX - touchStartX;
-    const minSwipeDistance = 50; // ন্যূনতম 50px সুইপ করলেই কাজ করবে
+    const minSwipeDistance = 50;
     
     if (Math.abs(swipeDistance) > minSwipeDistance) {
       if (swipeDistance > 0) {
-        // ডান দিকে সুইপ (আগের স্লাইড)
-        prevSlide();
+        currentIndex = (currentIndex - 1 + slides.length) % slides.length;
       } else {
-        // বাম দিকে সুইপ (পরের স্লাইড)
-        nextSlide();
+        currentIndex = (currentIndex + 1) % slides.length;
       }
+      showSlide(currentIndex);
+      startSlideshow();
     }
-  }
-
-  function prevSlide() {
-    if (slides.length === 0) return;
-    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-    showSlide(currentIndex);
-    startSlideshow();
-  }
-
-  function nextSlide() {
-    if (slides.length === 0) return;
-    currentIndex = (currentIndex + 1) % slides.length;
-    showSlide(currentIndex);
-    startSlideshow();
   }
 
   function renderSlides() {
@@ -513,7 +621,6 @@
       });
     });
 
-    // টাচ ইভেন্ট লিসেনার যোগ করুন
     const sliderContainer = document.querySelector('.content-container');
     sliderContainer.addEventListener('touchstart', handleTouchStart, false);
     sliderContainer.addEventListener('touchend', handleTouchEnd, false);
@@ -542,26 +649,23 @@
   function startSlideshow() {
     if (interval) clearInterval(interval);
     if (slides.length > 1) interval = setInterval(() => {
-      nextSlide();
+      currentIndex = (currentIndex + 1) % slides.length;
+      showSlide(currentIndex);
     }, 5000);
   }
 
-  // Firebase Realtime Database লোড
   const melaPostsRef = database.ref('melaPosts');
   melaPostsRef.on('value', (snapshot) => {
     const data = snapshot.val();
     if (data) {
       slides = Object.keys(data).map(key => ({ id: key, ...data[key] }));
       slides.sort((a, b) => (a.order || 0) - (b.order || 0));
-      console.log("Slides loaded:", slides.length);
     } else {
       slides = [];
-      console.log("No data found");
     }
     renderSlides();
   });
 
-  // মোডাল ক্লোজ
   document.querySelector('.close-modal').onclick = () => {
     document.getElementById('detailModal').style.display = 'none';
   };
