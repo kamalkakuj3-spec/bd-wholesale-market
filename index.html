@@ -17,7 +17,6 @@
       padding: 16px;
     }
 
-    /* বিলবোর্ড - সাদা ও গোল্ডেন আভা */
     .billboard {
       width: 100%;
       max-width: 640px;
@@ -68,14 +67,15 @@
     .news-card {
       background: #ffffff;
       width: 100%;
-      height: 100%;
+      min-height: 100%;
       display: flex;
       flex-direction: column;
       border-radius: 20px;
       position: relative;
+      padding-bottom: 45px;
     }
 
-    /* হেডার সেকশন - ট্যাগ ও স্ট্যাটাস */
+    /* হেডার সেকশন */
     .card-header {
       display: flex;
       justify-content: space-between;
@@ -164,39 +164,45 @@
       gap: 5px;
     }
 
-    .contact-dropdown {
-      margin-bottom: 12px;
-    }
-
-    .contact-summary {
-      background: #f5f5f5;
-      padding: 8px 12px;
-      border-radius: 12px;
+    /* যোগাযোগ - শুধু আইকন */
+    .contact-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #f0f0f0;
+      padding: 6px 12px;
+      border-radius: 30px;
       cursor: pointer;
       font-size: 0.75rem;
       color: #b8860b;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+      margin-bottom: 10px;
+      width: fit-content;
+      transition: all 0.2s;
+    }
+    .contact-icon:hover {
+      background: #e0e0e0;
     }
 
-    .contact-list {
+    .contact-popup {
       display: none;
       background: white;
-      border: 1px solid #ddd;
-      border-radius: 12px;
-      padding: 10px;
+      border: 1px solid #d4af37;
+      border-radius: 16px;
+      padding: 12px;
       margin-top: 5px;
+      margin-bottom: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
     }
-
-    .contact-list.show {
+    .contact-popup.show {
       display: block;
     }
-
     .contact-item {
-      padding: 5px 0;
-      font-size: 0.7rem;
+      padding: 6px 0;
+      font-size: 0.75rem;
       border-bottom: 1px solid #eee;
+    }
+    .contact-item:last-child {
+      border-bottom: none;
     }
 
     .map-link {
@@ -215,14 +221,14 @@
 
     .view-btn {
       position: absolute;
-      bottom: 15px;
+      bottom: 10px;
       right: 15px;
       background: linear-gradient(115deg, #d4af37, #c49b2a);
       color: white;
       border: none;
-      padding: 8px 16px;
+      padding: 6px 14px;
       border-radius: 30px;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: bold;
       cursor: pointer;
       z-index: 15;
@@ -332,7 +338,6 @@
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
 <script>
-  // Firebase কনফিগারেশন
   const firebaseConfig = {
     apiKey: "AIzaSyAKRgsUrYL4uAWinn5dcJrKck1nqUokRdw",
     authDomain: "all-hadith-a68fa.firebaseapp.com",
@@ -350,7 +355,6 @@
   let currentIndex = 0;
   let interval;
 
-  // ইউটিলিটি ফাংশন
   function escapeHtml(str) {
     if (!str) return '';
     return str.replace(/[&<>]/g, function(m) {
@@ -361,7 +365,6 @@
     });
   }
 
-  // চালমান/আসন্ন চেক
   function getStatus(startDate, endDate) {
     const now = new Date();
     const start = new Date(startDate);
@@ -370,18 +373,21 @@
     return 'upcoming';
   }
 
-  // কন্টাক্ট লিস্ট HTML
-  function renderContacts(contacts) {
-    if (!contacts || contacts.length === 0) return '<div>কোনো যোগাযোগ তথ্য নেই</div>';
-    let html = '<div class="contact-summary">📞 যোগাযোগ করুন ▼</div><div class="contact-list">';
-    contacts.forEach(c => {
-      html += `<div class="contact-item">👤 ${escapeHtml(c.name)}: ${escapeHtml(c.phone)}</div>`;
-    });
-    html += '</div>';
-    return html;
+  function formatDate(dateStr) {
+    if (!dateStr) return 'N/A';
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('bn-BD');
   }
 
-  // মোডাল দেখানো
+  // যোগাযোগ পপআপ টগল
+  window.toggleContact = function(element) {
+    const popup = element.nextElementSibling;
+    if (popup && popup.classList.contains('contact-popup')) {
+      popup.classList.toggle('show');
+    }
+  }
+
+  // মোডাল ফাংশন
   function showModal(card) {
     const modal = document.getElementById('detailModal');
     const modalBody = document.getElementById('modalBody');
@@ -413,10 +419,26 @@
     modal.style.display = 'flex';
   }
 
-  function formatDate(dateStr) {
-    if (!dateStr) return 'N/A';
-    const d = new Date(dateStr);
-    return d.toLocaleDateString('bn-BD');
+  window.showModalById = function(id) {
+    const card = slides.find(s => s.id === id);
+    if (card) showModal(card);
+  }
+
+  // যোগাযোগের পপআপ HTML (শুধু আইকন)
+  function renderContactIcon(contacts) {
+    if (!contacts || contacts.length === 0) return '';
+    let contactsHtml = '';
+    contacts.forEach(c => {
+      contactsHtml += `<div class="contact-item">👤 ${escapeHtml(c.name)}: <a href="tel:${escapeHtml(c.phone)}">${escapeHtml(c.phone)}</a></div>`;
+    });
+    return `
+      <div class="contact-icon" onclick="event.stopPropagation(); toggleContact(this)">
+        📞 যোগাযোগ ▼
+      </div>
+      <div class="contact-popup">
+        ${contactsHtml}
+      </div>
+    `;
   }
 
   // স্লাইড তৈরি
@@ -424,7 +446,6 @@
     const status = getStatus(card.startDate, card.endDate);
     const isRunning = status === 'running';
     const statusText = isRunning ? 'চলমান' : 'আসন্ন';
-    const contactHtml = renderContacts(card.contacts || []);
     
     return `
       <div class="slide" data-id="${card.id}" data-index="${idx}">
@@ -437,34 +458,18 @@
             <div class="mela-type-badge">${escapeHtml(card.melaType)} (${card.days || ''} দিন)</div>
           </div>
           <div class="title">${escapeHtml(card.title)}</div>
-          <div class="desc">${escapeHtml(card.description).substring(0, 100)}...</div>
+          <div class="desc">${escapeHtml(card.description).substring(0, 100)}${card.description.length > 100 ? '...' : ''}</div>
           <div class="date-info">
             <span>📅 শুরু: ${formatDate(card.startDate)}</span>
             <span>🏁 শেষ: ${formatDate(card.endDate)}</span>
           </div>
           ${card.address ? `<div class="address">📍 ${escapeHtml(card.address)}</div>` : ''}
-          <div class="contact-dropdown" onclick="event.stopPropagation(); toggleContact(this)">
-            ${contactHtml}
-          </div>
+          ${renderContactIcon(card.contacts)}
           ${card.mapLink ? `<a href="${escapeHtml(card.mapLink)}" target="_blank" class="map-link" onclick="event.stopPropagation();">🗺️ গুগল ম্যাপ</a>` : ''}
           <button class="view-btn" onclick="event.stopPropagation(); showModalById('${card.id}')">👁️ View</button>
         </div>
       </div>
     `;
-  }
-
-  // টগল কন্টাক্ট লিস্ট
-  window.toggleContact = function(element) {
-    const contactList = element.querySelector('.contact-list');
-    if (contactList) {
-      contactList.classList.toggle('show');
-    }
-  }
-
-  // আইডি দিয়ে মোডাল দেখানো
-  window.showModalById = function(id) {
-    const card = slides.find(s => s.id === id);
-    if (card) showModal(card);
   }
 
   function renderSlides() {
@@ -528,7 +533,7 @@
     if (slides.length > 1) interval = setInterval(nextSlide, 5000);
   }
 
-  // Realtime Database লোড
+  // Firebase Realtime Database লোড
   const melaPostsRef = database.ref('melaPosts');
   melaPostsRef.on('value', (snapshot) => {
     const data = snapshot.val();
