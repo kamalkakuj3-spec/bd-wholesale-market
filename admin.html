@@ -3,167 +3,332 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>অ্যাডমিন প্যানেল - মেলা অ্যাপস</title>
+  <title>অ্যাডমিন প্যানেল | বাংলাদেশ মেলা অ্যাপস</title>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
     body {
-      background: #f5f5f5;
-      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      font-family: 'Segoe UI', 'Poppins', 'Noto Sans Bengali', system-ui, sans-serif;
       padding: 20px;
     }
+
     .container {
       max-width: 800px;
       margin: 0 auto;
     }
+
     h1 {
       text-align: center;
-      color: #ff6b6b;
+      color: #d4af37;
       margin-bottom: 30px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
     }
+
     .form-card {
       background: white;
+      border-radius: 24px;
       padding: 25px;
-      border-radius: 20px;
       margin-bottom: 30px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+      border: 1px solid #d4af37;
     }
+
+    .form-card h3 {
+      color: #b8860b;
+      margin-bottom: 20px;
+      font-size: 1.4rem;
+    }
+
     input, textarea, select {
       width: 100%;
       padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ddd;
-      border-radius: 10px;
+      margin: 10px 0 20px 0;
+      border: 2px solid #e0e0e0;
+      border-radius: 12px;
       font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.3s;
     }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #d4af37;
+    }
+
     button {
-      background: #ff6b6b;
+      background: linear-gradient(115deg, #d4af37, #c49b2a);
       color: white;
       border: none;
-      padding: 12px 20px;
-      border-radius: 10px;
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-weight: bold;
       cursor: pointer;
       font-size: 1rem;
       margin-right: 10px;
+      transition: transform 0.2s;
     }
-    button:hover { opacity: 0.9; }
+
+    button:hover {
+      transform: translateY(-2px);
+    }
+
+    .delete-btn {
+      background: linear-gradient(115deg, #dc3545, #c82333);
+    }
+
     .card-list {
       background: white;
-      padding: 20px;
-      border-radius: 20px;
+      border-radius: 24px;
+      padding: 25px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
     }
+
+    .card-list h3 {
+      color: #b8860b;
+      margin-bottom: 20px;
+    }
+
     .card-item {
-      border: 1px solid #eee;
+      background: #f8f9fa;
+      border-left: 4px solid #d4af37;
       padding: 15px;
       margin-bottom: 15px;
-      border-radius: 15px;
+      border-radius: 12px;
+      transition: box-shadow 0.3s;
     }
-    .delete-btn { background: #dc3545; }
-    .edit-btn { background: #28a745; }
+
+    .card-item:hover {
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .card-item h4 {
+      color: #2c3e50;
+      margin-bottom: 8px;
+    }
+
+    .card-item p {
+      color: #666;
+      margin: 5px 0;
+      font-size: 0.9rem;
+    }
+
+    .card-actions {
+      margin-top: 12px;
+    }
+
+    .edit-btn {
+      background: linear-gradient(115deg, #28a745, #218838);
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+
+    .small-delete {
+      background: linear-gradient(115deg, #dc3545, #c82333);
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      color: #999;
+      padding: 40px;
+    }
   </style>
 </head>
 <body>
 <div class="container">
-  <h1>📝 অ্যাডমিন প্যানেল - মেলা স্লাইডার</h1>
+  <h1>🏆 অ্যাডমিন প্যানেল | মেলা স্লাইডার 🏆</h1>
   
   <div class="form-card">
-    <h3>নতুন মেলার তথ্য যোগ করুন</h3>
+    <h3>✨ নতুন মেলার তথ্য যোগ করুন ✨</h3>
     <input type="text" id="tag" placeholder="ট্যাগ (যেমন: 🎪 বিশেষ মেলা)">
     <input type="text" id="title" placeholder="শিরোনাম *" required>
     <textarea id="description" rows="3" placeholder="বিবরণ *" required></textarea>
     <select id="melaType">
-      <option value="মাসব্যাপী মেলা">মাসব্যাপী মেলা</option>
-      <option value="১৫ দিনব্যাপী মেলা">১৫ দিনব্যাপী মেলা</option>
-      <option value="৭ দিনব্যাপী মেলা">৭ দিনব্যাপী মেলা</option>
-      <option value="৩ দিনব্যাপী মেলা">৩ দিনব্যাপী মেলা</option>
+      <option value="মাসব্যাপী মেলা">📅 মাসব্যাপী মেলা</option>
+      <option value="১৫ দিনব্যাপী মেলা">📅 ১৫ দিনব্যাপী মেলা</option>
+      <option value="৭ দিনব্যাপী মেলা">📅 ৭ দিনব্যাপী মেলা</option>
+      <option value="৩ দিনব্যাপী মেলা">📅 ৩ দিনব্যাপী মেলা</option>
     </select>
+    <input type="number" id="order" placeholder="ক্রম (১, ২, ৩...)" value="1">
     <button id="saveBtn">➕ সংরক্ষণ করুন</button>
+    <button id="cancelBtn" style="background:#6c757d; display:none;">বাতিল করুন</button>
   </div>
 
   <div class="card-list">
-    <h3>সকল মেলার তালিকা</h3>
+    <h3>📋 সকল মেলার তালিকা</h3>
     <div id="postsList">লোড হচ্ছে...</div>
   </div>
 </div>
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
+<script>
+  // Firebase কনফিগারেশন
   const firebaseConfig = {
     apiKey: "AIzaSyAKRgsUrYL4uAWinn5dcJrKck1nqUokRdw",
     authDomain: "all-hadith-a68fa.firebaseapp.com",
     projectId: "all-hadith-a68fa",
+    databaseURL: "https://all-hadith-a68fa-default-rtdb.firebaseio.com/",
     storageBucket: "all-hadith-a68fa.firebasestorage.app",
     messagingSenderId: "124928027736",
     appId: "1:124928027736:android:f4d9a9a9ed667150ca2e2d"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+  const melaPostsRef = database.ref('melaPosts');
 
-  // রিয়েলটাইম লোড পোস্ট
-  onSnapshot(collection(db, "melaPosts"), (snapshot) => {
-    const postsList = document.getElementById('postsList');
-    if (snapshot.empty) {
-      postsList.innerHTML = '<p>কোনো পোস্ট নেই। উপরের ফর্ম দিয়ে যোগ করুন।</p>';
-      return;
-    }
-    
-    let html = '';
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      html += `
-        <div class="card-item">
-          <h4>${data.title || 'শিরোনাম নেই'}</h4>
-          <p><strong>ট্যাগ:</strong> ${data.tag || 'নেই'}</p>
-          <p><strong>মেলার ধরন:</strong> ${data.melaType || 'নির্ধারিত নয়'}</p>
-          <p><strong>বিবরণ:</strong> ${data.description || ''}</p>
-          <button class="delete-btn" data-id="${doc.id}">🗑️ ডিলিট</button>
-        </div>
-      `;
+  let currentEditId = null;
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
     });
-    postsList.innerHTML = html;
-    
-    // ডিলিট বাটনে ইভেন্ট
-    document.querySelectorAll('.delete-btn').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        if (confirm('পোস্টটি ডিলিট করতে চান?')) {
+  }
+
+  // পোস্ট লোড ও রেন্ডার (রিয়েলটাইম)
+  function loadPosts() {
+    melaPostsRef.on('value', (snapshot) => {
+      const data = snapshot.val();
+      const container = document.getElementById('postsList');
+      
+      if (!data) {
+        container.innerHTML = '<div class="empty-state">🎪 কোনো পোস্ট নেই। উপরের ফর্ম দিয়ে যোগ করুন।</div>';
+        return;
+      }
+
+      // অবজেক্ট থেকে অ্যারেতে কনভার্ট
+      const posts = Object.keys(data).map(key => ({
+        id: key,
+        ...data[key]
+      }));
+      
+      // অর্ডার অনুযায়ী সাজানো
+      posts.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+      let html = '';
+      posts.forEach(post => {
+        html += `
+          <div class="card-item" data-id="${post.id}">
+            <h4>${escapeHtml(post.title) || 'শিরোনাম নেই'}</h4>
+            <p><strong>🏷️ ট্যাগ:</strong> ${escapeHtml(post.tag) || 'নেই'}</p>
+            <p><strong>📅 মেলার ধরন:</strong> ${escapeHtml(post.melaType) || 'নির্ধারিত নয়'}</p>
+            <p><strong>🔢 ক্রম:</strong> ${post.order || '১'}</p>
+            <p><strong>📝 বিবরণ:</strong> ${escapeHtml(post.description) || ''}</p>
+            <div class="card-actions">
+              <button class="edit-btn" data-id="${post.id}">✏️ এডিট</button>
+              <button class="small-delete" data-id="${post.id}">🗑️ ডিলিট</button>
+            </div>
+          </div>
+        `;
+      });
+      container.innerHTML = html;
+
+      // এডিট বাটন
+      document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
           const id = btn.getAttribute('data-id');
-          await deleteDoc(doc(db, "melaPosts", id));
-        }
+          editPost(id);
+        });
+      });
+
+      // ডিলিট বাটন
+      document.querySelectorAll('.small-delete').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          if (confirm('পোস্টটি ডিলিট করতে চান?')) {
+            const id = btn.getAttribute('data-id');
+            await melaPostsRef.child(id).remove();
+            alert('পোস্ট ডিলিট হয়েছে!');
+          }
+        });
       });
     });
-  });
+  }
 
-  // সেভ বাটন
+  // এডিট ফাংশন
+  function editPost(id) {
+    melaPostsRef.child(id).once('value', (snapshot) => {
+      const post = snapshot.val();
+      if (post) {
+        document.getElementById('tag').value = post.tag || '';
+        document.getElementById('title').value = post.title || '';
+        document.getElementById('description').value = post.description || '';
+        document.getElementById('melaType').value = post.melaType || 'মাসব্যাপী মেলা';
+        document.getElementById('order').value = post.order || 1;
+        currentEditId = id;
+        document.getElementById('saveBtn').innerHTML = '✏️ আপডেট করুন';
+        document.getElementById('cancelBtn').style.display = 'inline-block';
+      }
+    });
+  }
+
+  // রিসেট ফর্ম
+  function resetForm() {
+    document.getElementById('tag').value = '';
+    document.getElementById('title').value = '';
+    document.getElementById('description').value = '';
+    document.getElementById('melaType').value = 'মাসব্যাপী মেলা';
+    document.getElementById('order').value = '1';
+    currentEditId = null;
+    document.getElementById('saveBtn').innerHTML = '➕ সংরক্ষণ করুন';
+    document.getElementById('cancelBtn').style.display = 'none';
+  }
+
+  // সেভ বা আপডেট
   document.getElementById('saveBtn').addEventListener('click', async () => {
     const tag = document.getElementById('tag').value;
     const title = document.getElementById('title').value;
     const description = document.getElementById('description').value;
     const melaType = document.getElementById('melaType').value;
-    
+    const order = parseInt(document.getElementById('order').value) || 1;
+
     if (!title || !description) {
-      alert('শিরোনাম ও বিবরণ দিতে হবে');
+      alert('শিরোনাম ও বিবরণ দিতে হবে!');
       return;
     }
-    
+
+    const postData = {
+      tag: tag,
+      title: title,
+      description: description,
+      melaType: melaType,
+      order: order,
+      timestamp: Date.now()
+    };
+
     try {
-      await addDoc(collection(db, "melaPosts"), {
-        tag: tag,
-        title: title,
-        description: description,
-        melaType: melaType,
-        timestamp: new Date()
-      });
-      alert('পোস্ট সফলভাবে যোগ হয়েছে!');
-      document.getElementById('tag').value = '';
-      document.getElementById('title').value = '';
-      document.getElementById('description').value = '';
+      if (currentEditId) {
+        await melaPostsRef.child(currentEditId).update(postData);
+        alert('পোস্ট আপডেট হয়েছে!');
+      } else {
+        const newRef = melaPostsRef.push();
+        await newRef.set(postData);
+        alert('নতুন পোস্ট যোগ হয়েছে!');
+      }
+      resetForm();
     } catch (error) {
-      console.error("Error:", error);
-      alert('পোস্ট করতে সমস্যা হয়েছে');
+      console.error('Error:', error);
+      alert('সংরক্ষণ করতে সমস্যা হয়েছে!');
     }
   });
+
+  // ক্যানসেল বাটন
+  document.getElementById('cancelBtn').addEventListener('click', resetForm);
+
+  // শুরু করা
+  loadPosts();
 </script>
 </body>
 </html>
