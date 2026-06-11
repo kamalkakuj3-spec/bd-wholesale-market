@@ -76,13 +76,17 @@
       padding-bottom: 50px;
     }
 
-    /* স্ট্যাটাস ও টাইপ আলাদা - ট্রান্সপারেন্ট */
-    .status-wrapper {
-      display: flex;
+    /* এক লাইনে স্ট্যাটাস ও টাইপ */
+    .status-type-wrapper {
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
-      margin-bottom: 15px;
+      gap: 10px;
+      background: transparent;
+      padding: 6px 15px;
+      border-radius: 50px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
     }
 
     .status-badge {
@@ -122,6 +126,20 @@
       background: #ff9800;
     }
 
+    .separator {
+      color: #b8860b;
+      font-size: 0.75rem;
+      font-weight: bold;
+    }
+
+    /* ট্রান্সপারেন্ট ব্যাকগ্রাউন্ড সহ মেলা টাইপ */
+    .mela-type-text {
+      font-size: 0.75rem;
+      font-weight: bold;
+      color: #b8860b;
+      background: transparent;
+    }
+
     .title {
       font-size: 1.4rem;
       font-weight: 800;
@@ -129,24 +147,9 @@
       background-clip: text;
       -webkit-background-clip: text;
       color: transparent;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       line-height: 1.3;
       text-align: center;
-    }
-
-    /* মেলার ধরন - ট্রান্সপারেন্ট ব্যাকগ্রাউন্ড, মেলার নামের নিচে */
-    .mela-type-wrapper {
-      margin-bottom: 12px;
-    }
-
-    .mela-type-text {
-      font-size: 0.7rem;
-      font-weight: bold;
-      color: #b8860b;
-      background: transparent;
-      padding: 4px 12px;
-      border-radius: 20px;
-      display: inline-block;
     }
 
     .desc {
@@ -285,7 +288,8 @@
       .desc { font-size: 0.75rem; }
       .slide { padding: 15px; }
       .status-badge { font-size: 0.65rem; }
-      .mela-type-text { font-size: 0.6rem; }
+      .mela-type-text { font-size: 0.65rem; }
+      .separator { font-size: 0.65rem; }
     }
   </style>
 </head>
@@ -430,16 +434,15 @@
     return `
       <div class="slide" data-id="${card.id}" data-index="${idx}">
         <div class="news-card">
-          <div class="status-wrapper">
+          <div class="status-type-wrapper">
             <div class="status-badge ${isRunning ? 'running' : 'upcoming'}">
               ${dotHtml}
               ${statusText}
             </div>
-          </div>
-          <div class="title">${escapeHtml(card.title)}</div>
-          <div class="mela-type-wrapper">
+            <span class="separator">|</span>
             <span class="mela-type-text">${escapeHtml(card.melaType)} (${card.days || ''} দিন)</span>
           </div>
+          <div class="title">${escapeHtml(card.title)}</div>
           <div class="desc">${escapeHtml(card.description).substring(0, 100)}${card.description.length > 100 ? '...' : ''}</div>
           <button class="view-btn" onclick="event.stopPropagation(); showModalById('${card.id}')">View</button>
         </div>
