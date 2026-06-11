@@ -10,711 +10,341 @@
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-    :root {
-      --g1: #fff8e1;   /* warm white */
-      --g2: #ffd54f;   /* light gold */
-      --g3: #f9a825;   /* mid gold */
-      --g4: #e65100;   /* deep amber-gold */
-      --gold: #d4af37;
-      --gold-bright: #ffe066;
-      --gold-shine: #fffde7;
-      --white: #ffffff;
-      --off-white: #fffdf5;
-    }
-
     body {
-      background: linear-gradient(135deg, #fffde7 0%, #fff8e1 40%, #fef9e7 100%);
+      background: linear-gradient(135deg, #fffde7 0%, #fff8e1 50%, #fef3c7 100%);
       min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
       font-family: 'Hind Siliguri', 'Noto Sans Bengali', system-ui, sans-serif;
       padding: 16px;
-      overflow: hidden;
     }
 
-    /* floating particles background */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        radial-gradient(circle at 20% 30%, rgba(212,175,55,0.15) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(249,168,37,0.12) 0%, transparent 50%);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    /* ═══════════════════════════════
-       BILLBOARD — 3D perspective wrap
-    ═══════════════════════════════ */
+    /* ─── BILLBOARD WRAP (3D perspective) ─── */
     .billboard-wrap {
-      perspective: 1200px;
-      perspective-origin: 50% 50%;
-      position: relative;
-      z-index: 1;
+      width: 100%;
+      max-width: 640px;
+      perspective: 1000px;
     }
 
     .billboard {
       width: 100%;
-      max-width: 640px;
       aspect-ratio: 16 / 9;
       position: relative;
-      border-radius: 22px;
+      border-radius: 20px;
+      animation: float3d 7s ease-in-out infinite;
       transform-style: preserve-3d;
-      animation: floatCard 6s ease-in-out infinite;
-      overflow: visible;
-
-      /* layered gold shadows for 3D depth */
-      filter: drop-shadow(0 8px 0 rgba(180,140,20,0.5))
-              drop-shadow(0 16px 0 rgba(180,140,20,0.25))
-              drop-shadow(0 32px 40px rgba(180,140,20,0.3))
-              drop-shadow(0 60px 80px rgba(0,0,0,0.15));
+      /* 3D layered gold shadow = depth illusion */
+      filter:
+        drop-shadow(0 6px 0px rgba(180,130,10,0.45))
+        drop-shadow(0 12px 0px rgba(180,130,10,0.2))
+        drop-shadow(0 24px 40px rgba(160,110,0,0.25));
     }
 
-    @keyframes floatCard {
-      0%   { transform: rotateX(3deg) rotateY(-1.5deg) translateY(0px); }
-      30%  { transform: rotateX(1deg) rotateY(1.5deg)  translateY(-8px); }
-      60%  { transform: rotateX(3.5deg) rotateY(0deg)  translateY(-4px); }
-      100% { transform: rotateX(3deg) rotateY(-1.5deg) translateY(0px); }
+    @keyframes float3d {
+      0%   { transform: rotateX(4deg) rotateY(-2deg) translateY(0); }
+      33%  { transform: rotateX(2deg) rotateY(2deg)  translateY(-7px); }
+      66%  { transform: rotateX(4deg) rotateY(-1deg) translateY(-3px); }
+      100% { transform: rotateX(4deg) rotateY(-2deg) translateY(0); }
     }
 
-    .billboard:hover {
-      animation: none;
-      transform: rotateX(2deg) rotateY(0deg) translateY(-4px) scale(1.01);
-      transition: transform 0.4s ease;
-    }
-
-    /* gold 3D edge — bottom face */
-    .billboard::after {
-      content: '';
-      position: absolute;
-      bottom: -10px; left: 6px; right: 6px;
-      height: 12px;
-      background: linear-gradient(180deg, #c9962a, #9a6f1e);
-      border-radius: 0 0 18px 18px;
-      transform: translateZ(-1px);
-      z-index: -1;
-    }
-
-    /* ═══════════════════════════════
-       SCREEN INNER
-    ═══════════════════════════════ */
+    /* ─── SCREEN ─── */
     .screen {
       width: 100%;
       height: 100%;
-      border-radius: 22px;
+      border-radius: 20px;
       overflow: hidden;
       position: relative;
-      background: linear-gradient(145deg, #ffffff 0%, #fffdf0 60%, #fff8e1 100%);
-      /* inset 3D border */
+      background: #ffffff;
+      /* 3-ring inset gold border */
       box-shadow:
-        inset 0 0 0 2px rgba(212,175,55,0.9),
-        inset 0 0 0 4px rgba(255,255,255,0.8),
-        inset 0 0 0 6px rgba(212,175,55,0.4),
-        inset 0 2px 20px rgba(255,250,230,0.6);
+        inset 0 0 0 2px #d4af37,
+        inset 0 0 0 4px #ffffff,
+        inset 0 0 0 6px rgba(212,175,55,0.35);
     }
 
-    /* animated shimmer sweep across screen */
-    .screen::before {
+    /* shimmer sweep */
+    .screen::after {
       content: '';
       position: absolute;
-      top: -100%; left: -60%;
-      width: 60%; height: 300%;
-      background: linear-gradient(
-        105deg,
-        transparent 40%,
-        rgba(255,255,255,0.55) 50%,
-        transparent 60%
-      );
-      animation: shimmerSweep 4s ease-in-out infinite;
+      top: 0; left: -100%;
+      width: 55%; height: 100%;
+      background: linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.65) 50%, transparent 70%);
+      animation: shimmer 4.5s ease-in-out infinite;
       pointer-events: none;
-      z-index: 40;
-      border-radius: 100%;
+      z-index: 50;
+    }
+    @keyframes shimmer {
+      0%   { left: -100%; opacity: 0; }
+      15%  { opacity: 1; }
+      65%  { left: 120%; opacity: 1; }
+      75%  { opacity: 0; }
+      100% { left: 120%; opacity: 0; }
     }
 
-    @keyframes shimmerSweep {
-      0%   { left: -60%; opacity: 0; }
-      10%  { opacity: 1; }
-      70%  { left: 110%; opacity: 1; }
-      80%  { opacity: 0; }
-      100% { left: 110%; opacity: 0; }
-    }
+    /* ─── CORNER ORNAMENTS ─── */
+    .corner { position: absolute; width: 28px; height: 28px; z-index: 30; pointer-events: none; }
+    .corner::before, .corner::after { content: ''; position: absolute; background: linear-gradient(135deg, #f0c040, #d4af37); }
+    .corner::before { width: 100%; height: 2px; top: 0; }
+    .corner::after  { width: 2px; height: 100%; left: 0; top: 0; }
+    .c-tl { top: 8px; left: 8px; }
+    .c-tr { top: 8px; right: 8px; transform: scaleX(-1); }
+    .c-bl { bottom: 8px; left: 8px; transform: scaleY(-1); }
+    .c-br { bottom: 8px; right: 8px; transform: scale(-1,-1); }
 
-    /* ═══════════════════════════════
-       HEADER BAR
-    ═══════════════════════════════ */
+    /* ─── HEADER BAR ─── */
     .header-bar {
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      z-index: 30;
-      height: 34px;
-      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.12), transparent);
-      border-bottom: 1.5px solid rgba(212,175,55,0.5);
-      display: flex; align-items: center; justify-content: center; gap: 10px;
+      position: absolute; top: 0; left: 0; right: 0; height: 32px; z-index: 25;
+      background: linear-gradient(90deg, transparent, rgba(212,175,55,0.1), transparent);
+      border-bottom: 1px solid rgba(212,175,55,0.4);
+      display: flex; align-items: center; justify-content: center; gap: 8px;
     }
-
-    .header-text {
+    .hbar-text {
       font-family: 'Cinzel', serif;
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--g3);
+      font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.28em; text-transform: uppercase;
+      color: #c9962a;
     }
-
-    .header-gem {
-      width: 6px; height: 6px;
-      background: radial-gradient(circle at 35% 35%, var(--gold-bright), var(--g3));
-      border-radius: 50%;
-      box-shadow: 0 0 8px rgba(212,175,55,0.7), 0 0 16px rgba(212,175,55,0.3);
+    .hbar-gem {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ffe066, #d4af37);
+      box-shadow: 0 0 7px rgba(212,175,55,0.9);
       animation: gemPulse 2.5s ease-in-out infinite;
     }
-    .header-gem:nth-child(3) { animation-delay: 1.2s; }
-
+    .hbar-gem:last-child { animation-delay: 1.2s; }
     @keyframes gemPulse {
-      0%, 100% { box-shadow: 0 0 8px rgba(212,175,55,0.7), 0 0 16px rgba(212,175,55,0.3); }
-      50% { box-shadow: 0 0 14px rgba(212,175,55,1), 0 0 28px rgba(212,175,55,0.6); }
+      0%,100% { box-shadow: 0 0 7px rgba(212,175,55,0.9); }
+      50%      { box-shadow: 0 0 14px rgba(212,175,55,1), 0 0 24px rgba(212,175,55,0.5); }
     }
 
-    /* ═══════════════════════════════
-       CORNER ORNAMENTS
-    ═══════════════════════════════ */
-    .corner {
+    /* ─── SLIDE CONTAINER ─── */
+    .slider-wrap {
       position: absolute;
-      width: 32px; height: 32px;
-      z-index: 35;
-      pointer-events: none;
-    }
-    .corner::before, .corner::after {
-      content: '';
-      position: absolute;
-      background: linear-gradient(135deg, var(--g3), var(--gold-bright));
-    }
-    .corner::before { width: 100%; height: 2.5px; top: 0; }
-    .corner::after  { width: 2.5px; height: 100%; top: 0; }
-
-    .corner-tl { top: 6px; left: 6px; }
-    .corner-tr { top: 6px; right: 6px; transform: scaleX(-1); }
-    .corner-bl { bottom: 6px; left: 6px; transform: scaleY(-1); }
-    .corner-br { bottom: 6px; right: 6px; transform: scale(-1); }
-
-    /* ═══════════════════════════════
-       SLIDE CONTAINER
-    ═══════════════════════════════ */
-    .content-container {
-      position: absolute;
-      inset: 34px 0 32px 0;
+      top: 32px; bottom: 30px; left: 0; right: 0;
       overflow: hidden;
       touch-action: pan-y pinch-zoom;
-      z-index: 10;
     }
 
-    /* ═══════════════════════════════
-       SLIDE — 3D flip entrance
-    ═══════════════════════════════ */
+    /* ─── SLIDE ─── */
     .slide {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      top: 0; left: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 14px 22px 10px;
-
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      padding: 12px 18px 8px;
       opacity: 0;
-      transform: perspective(800px) rotateY(25deg) translateX(40px) scale(0.95);
-      transition:
-        opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1),
-        transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: perspective(700px) rotateY(18deg) translateX(30px);
+      transition: opacity .55s cubic-bezier(.4,0,.2,1), transform .55s cubic-bezier(.4,0,.2,1);
       pointer-events: none;
     }
-
     .slide.active {
       opacity: 1;
-      transform: perspective(800px) rotateY(0deg) translateX(0) scale(1);
-      z-index: 10;
+      transform: perspective(700px) rotateY(0deg) translateX(0);
       pointer-events: auto;
     }
 
-    .slide.leaving {
-      opacity: 0;
-      transform: perspective(800px) rotateY(-20deg) translateX(-40px) scale(0.95);
-      z-index: 5;
-    }
-
-    /* ═══════════════════════════════
-       NEWS CARD — 3D raised tile
-    ═══════════════════════════════ */
-    .news-card {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      cursor: pointer;
-      position: relative;
-
-      /* 3D raised white card */
+    /* ─── CARD ─── */
+    .card {
+      width: 100%; cursor: pointer;
+      display: flex; flex-direction: column; align-items: center; text-align: center;
       background: linear-gradient(160deg, #ffffff 0%, #fffcf0 100%);
-      border-radius: 16px;
-      padding: 18px 20px 14px;
-      border: 1.5px solid rgba(212,175,55,0.35);
+      border-radius: 14px;
+      padding: 16px 18px 13px;
+      border: 1.5px solid rgba(212,175,55,0.4);
       box-shadow:
-        0 4px 0 rgba(212,175,55,0.3),
-        0 8px 0 rgba(212,175,55,0.15),
-        0 12px 30px rgba(180,140,20,0.12),
-        inset 0 1px 0 rgba(255,255,255,1),
-        inset 0 -1px 0 rgba(212,175,55,0.2);
-
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-    }
-
-    .news-card:hover {
-      transform: translateY(-3px) scale(1.01);
-      box-shadow:
-        0 6px 0 rgba(212,175,55,0.35),
-        0 12px 0 rgba(212,175,55,0.18),
-        0 20px 40px rgba(180,140,20,0.2),
-        inset 0 1px 0 rgba(255,255,255,1);
-    }
-
-    .news-card:active {
-      transform: translateY(1px) scale(0.99);
-      box-shadow:
-        0 2px 0 rgba(212,175,55,0.3),
-        0 6px 20px rgba(180,140,20,0.1);
-    }
-
-    /* gold top stripe on card */
-    .news-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 20px; right: 20px;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--g3), var(--gold-bright), var(--g3), transparent);
-      border-radius: 2px;
-      animation: goldStripe 3s ease-in-out infinite;
-    }
-
-    @keyframes goldStripe {
-      0%, 100% { opacity: 0.7; }
-      50% { opacity: 1; filter: brightness(1.2); }
-    }
-
-    /* ═══════════════════════════════
-       TYPE PILL
-    ═══════════════════════════════ */
-    .mela-type-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: linear-gradient(135deg, var(--g3), var(--gold-bright));
-      padding: 3px 14px;
-      border-radius: 100px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 8px rgba(212,175,55,0.4), 0 4px 0 rgba(180,130,10,0.2);
-    }
-    .mela-type-pill span {
-      font-size: 0.68rem;
-      font-weight: 700;
-      color: #4a2e00;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    /* ═══════════════════════════════
-       TITLE
-    ═══════════════════════════════ */
-    .title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.55rem;
-      font-weight: 900;
-      line-height: 1.2;
-      text-align: center;
-      padding: 0 4px;
-      margin-bottom: 8px;
-      background: linear-gradient(135deg, #9a6c00 0%, #c9962a 35%, #f0c040 60%, #c9962a 80%, #9a6c00 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      background-size: 200% 100%;
-      animation: goldTextShift 4s ease-in-out infinite;
-      /* 3D text depth */
-      filter: drop-shadow(0 1px 0 rgba(180,130,10,0.25));
-    }
-
-    @keyframes goldTextShift {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    /* thin divider */
-    .divider {
-      width: 50px; height: 1.5px;
-      background: linear-gradient(90deg, transparent, var(--g3), transparent);
-      margin: 0 auto 9px;
+        0 3px 0 rgba(180,130,10,0.28),
+        0 7px 0 rgba(180,130,10,0.12),
+        0 14px 28px rgba(180,130,10,0.1),
+        inset 0 1px 0 #ffffff;
+      transition: transform .2s, box-shadow .2s;
       position: relative;
     }
-    .divider::before {
-      content: '◆';
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 6px;
-      color: var(--g3);
-      background: white;
-      padding: 0 3px;
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 16px; right: 16px; height: 2px;
+      background: linear-gradient(90deg, transparent, #f0c040, #d4af37, #f0c040, transparent);
+      border-radius: 2px;
+      animation: topGlow 3s ease-in-out infinite;
+    }
+    @keyframes topGlow {
+      0%,100% { opacity: .7; }
+      50%      { opacity: 1; filter: brightness(1.3); }
+    }
+    .card:hover { transform: translateY(-3px); box-shadow: 0 5px 0 rgba(180,130,10,0.3), 0 10px 0 rgba(180,130,10,0.13), 0 22px 36px rgba(180,130,10,0.17), inset 0 1px 0 #fff; }
+    .card:active { transform: translateY(1px); }
+
+    /* type pill */
+    .type-pill {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: linear-gradient(135deg, #f9a825, #ffe066);
+      padding: 3px 13px; border-radius: 100px; margin-bottom: 9px;
+      box-shadow: 0 2px 6px rgba(212,175,55,0.4), 0 3px 0 rgba(155,105,0,0.2);
+    }
+    .type-pill span { font-size: 0.66rem; font-weight: 700; color: #4a2e00; letter-spacing: .07em; text-transform: uppercase; }
+
+    /* title */
+    .title {
+      font-family: 'Cinzel', serif; font-weight: 900;
+      font-size: 1.6rem; line-height: 1.2; margin-bottom: 8px; padding: 0 4px;
+      background: linear-gradient(135deg, #9a6c00 0%, #c9962a 35%, #f0c040 60%, #c9962a 85%, #9a6c00 100%);
+      background-size: 200%;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: titleShine 4s linear infinite;
+      filter: drop-shadow(0 1px 0 rgba(180,130,10,0.2));
+    }
+    @keyframes titleShine {
+      0%   { background-position: 0%; }
+      100% { background-position: 200%; }
     }
 
-    /* ═══════════════════════════════
-       STATUS BADGE
-    ═══════════════════════════════ */
-    .status-row {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px;
+    /* diamond divider */
+    .rule {
+      display: flex; align-items: center; gap: 6px; margin: 0 auto 9px; width: 80px;
     }
+    .rule-line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #d4af37); }
+    .rule-line:last-child { background: linear-gradient(270deg, transparent, #d4af37); }
+    .rule-gem { font-size: 7px; color: #d4af37; }
 
+    /* status badge */
+    .status-wrap { margin-bottom: 9px; }
     .status-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 3px 12px;
-      border-radius: 100px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 12px; border-radius: 100px;
+      font-size: 0.73rem; font-weight: 700;
     }
-
     .status-badge.running {
-      background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
-      border: 1.5px solid rgba(76,175,80,0.5);
-      color: #2e7d32;
-      box-shadow: 0 2px 8px rgba(76,175,80,0.2), 0 3px 0 rgba(76,175,80,0.15);
+      background: #f0fdf4; border: 1.5px solid rgba(74,222,128,0.5); color: #166534;
+      box-shadow: 0 2px 0 rgba(74,222,128,0.18);
     }
-
     .status-badge.upcoming {
-      background: linear-gradient(135deg, #fff3e0, #fff8e1);
-      border: 1.5px solid rgba(212,175,55,0.6);
-      color: #7a4e00;
-      box-shadow: 0 2px 8px rgba(212,175,55,0.25), 0 3px 0 rgba(180,130,10,0.15);
+      background: #fffbeb; border: 1.5px solid rgba(212,175,55,0.55); color: #78350f;
+      box-shadow: 0 2px 0 rgba(155,105,0,0.15);
     }
+    .dot-live {
+      width: 7px; height: 7px; border-radius: 50%; background: #22c55e;
+      box-shadow: 0 0 0 0 rgba(34,197,94,.5);
+      animation: liveRipple 1.5s ease-out infinite;
+    }
+    @keyframes liveRipple {
+      0%  { box-shadow: 0 0 0 0 rgba(34,197,94,.6); }
+      70% { box-shadow: 0 0 0 8px rgba(34,197,94,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+    }
+    .dot-soon { width: 7px; height: 7px; border-radius: 50%; background: #d4af37; }
 
-    .blinking-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: #4caf50;
-      box-shadow: 0 0 0 0 rgba(76,175,80,0.5);
-      animation: ripple 1.4s ease-out infinite;
-    }
-    @keyframes ripple {
-      0%   { box-shadow: 0 0 0 0 rgba(76,175,80,0.6); }
-      70%  { box-shadow: 0 0 0 8px rgba(76,175,80,0); }
-      100% { box-shadow: 0 0 0 0 rgba(76,175,80,0); }
-    }
-
-    .static-dot {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--g3);
-    }
-
-    /* ═══════════════════════════════
-       DESCRIPTION
-    ═══════════════════════════════ */
+    /* desc */
     .desc {
-      font-size: 0.82rem;
-      color: #6b5020;
-      line-height: 1.6;
-      max-width: 92%;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      margin-bottom: 12px;
+      font-size: 0.81rem; color: #6b5020; line-height: 1.6;
+      max-width: 92%; margin-bottom: 11px;
+      display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
     }
 
     /* tap hint */
     .tap-hint {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.66rem;
-      font-weight: 600;
-      color: var(--g3);
-      background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(240,192,64,0.12));
-      border: 1px solid rgba(212,175,55,0.35);
-      padding: 4px 14px;
-      border-radius: 100px;
-      letter-spacing: 0.05em;
-      transition: all 0.2s;
-      box-shadow: 0 2px 0 rgba(180,130,10,0.1);
+      font-size: 0.64rem; font-weight: 600; color: #c9962a;
+      border: 1px solid rgba(212,175,55,0.38); padding: 3px 13px; border-radius: 100px;
+      background: rgba(212,175,55,0.06);
+      box-shadow: 0 2px 0 rgba(155,105,0,0.1);
     }
+    .card:hover .tap-hint { background: rgba(212,175,55,0.13); border-color: #d4af37; }
 
-    .news-card:hover .tap-hint {
-      background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(240,192,64,0.2));
-      border-color: var(--g3);
-      box-shadow: 0 3px 0 rgba(180,130,10,0.15), 0 4px 12px rgba(212,175,55,0.2);
-    }
-
-    /* ═══════════════════════════════
-       SLIDE INDICATORS
-    ═══════════════════════════════ */
-    .slide-indicators {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 32px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 8px;
-      z-index: 20;
+    /* ─── INDICATORS ─── */
+    .indicators {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 30px;
+      display: flex; justify-content: center; align-items: center; gap: 7px; z-index: 20;
       border-top: 1px solid rgba(212,175,55,0.2);
-      background: linear-gradient(0deg, rgba(255,250,230,0.8), transparent);
+      background: linear-gradient(0deg, rgba(255,248,220,.8), transparent);
     }
-
-    .indicator {
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: rgba(212,175,55,0.25);
-      border: 1.5px solid rgba(212,175,55,0.4);
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
-      transform: translateZ(0);
+    .dot {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: rgba(212,175,55,0.25); border: 1.5px solid rgba(212,175,55,0.4);
+      cursor: pointer; transition: all .4s cubic-bezier(.4,0,.2,1);
     }
-
-    .indicator.active {
-      width: 24px;
-      border-radius: 10px;
-      background: linear-gradient(90deg, var(--g3), var(--gold-bright), var(--g3));
-      border-color: transparent;
-      box-shadow: 0 0 10px rgba(212,175,55,0.6), 0 2px 0 rgba(180,130,10,0.3);
+    .dot.active {
+      width: 24px; border-radius: 10px;
+      background: linear-gradient(90deg, #f9a825, #ffe066, #f9a825);
       background-size: 200%;
-      animation: activeIndicatorShine 2s linear infinite;
+      border: none; box-shadow: 0 0 10px rgba(212,175,55,.7), 0 2px 0 rgba(155,105,0,.3);
+      animation: dotShine 2s linear infinite;
     }
+    @keyframes dotShine { 0%{background-position:0%} 100%{background-position:200%} }
 
-    @keyframes activeIndicatorShine {
-      0% { background-position: 0%; }
-      100% { background-position: 200%; }
-    }
-
-    /* ═══════════════════════════════
-       LOADING
-    ═══════════════════════════════ */
-    .loading-state {
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: 12px;
-      color: var(--g3);
-      font-size: 0.82rem;
-      font-weight: 600;
-    }
-    .loader-ring {
-      width: 36px; height: 36px;
-      border: 3px solid rgba(212,175,55,0.2);
-      border-top: 3px solid var(--g3);
-      border-right: 3px solid var(--gold-bright);
-      border-radius: 50%;
-      animation: spin 0.9s linear infinite;
-    }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* ═══════════════════════════════
-       MODAL BACKDROP
-    ═══════════════════════════════ */
+    /* ─── MODAL ─── */
     .modal {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: rgba(80,55,0,0.55);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-      padding: 16px;
-      perspective: 1000px;
+      display: none; position: fixed; inset: 0; z-index: 1000;
+      background: rgba(60,40,0,.55); backdrop-filter: blur(6px);
+      justify-content: center; align-items: center; padding: 16px;
     }
-
-    /* ═══════════════════════════════
-       MODAL CARD — 3D flip-in
-    ═══════════════════════════════ */
-    .modal-content {
-      background: linear-gradient(160deg, #ffffff 0%, #fffdf5 60%, #fff9e8 100%);
-      border: 2px solid rgba(212,175,55,0.5);
-      box-shadow:
-        0 4px 0 rgba(180,130,10,0.3),
-        0 8px 0 rgba(180,130,10,0.15),
-        0 40px 80px rgba(130,90,0,0.25),
-        inset 0 1px 0 rgba(255,255,255,1),
-        inset 0 0 0 1px rgba(255,250,220,0.8);
-      width: 100%;
-      max-width: 480px;
-      max-height: 85vh;
-      border-radius: 20px;
-      padding: 26px 22px 22px;
-      overflow-y: auto;
-      position: relative;
-      animation: modalPop 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
-      scrollbar-width: thin;
-      scrollbar-color: var(--g3) transparent;
+    .modal-box {
+      width: 100%; max-width: 480px; max-height: 85vh;
+      background: linear-gradient(160deg, #ffffff, #fffdf5, #fff9e8);
+      border: 2px solid rgba(212,175,55,.5);
+      border-radius: 20px; padding: 24px 20px 20px; overflow-y: auto; position: relative;
+      box-shadow: 0 4px 0 rgba(155,105,0,.3), 0 8px 0 rgba(155,105,0,.13), 0 40px 70px rgba(120,80,0,.22),
+                  inset 0 1px 0 #fff;
+      animation: popIn .4s cubic-bezier(.34,1.56,.64,1);
+      scrollbar-width: thin; scrollbar-color: #d4af37 transparent;
     }
-    .modal-content::-webkit-scrollbar { width: 4px; }
-    .modal-content::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 4px; }
-
-    @keyframes modalPop {
-      from { opacity:0; transform: perspective(800px) rotateX(-15deg) scale(0.9) translateY(20px); }
-      to   { opacity:1; transform: perspective(800px) rotateX(0deg) scale(1) translateY(0); }
-    }
-
-    /* gold stripe top of modal */
-    .modal-content::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0; right: 0;
-      height: 4px;
-      background: linear-gradient(90deg, transparent, var(--g3), var(--gold-bright), var(--g3), transparent);
+    .modal-box::-webkit-scrollbar { width: 4px; }
+    .modal-box::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
+    .modal-box::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      background: linear-gradient(90deg, transparent, #d4af37, #ffe066, #d4af37, transparent);
       border-radius: 20px 20px 0 0;
     }
-
-    .close-modal {
-      position: absolute;
-      top: 14px; right: 14px;
-      width: 30px; height: 30px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #fff9e8, #fff3cc);
-      border: 1.5px solid rgba(212,175,55,0.5);
-      box-shadow: 0 2px 0 rgba(180,130,10,0.2), 0 4px 10px rgba(0,0,0,0.06);
+    @keyframes popIn {
+      from { opacity:0; transform: perspective(700px) rotateX(-12deg) scale(.9) translateY(16px); }
+      to   { opacity:1; transform: perspective(700px) rotateX(0) scale(1) translateY(0); }
+    }
+    .modal-close {
+      position: absolute; top: 14px; right: 14px;
+      width: 28px; height: 28px; border-radius: 50%;
+      background: #fff9e8; border: 1.5px solid rgba(212,175,55,.5);
+      box-shadow: 0 2px 0 rgba(155,105,0,.2);
       display: flex; align-items: center; justify-content: center;
-      font-size: 14px; color: var(--g3);
-      cursor: pointer;
-      transition: all 0.2s;
+      font-size: 13px; color: #c9962a; cursor: pointer; transition: all .2s;
     }
-    .close-modal:hover {
-      transform: rotate(90deg) scale(1.1);
-      background: linear-gradient(135deg, var(--g3), var(--gold-bright));
-      color: #4a2e00;
-      border-color: transparent;
-    }
-
+    .modal-close:hover { transform: rotate(90deg); background: linear-gradient(135deg,#f9a825,#ffe066); color: #4a2e00; border-color:transparent; }
     .modal-title {
-      font-family: 'Cinzel', serif;
-      font-size: 1.05rem;
-      font-weight: 700;
+      font-family: 'Cinzel', serif; font-size: 1.05rem; font-weight: 700; padding-right: 34px;
       background: linear-gradient(135deg, #9a6c00, #c9962a, #f0c040);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 4px;
-      padding-right: 36px;
-      line-height: 1.3;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      line-height: 1.3; margin-bottom: 4px;
     }
+    .modal-rule { display: flex; align-items: center; gap: 7px; margin: 7px 0 15px; }
+    .mrule { flex:1; height:1px; background: linear-gradient(90deg, #d4af37, transparent); }
+    .mrule-r { background: linear-gradient(270deg, #d4af37, transparent); }
+    .mrule-gem { font-size: 7px; color: #d4af37; }
+    .msec { margin-bottom: 13px; padding-bottom: 11px; border-bottom: 1px solid rgba(212,175,55,.15); }
+    .msec:last-child { border-bottom: none; margin-bottom: 0; }
+    .mlabel { font-size: .62rem; font-weight: 700; letter-spacing: .13em; text-transform: uppercase; color: rgba(180,130,10,.55); margin-bottom: 5px; }
+    .mval { font-size: .82rem; color: #5a3e10; line-height: 1.65; }
+    .mstatus {
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 3px 11px; border-radius: 100px; font-size: .75rem; font-weight: 700;
+    }
+    .mstatus.running  { background:#f0fdf4; border:1.5px solid rgba(74,222,128,.5); color:#166534; }
+    .mstatus.upcoming { background:#fffbeb; border:1.5px solid rgba(212,175,55,.6); color:#78350f; }
+    .contact-row { display:flex; align-items:center; gap:7px; padding:4px 0; font-size:.79rem; color:#6b4e1a; }
+    .contact-row a { color:#c9962a; font-weight:600; text-decoration:none; }
+    .map-btn {
+      display:inline-flex; align-items:center; gap:6px;
+      background: linear-gradient(135deg, #f9a825, #ffe066);
+      color:#4a2e00; padding:7px 18px; border-radius:100px;
+      text-decoration:none; font-size:.76rem; font-weight:700; margin-top:6px;
+      box-shadow: 0 3px 0 rgba(155,105,0,.28), 0 6px 14px rgba(212,175,55,.3);
+      transition: transform .2s, box-shadow .2s;
+    }
+    .map-btn:hover { transform:translateY(-2px); box-shadow:0 5px 0 rgba(155,105,0,.28), 0 10px 22px rgba(212,175,55,.4); }
 
-    .modal-rule {
-      display: flex; align-items: center; gap: 8px;
-      margin: 8px 0 16px;
-    }
-    .modal-rule-line {
-      flex: 1; height: 1px;
-      background: linear-gradient(90deg, var(--g3), transparent);
-    }
-    .modal-rule-gem { font-size: 8px; color: var(--g3); }
+    /* loading */
+    .loading { display:flex; flex-direction:column; align-items:center; gap:12px; color:#c9962a; font-size:.82rem; font-weight:600; }
+    .loader { width:34px; height:34px; border:3px solid rgba(212,175,55,.2); border-top:3px solid #d4af37; border-right:3px solid #ffe066; border-radius:50%; animation:spin .9s linear infinite; }
+    @keyframes spin { to { transform:rotate(360deg); } }
 
-    .modal-section {
-      margin-bottom: 14px;
-      padding-bottom: 12px;
-      border-bottom: 1px solid rgba(212,175,55,0.15);
-    }
-    .modal-section:last-child { border-bottom: none; margin-bottom: 0; }
-
-    .modal-label {
-      font-size: 0.64rem;
-      font-weight: 700;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: rgba(180,130,10,0.6);
-      margin-bottom: 5px;
-    }
-    .modal-value {
-      font-size: 0.83rem;
-      color: #5a3e10;
-      line-height: 1.65;
-    }
-
-    .contact-item {
-      display: flex; align-items: center; gap: 7px;
-      padding: 4px 0;
-      font-size: 0.8rem;
-      color: #6b4e1a;
-    }
-    .contact-item a { color: var(--g3); text-decoration: none; font-weight: 600; }
-    .contact-item a:hover { color: #9a6c00; }
-
-    .modal-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 12px;
-      border-radius: 100px;
-      font-size: 0.76rem;
-      font-weight: 700;
-      box-shadow: 0 2px 0 rgba(0,0,0,0.08);
-    }
-    .modal-status.running {
-      background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
-      border: 1.5px solid rgba(76,175,80,0.5);
-      color: #2e7d32;
-    }
-    .modal-status.upcoming {
-      background: linear-gradient(135deg, #fff9e8, #fff3cc);
-      border: 1.5px solid rgba(212,175,55,0.6);
-      color: #7a4e00;
-    }
-
-    .map-link-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: linear-gradient(135deg, var(--g3), var(--gold-bright));
-      color: #4a2e00;
-      padding: 8px 20px;
-      border-radius: 100px;
-      text-decoration: none;
-      font-size: 0.77rem;
-      font-weight: 700;
-      margin-top: 6px;
-      box-shadow: 0 3px 0 rgba(155,110,0,0.3), 0 6px 16px rgba(212,175,55,0.3);
-      transition: all 0.2s;
-    }
-    .map-link-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 5px 0 rgba(155,110,0,0.3), 0 10px 24px rgba(212,175,55,0.4);
-    }
-    .map-link-btn:active { transform: translateY(1px); }
-
-    /* ═══════════════════════════════
-       RESPONSIVE
-    ═══════════════════════════════ */
-    @media (max-width: 550px) {
-      .title { font-size: 1.25rem; }
-      .desc { font-size: 0.78rem; }
-      .header-text { font-size: 0.52rem; letter-spacing: 0.2em; }
-      .billboard { animation-duration: 8s; }
-    }
-    @media (max-width: 400px) {
-      .title { font-size: 1.1rem; }
-      .slide { padding: 10px 12px 8px; }
-      .news-card { padding: 14px 14px 11px; }
-    }
-    @media (prefers-reduced-motion: reduce) {
-      .billboard { animation: none; transform: none; }
-      .slide { transition: opacity 0.3s; transform: none !important; }
-      .blinking-dot { animation: none; }
-      .screen::before { display: none; }
-    }
+    /* responsive */
+    @media(max-width:540px) { .title{font-size:1.3rem;} .desc{font-size:.77rem;} .hbar-text{font-size:.5rem;letter-spacing:.2em;} }
+    @media(max-width:400px) { .title{font-size:1.1rem;} .slide{padding:10px 12px 6px;} .card{padding:13px 13px 11px;} }
+    @media(prefers-reduced-motion:reduce) { .billboard{animation:none;} .slide{transition:opacity .3s;transform:none!important;} .screen::after{display:none;} }
   </style>
 </head>
 <body>
@@ -722,250 +352,191 @@
 <div class="billboard-wrap">
   <div class="billboard">
     <div class="screen">
-      <!-- corner ornaments -->
-      <div class="corner corner-tl"></div>
-      <div class="corner corner-tr"></div>
-      <div class="corner corner-bl"></div>
-      <div class="corner corner-br"></div>
+      <div class="corner c-tl"></div><div class="corner c-tr"></div>
+      <div class="corner c-bl"></div><div class="corner c-br"></div>
 
-      <!-- header -->
       <div class="header-bar">
-        <div class="header-gem"></div>
-        <span class="header-text">বাংলাদেশ মেলা অ্যাপস</span>
-        <div class="header-gem"></div>
+        <div class="hbar-gem"></div>
+        <span class="hbar-text">বাংলাদেশ মেলা অ্যাপস</span>
+        <div class="hbar-gem"></div>
       </div>
 
-      <!-- slides -->
-      <div class="content-container" id="slidesContainer">
+      <div class="slider-wrap" id="sliderWrap">
         <div class="slide active">
-          <div class="news-card">
-            <div class="loading-state">
-              <div class="loader-ring"></div>
-              <span>লোড হচ্ছে…</span>
-            </div>
+          <div class="card">
+            <div class="loading"><div class="loader"></div><span>লোড হচ্ছে…</span></div>
           </div>
         </div>
       </div>
 
-      <!-- indicators -->
-      <div class="slide-indicators" id="indicators"></div>
+      <div class="indicators" id="indicators"></div>
     </div>
   </div>
 </div>
 
 <!-- Modal -->
-<div id="detailModal" class="modal">
-  <div class="modal-content">
-    <div class="close-modal" id="closeModalBtn">✕</div>
+<div id="modal" class="modal">
+  <div class="modal-box">
+    <div class="modal-close" id="modalClose">✕</div>
     <div id="modalBody"></div>
   </div>
 </div>
 
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-
 <script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAKRgsUrYL4uAWinn5dcJrKck1nqUokRdw",
-    authDomain: "all-hadith-a68fa.firebaseapp.com",
-    projectId: "all-hadith-a68fa",
-    databaseURL: "https://all-hadith-a68fa-default-rtdb.firebaseio.com/",
-    storageBucket: "all-hadith-a68fa.firebasestorage.app",
-    messagingSenderId: "124928027736",
-    appId: "1:124928027736:android:f4d9a9a9ed667150ca2e2d"
-  };
+/* ── Firebase ── */
+const firebaseConfig = {
+  apiKey: "AIzaSyAKRgsUrYL4uAWinn5dcJrKck1nqUokRdw",
+  authDomain: "all-hadith-a68fa.firebaseapp.com",
+  databaseURL: "https://all-hadith-a68fa-default-rtdb.firebaseio.com/",
+  projectId: "all-hadith-a68fa",
+  storageBucket: "all-hadith-a68fa.firebasestorage.app",
+  messagingSenderId: "124928027736",
+  appId: "1:124928027736:android:f4d9a9a9ed667150ca2e2d"
+};
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-  firebase.initializeApp(firebaseConfig);
-  const database = firebase.database();
+/* ── Demo fallback data (shown if Firebase empty) ── */
+const DEMO = [
+  { id:'d1', title:'ঢাকা আন্তর্জাতিক বাণিজ্য মেলা', melaType:'বাণিজ্য', days:'30',
+    description:'বাংলাদেশের সবচেয়ে বড় আন্তর্জাতিক বাণিজ্য মেলা। দেশি-বিদেশি হাজারো পণ্যের সমাহার এবং বিনোদনের ব্যবস্থা।',
+    address:'বঙ্গবন্ধু বাংলাদেশ-চায়না ফ্রেন্ডশিপ এক্সিবিশন সেন্টার, পূর্বাচল',
+    startDate: new Date(Date.now()-2*86400000).toISOString(),
+    endDate:   new Date(Date.now()+28*86400000).toISOString(),
+    contacts:[{name:'অফিস', phone:'01700-000001'}], mapLink:'https://maps.google.com',
+    order:1 },
+  { id:'d2', title:'চট্টগ্রাম শিল্প ও বাণিজ্য মেলা', melaType:'শিল্প', days:'15',
+    description:'চট্টগ্রামের স্থানীয় উদ্যোক্তাদের পণ্য প্রদর্শনী ও বিক্রয়ের বিশেষ আয়োজন। সকল বয়সের দর্শকদের জন্য উন্মুক্ত।',
+    address:'এম এ আজিজ স্টেডিয়াম, চট্টগ্রাম',
+    startDate: new Date(Date.now()+5*86400000).toISOString(),
+    endDate:   new Date(Date.now()+20*86400000).toISOString(),
+    contacts:[{name:'হেল্পলাইন', phone:'01800-000002'}], mapLink:'https://maps.google.com',
+    order:2 },
+  { id:'d3', title:'রাজশাহী কৃষি মেলা ২০২৬', melaType:'কৃষি', days:'7',
+    description:'উত্তরবঙ্গের কৃষকদের জন্য আধুনিক কৃষি প্রযুক্তি, বীজ ও সরঞ্জাম প্রদর্শনীর বার্ষিক আসর।',
+    address:'রাজশাহী কেন্দ্রীয় উদ্যান, রাজশাহী',
+    startDate: new Date(Date.now()+10*86400000).toISOString(),
+    endDate:   new Date(Date.now()+17*86400000).toISOString(),
+    contacts:[{name:'কৃষি অফিস', phone:'01600-000003'}], mapLink:'',
+    order:3 }
+];
 
-  let slides = [], currentIndex = 0, interval, touchStartX = 0;
+let slides=[], cur=0, timer=null, tx=0;
 
-  function escapeHtml(str) {
-    if (!str) return '';
-    return str.replace(/[&<>]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
-  }
+function esc(s){ if(!s) return ''; return s.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m])); }
+function status(s,e){
+  if(!s||!e) return 'upcoming';
+  const n=new Date(); return (n>=new Date(s)&&n<=new Date(e))?'running':'upcoming';
+}
+function fmtDate(d){ if(!d) return 'N/A'; return new Date(d).toLocaleString('bn-BD'); }
 
-  function getStatus(s, e) {
-    if (!s || !e) return 'upcoming';
-    const now = new Date();
-    return now >= new Date(s) && now <= new Date(e) ? 'running' : 'upcoming';
-  }
-
-  function formatDateTime(d) {
-    if (!d) return 'N/A';
-    return new Date(d).toLocaleString('bn-BD');
-  }
-
-  /* ── Modal ── */
-  window.showModalById = function(id, event) {
-    if (event) event.stopPropagation();
-    const card = slides.find(s => s.id === id);
-    if (!card) return;
-    const isRunning = getStatus(card.startDate, card.endDate) === 'running';
-
-    let contactsHtml = '';
-    if (card.contacts && card.contacts.length) {
-      card.contacts.forEach(c => {
-        contactsHtml += `<div class="contact-item">👤 <span>${escapeHtml(c.name)}</span> — <a href="tel:${escapeHtml(c.phone)}">${escapeHtml(c.phone)}</a></div>`;
-      });
-    } else {
-      contactsHtml = '<div class="modal-value" style="opacity:.5">কোনো তথ্য নেই</div>';
-    }
-
-    document.getElementById('modalBody').innerHTML = `
-      <div class="modal-title">${escapeHtml(card.title)}</div>
-      <div class="modal-rule">
-        <div class="modal-rule-line"></div>
-        <span class="modal-rule-gem">◆</span>
-        <div class="modal-rule-line" style="background:linear-gradient(90deg,transparent,#c9962a);"></div>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-label">স্ট্যাটাস ও ধরন</div>
-        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px;">
-          <span class="modal-status ${isRunning ? 'running' : 'upcoming'}">
-            <span style="width:6px;height:6px;border-radius:50%;background:${isRunning ? '#4caf50' : '#c9962a'};display:inline-block;${isRunning ? 'animation:ripple 1.4s infinite;' : ''}"></span>
-            ${isRunning ? 'চলমান' : 'আসন্ন'}
-          </span>
-          <span class="modal-value">${escapeHtml(card.melaType)} · ${card.days || '?'} দিনব্যাপী</span>
-        </div>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-label">বিস্তারিত বিবরণ</div>
-        <div class="modal-value" style="margin-top:4px;">${escapeHtml(card.description)}</div>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-label">ঠিকানা</div>
-        <div class="modal-value" style="margin-top:4px;">${escapeHtml(card.address || 'ঠিকানা দেওয়া নেই')}</div>
-        ${card.mapLink ? `<a href="${escapeHtml(card.mapLink)}" target="_blank" class="map-link-btn">🗺️ গুগল ম্যাপে দেখুন</a>` : ''}
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-label">যোগাযোগ</div>
-        <div style="margin-top:4px;">${contactsHtml}</div>
-      </div>
-
-      <div class="modal-section">
-        <div class="modal-label">সময়কাল</div>
-        <div class="modal-value" style="margin-top:4px;">শুরু: ${formatDateTime(card.startDate)}</div>
-        <div class="modal-value" style="margin-top:2px;">শেষ: ${formatDateTime(card.endDate)}</div>
-      </div>
-    `;
-    document.getElementById('detailModal').style.display = 'flex';
-  };
-
-  /* ── Slide HTML ── */
-  function createSlideHTML(card, idx) {
-    const isRunning = getStatus(card.startDate, card.endDate) === 'running';
-    const desc = card.description || '';
-    const short = desc.length > 105 ? desc.substring(0,105) + '…' : desc;
-    return `
-      <div class="slide" data-index="${idx}">
-        <div class="news-card" onclick="showModalById('${card.id}', event)">
-          <div class="mela-type-pill">
-            <span>${escapeHtml(card.melaType)}</span>
-            <span style="opacity:.5">·</span>
-            <span>${card.days || '?'} দিন</span>
-          </div>
-          <div class="title">${escapeHtml(card.title)}</div>
-          <div class="divider"></div>
-          <div class="status-row">
-            <div class="status-badge ${isRunning ? 'running' : 'upcoming'}">
-              ${isRunning ? '<span class="blinking-dot"></span>' : '<span class="static-dot"></span>'}
-              ${isRunning ? 'চলমান' : 'আসন্ন'}
-            </div>
-          </div>
-          <div class="desc">${escapeHtml(short)}</div>
-          <div class="tap-hint">✦ বিস্তারিত দেখতে ট্যাপ করুন</div>
-        </div>
-      </div>`;
-  }
-
-  /* ── Touch ── */
-  function onTouchStart(e) { touchStartX = e.changedTouches[0].screenX; }
-  function onTouchEnd(e) {
-    const dx = e.changedTouches[0].screenX - touchStartX;
-    if (Math.abs(dx) > 50) dx > 0 ? prevSlide() : nextSlide();
-  }
-
-  function prevSlide() {
-    if (!slides.length) return;
-    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-    showSlide(currentIndex); startSlideshow();
-  }
-  function nextSlide() {
-    if (!slides.length) return;
-    currentIndex = (currentIndex + 1) % slides.length;
-    showSlide(currentIndex); startSlideshow();
-  }
-
-  function showSlide(index) {
-    const allSlides = document.querySelectorAll('.slide');
-    allSlides.forEach((s, i) => {
-      s.classList.remove('active', 'leaving');
-      if (i === index) s.classList.add('active');
-    });
-    document.querySelectorAll('.indicator').forEach((d, i) => {
-      d.classList.toggle('active', i === index);
-    });
-  }
-
-  function goToSlide(index) {
-    currentIndex = index;
-    showSlide(currentIndex);
-    startSlideshow();
-  }
-
-  function startSlideshow() {
-    if (interval) clearInterval(interval);
-    if (slides.length > 1) interval = setInterval(nextSlide, 5000);
-  }
-
-  function renderSlides() {
-    const container = document.getElementById('slidesContainer');
-    const indicatorsDiv = document.getElementById('indicators');
-
-    if (!slides.length) {
-      container.innerHTML = `<div class="slide active"><div class="news-card"><div class="loading-state"><span>🎪 কোনো মেলার তথ্য নেই</span></div></div></div>`;
-      indicatorsDiv.innerHTML = '<div class="indicator active"></div>';
-      return;
-    }
-
-    container.innerHTML = slides.map(createSlideHTML).join('');
-    indicatorsDiv.innerHTML = slides.map((_, i) =>
-      `<div class="indicator${i===0?' active':''}" data-index="${i}"></div>`
-    ).join('');
-
-    document.querySelectorAll('.indicator').forEach(d => {
-      d.addEventListener('click', () => goToSlide(+d.getAttribute('data-index')));
-    });
-
-    const cc = document.querySelector('.content-container');
-    cc.addEventListener('touchstart', onTouchStart, {passive:true});
-    cc.addEventListener('touchend', onTouchEnd, {passive:true});
-
-    currentIndex = 0;
-    showSlide(0);
-    startSlideshow();
-  }
-
-  /* ── Firebase ── */
-  database.ref('melaPosts').on('value', snap => {
-    const data = snap.val();
-    slides = data ? Object.keys(data).map(k => ({id:k,...data[k]})).sort((a,b)=>(a.order||0)-(b.order||0)) : [];
-    renderSlides();
+/* ── Modal ── */
+window.openCard = function(id,ev){
+  if(ev) ev.stopPropagation();
+  const c=slides.find(s=>s.id===id); if(!c) return;
+  const run=status(c.startDate,c.endDate)==='running';
+  let contacts='';
+  (c.contacts||[]).forEach(x=>{
+    contacts+=`<div class="contact-row">👤 <span>${esc(x.name)}</span> — <a href="tel:${esc(x.phone)}">${esc(x.phone)}</a></div>`;
   });
+  if(!contacts) contacts='<div class="mval" style="opacity:.5">কোনো তথ্য নেই</div>';
 
-  /* ── Modal close ── */
-  document.getElementById('closeModalBtn').onclick = () => {
-    document.getElementById('detailModal').style.display = 'none';
-  };
-  window.onclick = e => {
-    if (e.target === document.getElementById('detailModal'))
-      document.getElementById('detailModal').style.display = 'none';
-  };
+  document.getElementById('modalBody').innerHTML=`
+    <div class="modal-title">${esc(c.title)}</div>
+    <div class="modal-rule"><div class="mrule"></div><span class="mrule-gem">◆</span><div class="mrule mrule-r"></div></div>
+    <div class="msec">
+      <div class="mlabel">স্ট্যাটাস ও ধরন</div>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px;">
+        <span class="mstatus ${run?'running':'upcoming'}">
+          <span style="width:6px;height:6px;border-radius:50%;background:${run?'#22c55e':'#d4af37'};display:inline-block;"></span>
+          ${run?'চলমান ✓':'আসন্ন'}
+        </span>
+        <span class="mval">${esc(c.melaType)} · ${c.days||'?'} দিনব্যাপী</span>
+      </div>
+    </div>
+    <div class="msec"><div class="mlabel">বিস্তারিত বিবরণ</div><div class="mval" style="margin-top:4px;">${esc(c.description)}</div></div>
+    <div class="msec">
+      <div class="mlabel">ঠিকানা</div>
+      <div class="mval" style="margin-top:4px;">${esc(c.address||'ঠিকানা দেওয়া নেই')}</div>
+      ${c.mapLink?`<a href="${esc(c.mapLink)}" target="_blank" class="map-btn">🗺️ গুগল ম্যাপে দেখুন</a>`:''}
+    </div>
+    <div class="msec"><div class="mlabel">যোগাযোগ</div><div style="margin-top:4px;">${contacts}</div></div>
+    <div class="msec">
+      <div class="mlabel">সময়কাল</div>
+      <div class="mval" style="margin-top:4px;">শুরু: ${fmtDate(c.startDate)}</div>
+      <div class="mval" style="margin-top:2px;">শেষ: ${fmtDate(c.endDate)}</div>
+    </div>`;
+  document.getElementById('modal').style.display='flex';
+};
+
+/* ── Build slide HTML ── */
+function slideHTML(c,i){
+  const run=status(c.startDate,c.endDate)==='running';
+  const short=(c.description||'').substring(0,108)+((c.description||'').length>108?'…':'');
+  return `<div class="slide" data-i="${i}">
+    <div class="card" onclick="openCard('${c.id}',event)">
+      <div class="type-pill"><span>${esc(c.melaType)}</span><span style="opacity:.4">·</span><span>${c.days||'?'} দিন</span></div>
+      <div class="title">${esc(c.title)}</div>
+      <div class="rule"><div class="rule-line"></div><span class="rule-gem">◆</span><div class="rule-line"></div></div>
+      <div class="status-wrap">
+        <span class="status-badge ${run?'running':'upcoming'}">
+          ${run?'<span class="dot-live"></span>':'<span class="dot-soon"></span>'}
+          ${run?'চলমান ✓':'আসন্ন'}
+        </span>
+      </div>
+      <div class="desc">${esc(short)}</div>
+      <div class="tap-hint">✦ বিস্তারিত দেখতে ট্যাপ করুন</div>
+    </div>
+  </div>`;
+}
+
+/* ── Show/navigate ── */
+function show(idx){
+  document.querySelectorAll('.slide').forEach((s,i)=>s.classList.toggle('active',i===idx));
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+}
+function next(){ cur=(cur+1)%slides.length; show(cur); resetTimer(); }
+function prev(){ cur=(cur-1+slides.length)%slides.length; show(cur); resetTimer(); }
+function goTo(i){ cur=i; show(cur); resetTimer(); }
+function resetTimer(){ if(timer)clearInterval(timer); if(slides.length>1) timer=setInterval(next,5000); }
+
+/* ── Touch ── */
+function onTS(e){ tx=e.changedTouches[0].screenX; }
+function onTE(e){ const d=e.changedTouches[0].screenX-tx; if(Math.abs(d)>50){d>0?prev():next();} }
+
+/* ── Render ── */
+function render(){
+  const wrap=document.getElementById('sliderWrap');
+  const indEl=document.getElementById('indicators');
+  if(!slides.length){
+    wrap.innerHTML='<div class="slide active"><div class="card"><div class="loading"><span>🎪 কোনো মেলার তথ্য নেই</span></div></div></div>';
+    indEl.innerHTML='<div class="dot active"></div>'; return;
+  }
+  wrap.innerHTML=slides.map(slideHTML).join('');
+  indEl.innerHTML=slides.map((_,i)=>`<div class="dot${i===0?' active':''}" data-i="${i}"></div>`).join('');
+  indEl.querySelectorAll('.dot').forEach(d=>d.addEventListener('click',()=>goTo(+d.dataset.i)));
+  const sw=document.querySelector('.slider-wrap');
+  sw.addEventListener('touchstart',onTS,{passive:true});
+  sw.addEventListener('touchend',onTE,{passive:true});
+  cur=0; show(0); resetTimer();
+}
+
+/* ── Firebase load with demo fallback ── */
+db.ref('melaPosts').on('value', snap=>{
+  const data=snap.val();
+  if(data && Object.keys(data).length){
+    slides=Object.keys(data).map(k=>({id:k,...data[k]})).sort((a,b)=>(a.order||0)-(b.order||0));
+  } else {
+    slides=DEMO; // demo data যদি Firebase খালি থাকে
+  }
+  render();
+}, ()=>{ slides=DEMO; render(); }); // network error fallback
+
+/* ── Modal close ── */
+document.getElementById('modalClose').onclick=()=>document.getElementById('modal').style.display='none';
+window.onclick=e=>{ if(e.target===document.getElementById('modal')) document.getElementById('modal').style.display='none'; };
 </script>
 </body>
 </html>
