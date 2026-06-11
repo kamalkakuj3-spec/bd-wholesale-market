@@ -44,6 +44,7 @@
       height: 100%;
       position: relative;
       overflow: hidden;
+      touch-action: pan-y pinch-zoom; /* টাচ সুইপের জন্য */
     }
 
     .slide {
@@ -53,7 +54,7 @@
       top: 0;
       left: 0;
       opacity: 0;
-      transition: opacity 0.5s ease-in-out;
+      transition: opacity 0.3s ease-in-out;
       overflow-y: auto;
       padding: 20px;
     }
@@ -268,7 +269,6 @@
       margin-top: 5px;
     }
 
-    /* মোবাইল রেস্পন্সিভ */
     @media (max-width: 550px) {
       .title { font-size: 1.6rem; margin-top: 15px; }
       .desc { font-size: 1rem; }
@@ -332,6 +332,8 @@
   let slides = [];
   let currentIndex = 0;
   let interval;
+  let touchStartX = 0;
+  let touchEndX = 0;
 
   function escapeHtml(str) {
     if (!str) return '';
@@ -419,7 +421,7 @@
     modal.style.display = 'flex';
   };
 
-  // স্লাইড তৈরি - পুরো কার্ডে ক্লিক করলেই মোডাল খুলবে
+  // স্লাইড তৈরি
   function createSlideHTML(card, idx) {
     const status = getStatus(card.startDate, card.endDate);
     const isRunning = status === 'running';
@@ -445,6 +447,41 @@
         </div>
       </div>
     `;
+  }
+
+  // টাচ সুইপ হ্যান্ডলার
+  function handleTouchStart(event) {
+    touchStartX = event.changedTouches[0].screenX;
+  }
+
+  function handleTouchEnd(event) {
+    touchEndX = event.changedTouches[0].screenX;
+    const swipeDistance = touchEndX - touchStartX;
+    const minSwipeDistance = 50; // ন্যূনতম 50px সুইপ করলেই কাজ করবে
+    
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      if (swipeDistance > 0) {
+        // ডান দিকে সুইপ (আগের স্লাইড)
+        prevSlide();
+      } else {
+        // বাম দিকে সুইপ (পরের স্লাইড)
+        nextSlide();
+      }
+    }
+  }
+
+  function prevSlide() {
+    if (slides.length === 0) return;
+    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+    showSlide(currentIndex);
+    startSlideshow();
+  }
+
+  function nextSlide() {
+    if (slides.length === 0) return;
+    currentIndex = (currentIndex + 1) % slides.length;
+    showSlide(currentIndex);
+    startSlideshow();
   }
 
   function renderSlides() {
@@ -476,6 +513,11 @@
       });
     });
 
+    // টাচ ইভেন্ট লিসেনার যোগ করুন
+    const sliderContainer = document.querySelector('.content-container');
+    sliderContainer.addEventListener('touchstart', handleTouchStart, false);
+    sliderContainer.addEventListener('touchend', handleTouchEnd, false);
+
     currentIndex = 0;
     showSlide(0);
     startSlideshow();
@@ -497,15 +539,11 @@
     startSlideshow();
   }
 
-  function nextSlide() {
-    if (slides.length === 0) return;
-    currentIndex = (currentIndex + 1) % slides.length;
-    showSlide(currentIndex);
-  }
-
   function startSlideshow() {
     if (interval) clearInterval(interval);
-    if (slides.length > 1) interval = setInterval(nextSlide, 5000);
+    if (slides.length > 1) interval = setInterval(() => {
+      nextSlide();
+    }, 5000);
   }
 
   // Firebase Realtime Database লোড
